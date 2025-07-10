@@ -394,6 +394,50 @@
             .bottom-panel { font-size: 0.93em; }
         }
         body { padding-bottom: 60px !important; }
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 12px 2px 80px 2px;
+            }
+            .glass-card {
+                padding: 18px 6px 12px 6px;
+            }
+            .manual-input {
+                padding: 10px 2px 8px 2px;
+            }
+            .header, .glass-card h2, .scan-result .result-text, .manual-input h3 {
+                font-size: 1em;
+            }
+            .upload-text, .upload-subtext, .scan-result, .example-ticket, .input-group input {
+                font-size: 0.95em;
+            }
+            .btn {
+                margin-bottom: 10px;
+            }
+            .btn:last-child {
+                margin-bottom: 0;
+            }
+            .input-group {
+                flex-direction: column;
+                gap: 6px;
+            }
+            #video {
+                width: 100vw;
+                max-width: 100vw;
+                border-radius: 10px;
+            }
+            #video-container {
+                max-width: 100vw;
+            }
+            .icon-btn span {
+                font-size: 0.85em;
+            }
+            .icon-btn .material-icons {
+                font-size: 22px;
+            }
+        }
+        html, body {
+            overflow-x: hidden;
+        }
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
