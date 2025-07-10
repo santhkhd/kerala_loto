@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Draw - Kerala Lottery</title>
+    <style>
+        body {
+            background: #e9edf5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #232946;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 24px 12px 80px 12px;
+        }
+        h1 {
+            text-align: center;
+            color: #2563eb;
+            margin-bottom: 18px;
+        }
+        .video-section {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #2563eb11;
+            padding: 18px 12px 24px 12px;
+            margin-bottom: 28px;
+        }
+        .video-label {
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .youtube-embed, .m3u8-player {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        iframe {
+            width: 100%;
+            max-width: 480px;
+            height: 270px;
+            border: none;
+            border-radius: 12px;
+        }
+        video {
+            width: 100%;
+            max-width: 480px;
+            height: 270px;
+            border-radius: 12px;
+            background: #000;
+        }
+        .numbers-section {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #2563eb11;
+            padding: 18px 12px 24px 12px;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        .numbers-label {
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 12px;
+        }
+        .live-numbers {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 10px;
+        }
+        .live-number {
+            background: #2563eb;
+            color: #fff;
+            font-size: 2em;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 12px 18px;
+            min-width: 48px;
+            box-shadow: 0 2px 8px #2563eb33;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 12px 2px 80px 2px; }
+            iframe, video { max-width: 99vw; height: 200px; }
+            .live-number { font-size: 1.3em; padding: 8px 10px; min-width: 32px; }
+        }
+        /* Bottom panel and icon-btn styles from index.html */
+        .bottom-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            background: #181f36;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 4px 0;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.13);
+            z-index: 200;
+        }
+        .icon-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #7ecbff;
+            font-size: 0.98em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.18s;
+            text-decoration: none;
+        }
+        .icon-btn .material-icons {
+            margin-bottom: 2px;
+            font-size: 28px;
+            line-height: 28px;
+        }
+        .icon-btn span {
+            font-size: 0.93em;
+            margin-top: 1px;
+        }
+        .icon-btn:hover, .icon-btn.active {
+            color: #fff;
+        }
+        @media (max-width: 700px) {
+            .bottom-panel { font-size: 0.93em; }
+        }
+        body { padding-bottom: 60px !important; }
+        .header {
+            background: linear-gradient(90deg, #1a2980 0%, #2575fc 100%);
+            color: #fff;
+            padding: 18px 0 10px 0;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(30,60,120,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5em;
+        }
+        .header .back-btn {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: #fff; font-size: 1.3em;
+            cursor: pointer; display: block;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+    <div class="header has-back">
+        <button class="back-btn" onclick="goBack()" title="Back">←</button>
+        <span id="header-title">Live Draw</span>
+    </div>
+    <div class="container">
+        <div style="text-align:center; margin-bottom: 18px;">
+            <a href="https://www.youtube.com/channel/UC4a-Gbdw7vOaccHmFo40b9g?sub_confirmation=1" target="_blank" style="display:inline-block; background:#ff0000; color:#fff; font-size:1.2em; font-weight:700; padding:14px 32px; border-radius:32px; text-decoration:none; box-shadow:0 2px 8px #ff000033; letter-spacing:1px; transition:background 0.2s;">
+                🔔 Subscribe to our YouTube Channel
+            </a>
+        </div>
+        <h1>🎥 Live Draw</h1>
+        <div class="video-section">
+            <div class="video-label">YouTube Live</div>
+            <div class="youtube-embed">
+                <!-- Replace the src with your YouTube live link -->
+                <iframe id="ytplayer" src="https://www.youtube.com/embed/live_stream?channel=UC4a-Gbdw7vOaccHmFo40b9g" allowfullscreen></iframe>
+            </div>
+            <div class="video-label">Live Stream (m3u8)</div>
+            <div class="m3u8-player">
+                <video id="hls-video" controls poster="https://dummyimage.com/480x270/2563eb/fff&text=Live+Preview"></video>
+            </div>
+        </div>
+        <!-- Live numbers section removed as requested -->
+    </div>
+    <nav class="bottom-panel">
+        <a class="icon-btn" href="index.html">
+            <span class="material-icons">home</span>
+            <span>Home</span>
+        </a>
+        <a class="icon-btn" href="prediction.html">
+            <span class="material-icons">star</span>
+            <span>Lucky</span>
+        </a>
+        <a class="icon-btn" href="search.html">
+            <span class="material-icons">search</span>
+            <span>Search</span>
+        </a>
+        <a class="icon-btn" href="scanner.html">
+            <span class="material-icons">qr_code_scanner</span>
+            <span>Scanner</span>
+        </a>
+        <a class="icon-btn active" href="live.html">
+            <span class="material-icons">live_tv</span>
+            <span>Live</span>
+        </a>
+    </nav>
+    <script>
+        function goBack() {
+            window.history.length > 1 ? window.history.back() : window.location.href = 'index.html';
+        }
+        // m3u8 video preview setup (replace with your m3u8 link later)
+        const video = document.getElementById('hls-video');
+        const m3u8Url = '';
+        if (Hls.isSupported() && m3u8Url) {
+            const hls = new Hls();
+            hls.loadSource(m3u8Url);
+            hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = m3u8Url;
+        }
+        // Placeholder: You can update the numbers dynamically later
+        // Example: document.getElementById('num1').textContent = '12345';
+    </script>
+</body>
+</html> 
