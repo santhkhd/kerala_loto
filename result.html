@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lottery Result</title>
+  <style>
+    /* --- COPY ALL CSS FROM BT-10-2025-07-07 (13).html --- */
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #10182a; color: #e6eaf3; margin: 0; padding: 0; }
+    .header { background: #181f36; padding: 24px 0 18px 0; border-bottom: 2px solid #232c4b; box-shadow: 0 2px 12px rgba(0,0,0,0.13); }
+    .header-content { max-width: 900px; margin: 0 auto; padding: 0 18px; display: flex; flex-direction: column; gap: 10px; }
+    .lottery-title { font-size: 2em; font-weight: 700; color: #fff; margin-bottom: 2px; letter-spacing: 1px; }
+    .lottery-meta { display: flex; flex-wrap: wrap; gap: 18px 32px; font-size: 1.08em; color: #b3b9c9; margin-bottom: 6px; }
+    .lottery-meta span { background: #232c4b; border-radius: 7px; padding: 4px 14px; font-weight: 500; color: #7ecbff; margin-right: 6px; }
+    .main-content { max-width: 900px; margin: 28px auto; padding: 0 18px 36px 18px; }
+    .prize-section { margin-bottom: 32px; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.10); background: #181f36; border: 2.5px solid #232c4b; overflow: hidden; }
+    .prize-header { display: flex; align-items: center; gap: 16px; padding: 18px 18px 10px 18px; border-bottom: 1.5px solid #232c4b; }
+    .prize-title { font-size: 1.18em; font-weight: bold; color: #fff; letter-spacing: 0.5px; }
+    .prize-amount { font-size: 1.08em; font-weight: 600; color: #7ecbff; margin-left: auto; }
+    .winners-list { display: flex; flex-wrap: wrap; gap: 10px 8px; margin: 18px 0 0 0; padding: 0 18px 18px 18px; }
+    .winner { background: #232c4b; color: #7ecbff; padding: 8px 14px; border-radius: 6px; font-size: 1.08em; transition: background 0.2s, color 0.2s, box-shadow 0.2s; user-select: all; min-width: 60px; text-align: center; font-weight: 500; }
+    .winner.highlight { background: #7ecbff; color: #181f36; font-weight: bold; box-shadow: 0 2px 8px rgba(126,203,255,0.13); border: 1.5px solid #7ecbff; font-size: 1.13em; letter-spacing: 0.5px; }
+    .prize-section.prize-1st { border-left: 8px solid #7ecbff; } .prize-section.prize-consolation { border-left: 8px solid #a259ff; }
+    .prize-section.prize-2nd { border-left: 8px solid #ffb347; } .prize-section.prize-3rd { border-left: 8px solid #ff6f61; }
+    .prize-section.prize-4th { border-left: 8px solid #00b894; } .prize-section.prize-5th { border-left: 8px solid #00cec9; }
+    .prize-section.prize-6th { border-left: 8px solid #fdcb6e; } .prize-section.prize-7th { border-left: 8px solid #e17055; }
+    .prize-section.prize-8th { border-left: 8px solid #0984e3; } .prize-section.prize-9th { border-left: 8px solid #636e72; }
+    .search-bar { margin: 28px auto 18px auto; max-width: 420px; display: flex; justify-content: center; align-items: center; }
+    .search-box { position: relative; width: 100%; display: flex; align-items: center; }
+    .search-box input { width: 100%; padding: 15px 44px 15px 18px; border-radius: 8px; border: none; font-size: 1.15em; background: #232c4b; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.10); outline: none; transition: border 0.2s, background 0.2s; border: 2px solid #232c4b; margin: 0; }
+    .search-box input:focus { border: 2px solid #7ecbff; background: #1a223a; }
+    .search-box button { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: none; outline: none; cursor: pointer; padding: 0 7px; display: flex; align-items: center; justify-content: center; height: 100%; transition: opacity 0.2s; }
+    #searchBtn { right: 7px; opacity: 0.85; } #clearBtn { right: 36px; opacity: 0.85; }
+    .no-result { text-align: center; color: #ef233c; font-size: 1.13em; margin-top: 24px; font-weight: 500; }
+    .info-cards { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; margin: 28px 0 18px 0; }
+    .info-card { background: #181f36; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.10); border: 2px solid #232c4b; min-width: 140px; padding: 18px 22px 12px 22px; text-align: center; }
+    .info-label { color: #7ecbff; font-size: 1em; margin-bottom: 7px; font-weight: 500; letter-spacing: 0.5px; }
+    .info-value { color: #fff; font-size: 1.25em; font-weight: bold; letter-spacing: 1px; }
+    .download-link-section { margin-top: 40px; text-align: center; padding: 20px; background: #181f36; border-radius: 10px; border: 1px solid #232c4b; }
+    .download-link-section a { color: #10182a; background: #7ecbff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; }
+    @media (max-width: 700px) { 
+        .header-content, .main-content { padding: 0 4vw; } .prize-section { border-radius: 7px; } .lottery-title { font-size: 1.2em; } .prize-title { font-size: 1em; } .winner { font-size: 0.98em; padding: 7px 8px; }
+        .info-cards { gap: 10px; } .info-card { min-width: 44vw; padding: 12px 4vw 8px 4vw; border-radius: 7px; } .info-label { font-size: 0.98em; } .info-value { font-size: 1.08em; }
+    }
+    .top-panel { width: 100%; background: linear-gradient(90deg, #1a2980 0%, #2575fc 100%); color: #fff; padding: 18px 0 10px 0; text-align: center; font-size: 1.6em; font-weight: 700; letter-spacing: 1.5px; box-shadow: 0 2px 8px rgba(30,60,120,0.13); position: sticky; top: 0; z-index: 100; }
+    .live-title { color: #fff; text-shadow: 0 2px 8px rgba(30,60,120,0.10); }
+    .bottom-panel { position: fixed; bottom: 0; left: 0; width: 100vw; background: #181f36; display: flex; justify-content: space-around; align-items: center; padding: 8px 0 4px 0; box-shadow: 0 -2px 12px rgba(0,0,0,0.13); z-index: 200; }
+    .icon-btn { display: flex; flex-direction: column; align-items: center; color: #7ecbff; font-size: 0.98em; font-weight: 600; cursor: pointer; transition: color 0.18s; }
+    .icon-btn svg { margin-bottom: 2px; }
+    .icon-btn span { font-size: 0.93em; margin-top: 1px; }
+    .icon-btn:hover { color: #fff; }
+    @media (max-width: 700px) { .top-panel { font-size: 1.1em; padding: 12px 0 7px 0; } .bottom-panel { font-size: 0.93em; } }
+    body { padding-bottom: 60px !important; }
+    @media print {
+      body { font-size: 12px !important; margin: 8px !important; padding: 0 !important; }
+      .result-container, .main-card, .prize-table, .info-cards, .header, .footer, .card, .card-bottom {
+        margin: 0 !important; padding: 0 !important; box-shadow: none !important; border-radius: 0 !important;
+      }
+      .prize-table th, .prize-table td { padding: 2px 4px !important; font-size: 11px !important; }
+      .header { font-size: 1.1em !important; padding: 4px 0 !important; }
+      .main-card { font-size: 1em !important; }
+      .info-cards { font-size: 0.95em !important; }
+      .download-pdf-btn, .download-html-btn, .download-json-btn, .no-print, .print-hide { display: none !important; }
+      .page-break { page-break-after: always; }
+      .force-two-pages { max-height: 95vh; overflow: hidden; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-panel">
+    <span class="live-title">LIVE KERALA RESULTS</span>
+  </div>
+  <div id="main-content-area">
+    <div style="text-align:center; margin: 40px 0; font-size:1.2em;" id="loadingMsg">Loading result...</div>
+  </div>
+  <div class="bottom-panel">
+    <a class="icon-btn" href="index.html">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-4h-4v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V11.5z" stroke="#7ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Home</span>
+    </a>
+    <a class="icon-btn" href="prediction.html">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#ffb347" stroke-width="2"/><path d="M8 12l2 2 4-4" stroke="#ffb347" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Lucky</span>
+    </a>
+    <a class="icon-btn" href="search.html">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="#a259ff" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#a259ff" stroke-width="2" stroke-linecap="round"/></svg><span>Search</span>
+    </a>
+    <a class="icon-btn" href="scanner.html">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="#00b894" stroke-width="2"/><path d="M8 8h8v8H8z" stroke="#00b894" stroke-width="2"/></svg><span>Scanner</span>
+    </a>
+  </div>
+  <script>
+    function escapeHtml(str) {
+      return str ? str.replace(/[&<>"']/g, function(tag) {
+        const charsToReplace = {
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        };
+        return charsToReplace[tag] || tag;
+      }) : '';
+    }
+    function getQueryParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+    // Prize structures for all lottery types
+    const prizeStructures = {
+      BT:[{key:"1st_prize",label:"1st Prize",amount:10000000},{key:"consolation_prize",label:"Consolation Prize",amount:5000},{key:"2nd_prize",label:"2nd Prize",amount:3000000},{key:"3rd_prize",label:"3rd Prize",amount:500000},{key:"4th_prize",label:"4th Prize",amount:5000},{key:"5th_prize",label:"5th Prize",amount:2000},{key:"6th_prize",label:"6th Prize",amount:1000},{key:"7th_prize",label:"7th Prize",amount:500},{key:"8th_prize",label:"8th Prize",amount:200},{key:"9th_prize",label:"9th Prize",amount:100}],
+      SS:[{key:"1st_prize",label:"1st Prize",amount:10000000},{key:"consolation_prize",label:"Consolation Prize",amount:5000},{key:"2nd_prize",label:"2nd Prize",amount:3000000},{key:"3rd_prize",label:"3rd Prize",amount:500000},{key:"4th_prize",label:"4th Prize",amount:5000},{key:"5th_prize",label:"5th Prize",amount:2000},{key:"6th_prize",label:"6th Prize",amount:1000},{key:"7th_prize",label:"7th Prize",amount:500},{key:"8th_prize",label:"8th Prize",amount:200},{key:"9th_prize",label:"9th Prize",amount:100}],
+      DL:[{key:"1st_prize",label:"1st Prize",amount:10000000},{key:"consolation_prize",label:"Consolation Prize",amount:5000},{key:"2nd_prize",label:"2nd Prize",amount:3000000},{key:"3rd_prize",label:"3rd Prize",amount:500000},{key:"4th_prize",label:"4th Prize",amount:5000},{key:"5th_prize",label:"5th Prize",amount:2000},{key:"6th_prize",label:"6th Prize",amount:1000},{key:"7th_prize",label:"7th Prize",amount:500},{key:"8th_prize",label:"8th Prize",amount:200},{key:"9th_prize",label:"9th Prize",amount:100}],
+      KN:[{key:"1st_prize",label:"1st Prize",amount:10000000},{key:"consolation_prize",label:"Consolation Prize",amount:5000},{key:"2nd_prize",label:"2nd Prize",amount:3000000},{key:"3rd_prize",label:"3rd Prize",amount:500000},{key:"4th_prize",label:"4th Prize",amount:5000},{key:"5th_prize",label:"5th Prize",amount:2000},{key:"6th_prize",label:"6th Prize",amount:1000},{key:"7th_prize",label:"7th Prize",amount:500},{key:"8th_prize",label:"8th Prize",amount:200},{key:"9th_prize",label:"9th Prize",amount:100}],
+      SK:[{key:"1st_prize",label:"1st Prize",amount:10000000},{key:"consolation_prize",label:"Consolation Prize",amount:5000},{key:"2nd_prize",label:"2nd Prize",amount:3000000},{key:"3rd_prize",label:"3rd Prize",amount:500000},{key:"4th_prize",label:"4th Prize",amount:5000},{key:"5th_prize",label:"5th Prize",amount:2000},{key:"6th_prize",label:"6th Prize",amount:1000},{key:"7th_prize",label:"7th Prize",amount:500},{key:"8th_prize",label:"8th Prize",amount:200},{key:"9th_prize",label:"9th Prize",amount:100}],
+      KR:[{key:"1st_prize",label:"1st Prize",amount:10000000},{key:"consolation_prize",label:"Consolation Prize",amount:5000},{key:"2nd_prize",label:"2nd Prize",amount:2500000},{key:"3rd_prize",label:"3rd Prize",amount:1000000},{key:"4th_prize",label:"4th Prize",amount:5000},{key:"5th_prize",label:"5th Prize",amount:2000},{key:"6th_prize",label:"6th Prize",amount:1000},{key:"7th_prize",label:"7th Prize",amount:500},{key:"8th_prize",label:"8th Prize",amount:200},{key:"9th_prize",label:"9th Prize",amount:100}],
+      SM:[{key:"1st_prize",label:"1st Prize",amount:10000000},{key:"consolation_prize",label:"Consolation Prize",amount:5000},{key:"2nd_prize",label:"2nd Prize",amount:2500000},{key:"3rd_prize",label:"3rd Prize",amount:500000},{key:"4th_prize",label:"4th Prize",amount:5000},{key:"5th_prize",label:"5th Prize",amount:2000},{key:"6th_prize",label:"6th Prize",amount:1000},{key:"7th_prize",label:"7th Prize",amount:500},{key:"8th_prize",label:"8th Prize",amount:200},{key:"9th_prize",label:"9th Prize",amount:100}],
+    };
+    // Map code to full name
+    const lotteryNames = {
+      BT: 'BHAGYATHARA (BT)',
+      DL: 'DHANALEKSHMI (DL)',
+      KN: 'KARUNYA PLUS (KN)',
+      KR: 'KARUNYA (KR)',
+      NR: 'NIRMAL (NR)',
+      SS: 'STHREE SAKTHI (SS)',
+      AK: 'AKSHAYA (AK)',
+      SM: 'SAMRUDHI (SM)',
+      SK: 'SUVARNA KERALAM (SK)'
+    };
+    function parseFilename(file) {
+      // Example: DL-08-2025-07-09.json or DL-08-2025-07-09 (1).json
+      const match = file.match(/^([A-Z]{2})-(\d+)-(\d{4})-(\d{2})-(\d{2})/);
+      if (!match) return null;
+      const code = match[1];
+      const draw = match[2];
+      const year = match[3];
+      const month = match[4];
+      const day = match[5];
+      return {
+        code,
+        draw_number: draw,
+        draw_date: `${day}/${month}/${year}`,
+        lottery_name: lotteryNames[code] || code
+      };
+    }
+    function buildEmptyResultData(parsed) {
+      const structure = prizeStructures[parsed.code] || [];
+      const prizes = {};
+      structure.forEach(p => {
+        prizes[p.key] = { amount: p.amount, label: p.label, winners: [] };
+      });
+      return {
+        lottery_name: parsed.lottery_name,
+        draw_number: parsed.draw_number,
+        draw_date: parsed.draw_date,
+        prizes
+      };
+    }
+    function renderResult(data) {
+      // Build the HTML using the same structure as the reference static HTML
+      let html = '';
+      html += '<div class="header">';
+      html += '  <div class="header-content">';
+      html += '    <div class="lottery-title">' + escapeHtml(data.lottery_name || '') + '</div>';
+      html += '    <div class="lottery-meta">';
+      html += '      <span>Draw: ' + escapeHtml(data.draw_number || '') + '</span>';
+      html += '      <span>Date: ' + escapeHtml(data.draw_date || '') + '</span>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+      html += '<div class="main-content">';
+      html += '  <div style="text-align:center; margin: 18px 0;">' +
+              '<button onclick="window.location.reload()" style="background:#7ecbff;color:#10182a;padding:12px 24px;border-radius:8px;font-weight:bold;border:none;cursor:pointer;">Refresh</button>' +
+              '</div>';
+      html += '  <div class="search-bar">';
+      html += '    <div class="search-box">';
+      html += '      <input type="text" id="searchInput" placeholder="Search ticket number..." autocomplete="off">';
+      html += '      <button id="searchBtn" title="Search"><svg width="22" height="22" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="7" stroke="#7ecbff" stroke-width="2"/><path d="M15.5 15.5L13 13" stroke="#7ecbff" stroke-width="2" stroke-linecap="round"/></svg></button>';
+      html += '      <button id="clearBtn" title="Clear" style="display:none;"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><line x1="6" y1="6" x2="14" y2="14" stroke="#ef233c" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="6" x2="6" y2="14" stroke="#ef233c" stroke-width="2" stroke-linecap="round"/></svg></button>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '  <div id="results"></div>';
+      html += '  <div id="noResult" class="no-result" style="display:none;">No matching ticket found.</div>';
+      html += '  <div style="text-align:center; margin: 24px 0 0 0;"><button onclick="window.print()" style="background:#7ecbff;color:#10182a;padding:12px 24px;border-radius:8px;font-weight:bold;border:none;cursor:pointer;">Download PDF</button></div>';
+      html += '  <div class="info-cards">';
+      html += '    <div class="info-card"><div class="info-label">Total Winners</div><div class="info-value" id="totalWinners"></div></div>';
+      html += '    <div class="info-card"><div class="info-label">Total Prize Distributed</div><div class="info-value" id="prizeDistributed"></div></div>';
+      html += '    <div class="info-card"><div class="info-label">Draw Number</div><div class="info-value" id="drawNumber"></div></div>';
+      html += '    <div class="info-card"><div class="info-label">Prize Categories</div><div class="info-value" id="prizeCategories"></div></div>';
+      html += '  </div>';
+      html += '</div>';
+      document.getElementById('main-content-area').innerHTML = html;
+      // --- JS for search and rendering prizes ---
+      const prizeNames = {
+        "1st_prize": {name: "1st Prize", class: "prize-1st"},
+        "consolation_prize": {name: "Consolation Prize", class: "prize-consolation"},
+        "2nd_prize": {name: "2nd Prize", class: "prize-2nd"},
+        "3rd_prize": {name: "3rd Prize", class: "prize-3rd"},
+        "4th_prize": {name: "4th Prize", class: "prize-4th"},
+        "5th_prize": {name: "5th Prize", class: "prize-5th"},
+        "6th_prize": {name: "6th Prize", class: "prize-6th"},
+        "7th_prize": {name: "7th Prize", class: "prize-7th"},
+        "8th_prize": {name: "8th Prize", class: "prize-8th"},
+        "9th_prize": {name: "9th Prize", class: "prize-9th"}
+      };
+      function updateInfoCards() {
+        let totalWinners = 0;
+        let totalPrizeMoney = 0;
+        let prizeCategories = 0;
+        for (const key in data.prizes) {
+          const prize = data.prizes[key];
+          if (prize) {
+            prizeCategories++;
+            totalWinners += prize.winners.length;
+            totalPrizeMoney += (parseInt(prize.amount)||0) * prize.winners.length;
+          }
+        }
+        document.getElementById('totalWinners').textContent = totalWinners.toLocaleString();
+        document.getElementById('prizeDistributed').textContent = '₹' + totalPrizeMoney.toLocaleString();
+        document.getElementById('drawNumber').textContent = data.draw_number;
+        document.getElementById('prizeCategories').textContent = prizeCategories;
+      }
+      function renderResults(filter = "") {
+        const resultsContainer = document.getElementById('results');
+        const searchInput = filter.toLowerCase().trim();
+        let anyResultsFound = false;
+        let resultsHtml = '';
+        // Use all keys in data.prizes, but order by known keys first
+        const allPrizeKeys = [
+          "1st_prize", "consolation_prize", "2nd_prize", "3rd_prize", "4th_prize",
+          "5th_prize", "6th_prize", "7th_prize", "8th_prize", "9th_prize"
+        ];
+        // Add any extra keys (for flexibility)
+        Object.keys(data.prizes).forEach(k => { if (!allPrizeKeys.includes(k)) allPrizeKeys.push(k); });
+        allPrizeKeys.forEach(key => {
+          const prize = data.prizes[key] || { winners: [], amount: '', label: '' };
+          let matchingWinners = prize.winners;
+          if (searchInput) {
+            matchingWinners = prize.winners.filter(w => w.toLowerCase().includes(searchInput));
+          }
+          if (matchingWinners.length === 0 && searchInput) {
+            return; // Don't show prize category if no winners match search
+          }
+          const prizeInfo = prizeNames[key] || { name: escapeHtml(prize.label), class: '' };
+          let winnersHtml = '';
+          if (matchingWinners.length > 0) {
+            winnersHtml = matchingWinners.map(function(w) {
+              const highlightClass = searchInput && w.toLowerCase().includes(searchInput) ? 'highlight' : '';
+              return '<div class="winner ' + highlightClass + '">' + escapeHtml(w) + '</div>';
+            }).join('');
+            anyResultsFound = true;
+          } else {
+            winnersHtml = '<div class="winner" style="color:#b3b9c9; font-style:italic;">Please wait, results will be published at 3 PM.</div>';
+          }
+          const sectionHtml =
+            '<div class="prize-section ' + prizeInfo.class + '">' +
+              '<div class="prize-header">' +
+                '<div class="prize-title">' + prizeInfo.name + '</div>' +
+                '<div class="prize-amount">' + (prize.amount ? '₹' + parseInt(prize.amount).toLocaleString() : '') + '</div>' +
+              '</div>' +
+              '<div class="winners-list">' + winnersHtml + '</div>' +
+            '</div>';
+          resultsHtml += sectionHtml;
+        });
+        resultsContainer.innerHTML = resultsHtml;
+        document.getElementById('noResult').style.display = anyResultsFound || !searchInput ? 'none' : 'block';
+      }
+      updateInfoCards();
+      renderResults();
+      const searchInput = document.getElementById('searchInput');
+      const searchBtn = document.getElementById('searchBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      searchInput.addEventListener('input', () => {
+        renderResults(searchInput.value);
+        clearBtn.style.display = searchInput.value ? 'block' : 'none';
+      });
+      searchBtn.addEventListener('click', () => renderResults(searchInput.value));
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearBtn.style.display = 'none';
+        renderResults();
+      });
+    }
+    (function() {
+      const file = getQueryParam('file');
+      if (!file) {
+        document.getElementById('loadingMsg').textContent = 'No result file specified.';
+        return;
+      }
+      fetch('note/' + encodeURIComponent(file))
+        .then(res => {
+          if (!res.ok) throw new Error('Not found');
+          return res.json();
+        })
+        .then(data => {
+          renderResult(data);
+        })
+        .catch(() => {
+          // If file not found, render empty template for that day/lottery
+          const parsed = parseFilename(file);
+          if (!parsed) {
+            document.getElementById('loadingMsg').textContent = 'Result not available yet. Please check back later.';
+            return;
+          }
+          const emptyData = buildEmptyResultData(parsed);
+          renderResult(emptyData);
+        });
+    })();
+  </script>
+</body>
+</html> 
