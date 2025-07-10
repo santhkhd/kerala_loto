@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Lottery Numbers - Kerala Lottery</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --accent: #7ecbff;
+            --bg: #e9edf5;
+            --glass: rgba(255,255,255,0.7);
+            --card-bg: rgba(35,41,70,0.92);
+            --card-fg: #fff;
+            --nav-bg: #fff;
+            --nav-active: #2563eb;
+            --nav-inactive: #6b7280;
+            --nav-shadow: 0 -2px 12px rgba(30,60,120,0.08);
+            --border-radius: 18px;
+            --shadow: 0 8px 32px rgba(30,60,120,0.13);
+        }
+        html, body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            color: #232946;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .header {
+            background: linear-gradient(90deg, #1a2980 0%, #2575fc 100%);
+            color: #fff;
+            padding: 18px 0 10px 0;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(30,60,120,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5em;
+        }
+        .header .back-btn {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: #fff; font-size: 1.3em;
+            cursor: pointer; display: block;
+        }
+        .header .lang-icon-btn {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; font-size: 1.5em; color: #fff;
+            cursor: pointer; padding: 2px 8px 2px 2px; border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .lang-popup {
+            display: none; position: fixed; top: 56px; right: 12px; z-index: 200;
+            background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(30,60,120,0.13);
+            padding: 18px 24px 12px 24px; min-width: 180px; animation: fadeIn 0.2s;
+        }
+        .lang-popup.active { display: block; }
+        .lang-popup-title { font-weight: 700; margin-bottom: 10px; color: var(--primary); font-size: 1.1em; }
+        .lang-popup-btn { display: block; width: 100%; background: none; border: none; color: var(--nav-inactive); font-size: 1em; font-weight: 600; text-align: left; padding: 8px 0; border-radius: 6px; cursor: pointer; transition: background 0.2s, color 0.2s; }
+        .lang-popup-btn.active { color: var(--nav-active); background: #e0e7ff; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .main-content {
+            max-width: 500px; margin: 0 auto; padding: 32px 12px 90px 12px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .glass-card {
+            background: var(--glass);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 32px 24px 24px 24px;
+            margin-bottom: 32px;
+            width: 100%;
+            display: flex; flex-direction: column; align-items: center;
+            backdrop-filter: blur(8px);
+            border: 1.5px solid #e0e7ff;
+            transition: box-shadow 0.2s;
+        }
+        .glass-card h2 {
+            margin: 0 0 18px 0;
+            font-size: 1.3em;
+            color: var(--primary);
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .search-input-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .search-input-group input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.1em;
+            transition: border-color 0.3s;
+            min-width: 120px;
+        }
+        .search-input-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        .btn.secondary {
+            background: #6b7280;
+        }
+        .btn.secondary:hover {
+            background: #4b5563;
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
+        }
+        .search-results {
+            margin-top: 10px;
+            width: 100%;
+        }
+        .win-result {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            margin: 15px 0 0 0;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        .no-win-result {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            margin: 15px 0 0 0;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+        .win-alert {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 15px 0 0 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        .example-section {
+            background: rgba(255,255,255,0.55);
+            border: 1.5px solid #e0e7ff;
+            border-radius: 12px;
+            padding: 18px 14px 10px 14px;
+            margin-top: 10px;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(30,60,120,0.07);
+        }
+        .example-section h3 {
+            margin: 0 0 10px 0;
+            color: #495057;
+            font-size: 1.08em;
+        }
+        .example-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .example-number {
+            background: #3b82f6;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-size: 1em;
+        }
+        .example-number:hover {
+            transform: scale(1.05);
+        }
+        @media (max-width: 600px) {
+            .main-content { padding-bottom: 80px; }
+            .glass-card { padding: 18px 6px 16px 6px; }
+            .search-input-group { gap: 8px; }
+            .btn { padding: 10px 12px; font-size: 1em; }
+            .example-section { padding: 12px 6px 8px 6px; }
+        }
+        .bottom-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            background: #181f36;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 4px 0;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.13);
+            z-index: 200;
+        }
+        .icon-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #7ecbff;
+            font-size: 0.98em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.18s;
+            text-decoration: none;
+        }
+        .icon-btn .material-icons {
+            margin-bottom: 2px;
+            font-size: 28px;
+            line-height: 28px;
+        }
+        .icon-btn span {
+            font-size: 0.93em;
+            margin-top: 1px;
+        }
+        .icon-btn:hover {
+            color: #fff;
+        }
+        @media (max-width: 700px) {
+            .bottom-panel { font-size: 0.93em; }
+        }
+        body { padding-bottom: 60px !important; }
+    </style>
+</head>
+<body>
+    <div class="header has-back">
+        <button class="back-btn" onclick="goBack()" title="Back">←</button>
+        <span id="header-title">Search Lottery Numbers</span>
+        <button class="lang-icon-btn" id="langIconBtn" title="Change language">🌐</button>
+        <div class="lang-popup" id="langPopup">
+            <div class="lang-popup-title">Select Language</div>
+            <button class="lang-popup-btn" data-lang="en">English</button>
+            <button class="lang-popup-btn" data-lang="ml">മലയാളം</button>
+            <button class="lang-popup-btn" data-lang="ta">தமிழ்</button>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="glass-card">
+            <h2 id="searchTitle">🔍 Search Your Number</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 18px; font-size: 1.08em;">
+                Enter your lottery number and select a date to check if you've won any prize
+            </p>
+            <div class="search-input-group">
+                <input type="text" id="numberSearchInput" placeholder="Enter your number (e.g., MW 501046, 0875, etc.)" maxlength="20">
+                <input type="date" id="dateSearchInput" style="padding:12px 14px; border-radius:10px; border:2px solid #e1e5e9; font-size:1.08em; background:rgba(255,255,255,0.7); color:#232946; min-width:120px;">
+                <button class="btn" id="searchBtn" onclick="searchNumber()" disabled>Check</button>
+                <button class="btn secondary" onclick="clearNumberSearch()">Clear</button>
+            </div>
+            <div id="numberSearchResults" class="search-results"></div>
+        </div>
+        <div class="example-section glass-card" style="margin-bottom:0;">
+            <h3>💡 Try these example numbers:</h3>
+            <div class="example-numbers">
+                <div class="example-number" onclick="searchExample('MW 501046')">MW 501046 (1st Prize)</div>
+                <div class="example-number" onclick="searchExample('MR 594475')">MR 594475 (2nd Prize)</div>
+                <div class="example-number" onclick="searchExample('0875')">0875 (4th Prize)</div>
+                <div class="example-number" onclick="searchExample('0014')">0014 (6th Prize)</div>
+                <div class="example-number" onclick="searchExample('999999')">999999 (No Win)</div>
+            </div>
+        </div>
+    </div>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <nav class="bottom-panel">
+        <a class="icon-btn" href="index.html">
+            <span class="material-icons">home</span>
+            <span>Home</span>
+        </a>
+        <a class="icon-btn" href="prediction.html">
+            <span class="material-icons">star</span>
+            <span>Lucky</span>
+        </a>
+        <a class="icon-btn" href="search.html">
+            <span class="material-icons">search</span>
+            <span>Search</span>
+        </a>
+        <a class="icon-btn" href="scanner.html">
+            <span class="material-icons">qr_code_scanner</span>
+            <span>Scanner</span>
+        </a>
+    </nav>
+    <script>
+        // Language logic (same as index.html/prediction.html)
+        const langIconBtn = document.getElementById('langIconBtn');
+        const langPopup = document.getElementById('langPopup');
+        const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
+        let currentLang = localStorage.getItem('lang') || 'en';
+        // Language strings
+        const langStrings = {
+            en: 'Search Lottery Numbers',
+            ml: 'ലോട്ടറി നമ്പർ തിരയുക',
+            ta: 'லாட்டரி எண் தேடு'
+        };
+        // Short language strings for mobile
+        const langStringsShort = {
+            en: 'Search Lottery',
+            ml: 'ലോട്ടറി തിരയുക',
+            ta: 'லாட்டரி தேடு'
+        };
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            updateHeaderTitle();
+            document.getElementById('searchTitle').textContent = searchTitleStrings[lang] || searchTitleStrings['en'];
+            langPopupBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
+        }
+        function updateHeaderTitle() {
+            const w = window.innerWidth;
+            if (w < 400) {
+                document.getElementById('header-title').textContent = langStringsShort[currentLang] || langStringsShort['en'];
+            } else {
+                document.getElementById('header-title').textContent = langStrings[currentLang] || langStrings['en'];
+            }
+        }
+        window.addEventListener('resize', updateHeaderTitle);
+        langIconBtn.addEventListener('click', function() {
+            langPopup.classList.toggle('active');
+        });
+        document.body.addEventListener('click', function(e) {
+            if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
+                langPopup.classList.remove('active');
+            }
+        });
+        langPopupBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                setLang(this.getAttribute('data-lang'));
+                langPopup.classList.remove('active');
+            });
+        });
+        // Language strings
+        const searchTitleStrings = {
+            en: '🔍 Search Your Number',
+            ml: 'നിങ്ങളുടെ നമ്പർ പരിശോധിക്കുക',
+            ta: 'உங்கள் எண்ணை தேடு'
+        };
+        document.addEventListener('DOMContentLoaded', function() {
+            setLang(currentLang);
+            updateHeaderTitle();
+        });
+        function goBack() {
+            window.history.length > 1 ? window.history.back() : window.location.href = 'index.html';
+        }
+        // --- Real search using history.json ---
+        let historyData = [];
+        fetch('history.json')
+          .then(res => res.json())
+          .then(data => { historyData = data; })
+          .catch(() => { historyData = []; });
+        // Enable search button only if both fields are filled
+        const numberInput = document.getElementById('numberSearchInput');
+        const dateInput = document.getElementById('dateSearchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        function updateSearchBtnState() {
+            searchBtn.disabled = !(numberInput.value.trim() && dateInput.value);
+        }
+        numberInput.addEventListener('input', updateSearchBtnState);
+        dateInput.addEventListener('input', updateSearchBtnState);
+        // Search for a specific number on a specific date
+        function searchNumber() {
+            const searchNumber = numberInput.value.trim();
+            const searchDate = dateInput.value;
+            const resultsContainer = document.getElementById('numberSearchResults');
+            if (!searchNumber || !searchDate) {
+                resultsContainer.innerHTML = '<div class="no-win-result">Please enter a number and select a date to search</div>';
+                return;
+            }
+            // Format date to match draw_date in data (YYYY-MM-DD or DD/MM/YYYY)
+            let formattedDate = searchDate;
+            if (searchDate.includes('-')) {
+                const [yyyy, mm, dd] = searchDate.split('-');
+                formattedDate = `${dd}/${mm}/${yyyy}`;
+            }
+            // Find result for the selected date
+            const result = historyData.find(r => (r.date === formattedDate || r.date === searchDate));
+            if (!result) {
+                resultsContainer.innerHTML = `<div class="no-win-result">No lottery result found for the selected date.</div>`;
+                return;
+            }
+            // Search for the number in this result (4d and 6d)
+            const wins = [];
+            const searchLower = searchNumber.replace(/\s+/g, '').toLowerCase();
+            (result.numbers4 || []).forEach(num => {
+                if (num.replace(/\s+/g, '').toLowerCase().includes(searchLower) || searchLower.includes(num.replace(/\s+/g, '').toLowerCase())) {
+                    wins.push({ number: num, type: '4-digit' });
+                }
+            });
+            (result.numbers6 || []).forEach(num => {
+                if (num.replace(/\s+/g, '').toLowerCase().includes(searchLower) || searchLower.includes(num.replace(/\s+/g, '').toLowerCase())) {
+                    wins.push({ number: num, type: '6-digit' });
+                }
+            });
+            let resultHtml = '';
+            if (wins.length > 0) {
+                resultHtml = `
+                    <div class="win-alert">
+                        🎊 YOU ARE A WINNER! Found ${wins.length} winning entry(ies)
+                    </div>
+                    ${wins.map(win => `
+                        <div class="win-result">
+                            🎉 CONGRATULATIONS! You won (${win.type})<br>
+                            <strong>Number:</strong> ${win.number}<br>
+                            <strong>Date:</strong> ${result.date}<br>
+                            <div style="margin-top:12px;text-align:center;">
+                                <a href="note/${getResultPageFilename(result.date)}" target="_blank" class="btn" style="background:linear-gradient(135deg,#7ecbff 0%,#2563eb 100%);color:#fff;font-weight:700;font-size:1.08em;padding:10px 22px;border-radius:12px;box-shadow:0 2px 8px #2563eb22;display:inline-block;">View Full Result Page</a>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            } else {
+                resultHtml = `
+                    <div class="no-win-result">
+                        😔 Sorry, your number "${searchNumber}" was not found in any winning results for this date.
+                        <br>Keep trying with other numbers or check back for new results!
+                        <div style="margin-top:18px;text-align:center;">
+                            <a href="note/${getResultPageFilename(result.date)}" target="_blank" class="btn" style="background:linear-gradient(135deg,#7ecbff 0%,#2563eb 100%);color:#fff;font-weight:700;font-size:1.08em;padding:10px 22px;border-radius:12px;box-shadow:0 2px 8px #2563eb22;display:inline-block;">View Full Result Page</a>
+                        </div>
+                    </div>
+                `;
+            }
+            resultsContainer.innerHTML = resultHtml;
+        }
+        // Helper to get result page filename from date (expects DD/MM/YYYY)
+        function getResultPageFilename(dateStr) {
+            // Try to find a file in note/ that matches the date
+            // e.g. DL-08-2025-07-03 (1).html or similar
+            // We'll use a fallback: YYYY-MM-DD.html
+            if (!dateStr) return '';
+            const [dd, mm, yyyy] = dateStr.split('/');
+            // Try DL-??-YYYY-MM-DD.html
+            return `${yyyy}-${mm}-${dd}.html`;
+        }
+        // Update: search on Enter key in either field
+        numberInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchNumber();
+        });
+        dateInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchNumber();
+        });
+        // Clear number and date search
+        function clearNumberSearch() {
+            numberInput.value = '';
+            dateInput.value = '';
+            document.getElementById('numberSearchResults').innerHTML = '';
+            updateSearchBtnState();
+        }
+        // Search example number
+        function searchExample(number) {
+            document.getElementById('numberSearchInput').value = number;
+            searchNumber();
+        }
+    </script>
+</body>
+</html> 
