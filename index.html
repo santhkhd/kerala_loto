@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kerala Lottery Home</title>
+  <title>Ponkudam Lottery Home</title>
   <style>
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -351,14 +351,15 @@
           const cardDateStr = `${dd}/${mm}/${yyyy}`;
           const dataDateStr = `${yyyy}-${mm}-${dd}`;
           const isNew = (dataDateStr === todayStr);
-          const link = `page/${lottery.shortName}-${currentNumber}-${dataDateStr}.html`;
+          const drawNumberStr = String(currentNumber).padStart(2, '0');
+          const link = `result.html?file=${lottery.shortName}-${drawNumberStr}-${dataDateStr}.json`;
           // Get translated name
           const translatedName = lotteryNameTranslations[lottery.name][lang] || lotteryNameTranslations[lottery.name]['en'];
           const cardHtml = `
             <a class="lottery-card" href="${link}">
                 <div class="card-top">
                     ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
-                    <span class="badge">${lottery.shortName}-${currentNumber}</span>
+                    <span class="badge">${lottery.shortName}-${drawNumberStr}</span>
                     <div class="lottery-title">${translatedName}</div>
                 </div>
                 <div class="card-bottom">${cardDateStr}</div>
