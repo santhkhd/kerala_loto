@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STHREE-SAKTHI (SS) Results - 475 (08/07/2025)</title>
+  <style>body{font-family:'Segoe UI',Arial,sans-serif;background:#10182a;color:#e6eaf3;margin:0;padding:0;}
+.header{background:#181f36;padding:24px 0 18px 0;border-bottom:2px solid #232c4b;box-shadow:0 2px 12px rgba(0,0,0,0.13);}
+.header-content{max-width:900px;margin:0 auto;padding:0 18px;display:flex;flex-direction:column;gap:10px;}
+.lottery-title{font-size:2em;font-weight:700;color:#fff;margin-bottom:2px;letter-spacing:1px;}
+.lottery-meta{display:flex;flex-wrap:wrap;gap:18px 32px;font-size:1.08em;color:#b3b9c9;margin-bottom:6px;}
+.lottery-meta span{background:#232c4b;border-radius:7px;padding:4px 14px;font-weight:500;color:#7ecbff;margin-right:6px;}
+.main-content{max-width:900px;margin:28px auto;padding:0 18px 36px 18px;}
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="lottery-title">STHREE-SAKTHI (SS)</div>
+      <div class="lottery-meta">
+        <span>Draw: 475</span>
+        <span>Date: 08/07/2025</span>
+        <span>Venue: GORKY BHAVAN, NEAR BAKERY JUNCTION, THIRUVANANTHAPURAM</span>
+      </div>
+    </div>
+  </div>
+  <div class="main-content">
+    <div id="live-results" style="max-width:600px;margin:0 auto;padding:16px;"></div>
+  </div>
+<script>
+const url = "https://script.google.com/macros/s/AKfycbySosa9mTJJF4YdwnfguYxwjDgl6UPE1mafc88ozV5DDZwDBLtv7fdXp4PcWs47TIvT/exec";
+const date = "2025-07-08";
+const lotteryType = "SS";
+const prizeOrder = ["1st Prize","Consolation Prize","2nd Prize","3rd Prize","4th Prize","5th Prize","6th Prize","7th Prize","8th Prize","9th Prize"];
+const prizeColors = {"1st Prize":"#7ecbff","Consolation Prize":"#a259ff","2nd Prize":"#ffb347","3rd Prize":"#ff6f61","4th Prize":"#00b894","5th Prize":"#00cec9","6th Prize":"#fdcb6e","7th Prize":"#e17055","8th Prize":"#0984e3","9th Prize":"#636e72"};
+function renderResults(data) {
+  const todayResults = data.filter(row => row.Date.split('T')[0] === date && row["Lottery name"].toUpperCase() === lotteryType.toUpperCase());
+  function formatWinners(winners) {
+    if (!winners) return '<span style="color:#b3b9c9">Waiting for results...</span>';
+    if (Array.isArray(winners)) return winners.join(' ');
+    return String(winners).split('\n').join('<br />');
+  }
+  let html = `<div style="font-size:1.3em;font-weight:700;color:#2563eb;text-align:center;margin-bottom:18px;">Live Results (${lotteryType} - ${date})</div>`;
+  if (todayResults.length === 0) {
+    html += `<div style="color:#b3b9c9;text-align:center;">No results yet. Please check back later.</div>`;
+  } else {
+    prizeOrder.forEach(prize => {
+      const row = todayResults.find(r => r.Prize === prize);
+      html += `<div style="background:${prizeColors[prize] || '#232c4b'}22;border-left:6px solid ${prizeColors[prize] || '#7ecbff'};border-radius:10px;margin:10px 0;padding:14px 18px;">
+        <div style="font-weight:700;color:${prizeColors[prize] || '#7ecbff'};font-size:1.08em;margin-bottom:6px;">${prize}</div>
+        <div style="font-size:1.13em;color:#e6eaf3;">
+          ${formatWinners(row ? row.Winners : null)}
+        </div>
+      </div>`;
+    });
+  }
+  document.getElementById("live-results").innerHTML = html;
+}
+fetch(url + '?v=' + Date.now())
+  .then(res => res.json())
+  .then(renderResults)
+  .catch((err) => {
+    console.error('Failed to fetch or render results:', err);
+    document.getElementById("live-results").innerHTML = "<div style=\"color:#ef233c;text-align:center;\">Failed to load results. Check console for details.<\/div>";
+  });
+</script>
+</body>
+</html>
