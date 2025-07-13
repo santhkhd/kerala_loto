@@ -3,465 +3,487 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Lottery Numbers - Kerala Lottery</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --accent: #7ecbff;
-            --bg: #e9edf5;
-            --glass: rgba(255,255,255,0.7);
-            --card-bg: rgba(35,41,70,0.92);
-            --card-fg: #fff;
-            --nav-bg: #fff;
-            --nav-active: #2563eb;
-            --nav-inactive: #6b7280;
-            --nav-shadow: 0 -2px 12px rgba(30,60,120,0.08);
-            --border-radius: 18px;
-            --shadow: 0 8px 32px rgba(30,60,120,0.13);
-        }
-        html, body {
-            margin: 0; padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: var(--bg);
-            color: #232946;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-        .header {
-            background: linear-gradient(90deg, #1a2980 0%, #2575fc 100%);
-            color: #fff;
-            padding: 18px 0 10px 0;
-            text-align: center;
-            font-size: 1.5em;
-            font-weight: 600;
-            letter-spacing: 1px;
-            position: relative;
-            box-shadow: 0 2px 8px rgba(30,60,120,0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5em;
-        }
-        .header .back-btn {
-            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; color: #fff; font-size: 1.3em;
-            cursor: pointer; display: block;
-        }
-        .header .lang-icon-btn {
-            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; font-size: 1.5em; color: #fff;
-            cursor: pointer; padding: 2px 8px 2px 2px; border-radius: 6px;
-            transition: background 0.2s;
-        }
-        .lang-popup {
-            display: none; position: fixed; top: 56px; right: 12px; z-index: 200;
-            background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(30,60,120,0.13);
-            padding: 18px 24px 12px 24px; min-width: 180px; animation: fadeIn 0.2s;
-        }
-        .lang-popup.active { display: block; }
-        .lang-popup-title { font-weight: 700; margin-bottom: 10px; color: var(--primary); font-size: 1.1em; }
-        .lang-popup-btn { display: block; width: 100%; background: none; border: none; color: var(--nav-inactive); font-size: 1em; font-weight: 600; text-align: left; padding: 8px 0; border-radius: 6px; cursor: pointer; transition: background 0.2s, color 0.2s; }
-        .lang-popup-btn.active { color: var(--nav-active); background: #e0e7ff; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .main-content {
-            max-width: 500px; margin: 0 auto; padding: 32px 12px 90px 12px;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .glass-card {
-            background: var(--glass);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 32px 24px 24px 24px;
-            margin-bottom: 32px;
-            width: 100%;
-            display: flex; flex-direction: column; align-items: center;
-            backdrop-filter: blur(8px);
-            border: 1.5px solid #e0e7ff;
-            transition: box-shadow 0.2s;
-        }
-        .glass-card h2 {
-            margin: 0 0 18px 0;
-            font-size: 1.3em;
-            color: var(--primary);
-            text-align: center;
-            letter-spacing: 1px;
-        }
-        .search-input-group {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-        .search-input-group input {
-            flex: 1;
-            padding: 15px 20px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 1.1em;
-            transition: border-color 0.3s;
-            min-width: 120px;
-        }
-        .search-input-group input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-        .btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-        }
-        .btn.secondary {
-            background: #6b7280;
-        }
-        .btn.secondary:hover {
-            background: #4b5563;
-            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
-        }
-        .search-results {
-            margin-top: 10px;
-            width: 100%;
-        }
-        .win-result {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 18px;
-            border-radius: 12px;
-            margin: 15px 0 0 0;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-        .no-win-result {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-            padding: 18px;
-            border-radius: 12px;
-            margin: 15px 0 0 0;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        }
-        .win-alert {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 16px;
-            border-radius: 12px;
-            margin: 15px 0 0 0;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1em;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-        .example-section {
-            background: rgba(255,255,255,0.55);
-            border: 1.5px solid #e0e7ff;
-            border-radius: 12px;
-            padding: 18px 14px 10px 14px;
-            margin-top: 10px;
-            width: 100%;
-            box-shadow: 0 2px 8px rgba(30,60,120,0.07);
-        }
-        .example-section h3 {
-            margin: 0 0 10px 0;
-            color: #495057;
-            font-size: 1.08em;
-        }
-        .example-numbers {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .example-number {
-            background: #3b82f6;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-            font-size: 1em;
-        }
-        .example-number:hover {
-            transform: scale(1.05);
-        }
-        @media (max-width: 600px) {
-            .main-content { padding-bottom: 80px; }
-            .glass-card { padding: 18px 6px 16px 6px; }
-            .search-input-group { gap: 8px; }
-            .btn { padding: 10px 12px; font-size: 1em; }
-            .example-section { padding: 12px 6px 8px 6px; }
-        }
-        .bottom-panel {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100vw;
-            background: #181f36;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 8px 0 4px 0;
-            box-shadow: 0 -2px 12px rgba(0,0,0,0.13);
-            z-index: 200;
-        }
-        .icon-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #7ecbff;
-            font-size: 0.98em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: color 0.18s;
-            text-decoration: none;
-        }
-        .icon-btn .material-icons {
-            margin-bottom: 2px;
-            font-size: 28px;
-            line-height: 28px;
-        }
-        .icon-btn span {
-            font-size: 0.93em;
-            margin-top: 1px;
-        }
-        .icon-btn:hover {
-            color: #fff;
-        }
-        @media (max-width: 700px) {
-            .bottom-panel { font-size: 0.93em; }
-        }
-        body { padding-bottom: 60px !important; }
-    </style>
+    <title>Ticket Scanner - Kerala Lottery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS only, all custom CSS removed -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <div class="header has-back">
-        <button class="back-btn" onclick="goBack()" title="Back">←</button>
-        <span id="header-title">Search Lottery Numbers</span>
-        <button class="lang-icon-btn" id="langIconBtn" title="Change language">🌐</button>
-        <div class="lang-popup" id="langPopup">
-            <div class="lang-popup-title">Select Language</div>
-            <button class="lang-popup-btn" data-lang="en">English</button>
-            <button class="lang-popup-btn" data-lang="ml">മലയാളം</button>
-            <button class="lang-popup-btn" data-lang="ta">தமிழ்</button>
+    <div class="w-full bg-gradient-to-r from-blue-900 to-blue-500 text-white py-5 px-4 flex items-center justify-between shadow-md relative">
+        <button class="text-2xl absolute left-4 top-1/2 -translate-y-1/2 bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition" onclick="goBack()" title="Back">←</button>
+        <span id="header-title" class="text-lg font-bold flex-1 text-center">Ticket Scanner</span>
+        <button class="text-2xl absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition" id="langIconBtn" title="Change language">🌐</button>
+        <div class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-lg p-6 min-w-[180px]" id="langPopup">
+            <div class="font-bold text-blue-700 mb-2">Select Language</div>
+            <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="en">English</button>
+            <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ml">മലയാളം</button>
+            <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
         </div>
     </div>
-    <div class="main-content">
-        <div class="glass-card">
-            <h2 id="searchTitle">🔍 Search Your Number</h2>
-            <p style="text-align: center; color: #666; margin-bottom: 18px; font-size: 1.08em;">
-                Enter your lottery number and select a date to check if you've won any prize
-            </p>
-            <div class="search-input-group">
-                <input type="text" id="numberSearchInput" placeholder="Enter your number (e.g., MW 501046, 0875, etc.)" maxlength="20">
-                <input type="date" id="dateSearchInput" style="padding:12px 14px; border-radius:10px; border:2px solid #e1e5e9; font-size:1.08em; background:rgba(255,255,255,0.7); color:#232946; min-width:120px;">
-                <button class="btn" id="searchBtn" onclick="searchNumber()" disabled>Check</button>
-                <button class="btn secondary" onclick="clearNumberSearch()">Clear</button>
+    <div class="main-content w-full py-8 px-2">
+        <div class="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8 mb-8 flex flex-col items-center">
+            <h2 class="text-2xl font-bold text-blue-700 mb-2 flex items-center gap-2">📷 Scan Your Lottery Ticket</h2>
+            <p class="text-gray-500 text-center mb-6 text-lg">Upload a photo of your ticket or use camera to scan</p>
+            <!-- File Upload Area -->
+            <div id="uploadArea" class="w-full border-2 border-dashed border-blue-300 rounded-xl bg-blue-50 hover:bg-blue-100 transition p-8 flex flex-col items-center justify-center mb-6 cursor-pointer shadow-sm">
+                <div class="text-4xl text-blue-400 mb-2">📷</div>
+                <div class="text-lg font-semibold text-gray-700 mb-1">Drop your ticket image here or click to browse</div>
+                <div class="text-gray-400 text-sm">Supports JPG, PNG, PDF files</div>
+                <input type="file" id="fileInput" accept="image/*,.pdf" class="hidden">
             </div>
-            <div id="numberSearchResults" class="search-results"></div>
+            <div class="flex flex-col sm:flex-row gap-3 w-full justify-center mb-6">
+                <button class="flex-1 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-3 px-4 rounded-xl shadow hover:from-blue-600 hover:to-blue-800 transition flex items-center justify-center gap-3 text-lg" onclick="document.getElementById('fileInput').click()">
+                  <span class="text-xl">📁</span>
+                  <span>Choose File</span>
+                </button>
+                <button class="flex-1 bg-gray-600 text-white font-bold py-3 px-4 rounded-xl shadow hover:bg-gray-700 transition flex items-center justify-center gap-3 text-lg" onclick="startCamera()">
+                  <span class="text-xl">📹</span>
+                  <span>Use Camera</span>
+                </button>
+                <button class="flex-1 bg-gray-400 text-white font-bold py-3 px-4 rounded-xl shadow hover:bg-gray-500 transition flex items-center justify-center gap-3 text-lg" onclick="clearScan()">
+                  <span class="text-xl">🗑️</span>
+                  <span>Clear</span>
+                </button>
+            </div>
+            <!-- Camera Section -->
+            <div class="camera-section" id="cameraSection" style="display: none;">
+                <div id="video-container">
+                    <video id="video" autoplay></video>
+                    <div class="scan-overlay"></div>
+                </div>
+                <div>
+                    <button class="btn success" onclick="stopCamera()">Stop Camera</button>
+                </div>
+                <canvas id="canvas" style="display: none;"></canvas>
+            </div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Scanning ticket and extracting information...</p>
+            </div>
+            <div id="scanResult"></div>
+            <!-- Manual Input Section -->
+            <div class="w-full mt-6 bg-gradient-to-br from-white to-blue-50 border border-blue-100 rounded-2xl shadow-lg p-6 flex flex-col items-center">
+                <h3 class="text-blue-700 text-lg font-bold mb-4 flex items-center gap-2">✏️ Manual Entry</h3>
+                <form id="manualEntryForm" class="w-full flex flex-col gap-4" onsubmit="event.preventDefault(); processManualInput();">
+                  <div class="flex flex-col md:flex-row items-center gap-4 w-full">
+                    <div class="flex flex-col flex-1 w-full">
+                      <label for="ticketNumber" class="font-semibold text-gray-700 mb-1">Ticket Number</label>
+                      <input type="text" id="ticketNumber" class="w-full px-5 py-4 rounded-xl border-2 border-blue-200 focus:border-blue-500 focus:outline-none text-lg bg-white shadow-sm" placeholder="e.g., MW 501046 or 1234" required autocomplete="off">
+                </div>
+                    <div class="flex flex-col flex-1 w-full">
+                      <label for="drawDate" class="font-semibold text-gray-700 mb-1">Draw Date</label>
+                      <input type="date" id="drawDate" class="w-full px-5 py-4 rounded-xl border-2 border-blue-200 focus:border-blue-500 focus:outline-none text-lg bg-white shadow-sm" required>
+                </div>
+            </div>
+                  <div class="flex gap-4 justify-center mt-6">
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 px-4 rounded-xl shadow hover:from-green-600 hover:to-emerald-700 transition flex items-center justify-center gap-3 text-lg">
+                      <span class="text-xl">🔍</span>
+                      <span>Check Result</span>
+                    </button>
+                    <button type="button" class="flex-1 bg-gray-500 text-white font-bold py-3 px-4 rounded-xl shadow hover:bg-gray-700 transition flex items-center justify-center gap-3 text-lg" onclick="clearManualEntry()">
+                      <span class="text-xl">🧹</span>
+                      <span>Clear</span>
+                    </button>
+                </div>
+                </form>
+            </div>
+            <!-- Ticket Information preview removed -->
         </div>
-        <!-- Example section removed as requested -->
+        <!-- Example Tickets section removed -->
     </div>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <nav class="bottom-panel">
-        <a class="icon-btn" href="index.html">
+    <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-2 shadow-lg z-40">
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="index.html">
             <span class="material-icons">home</span>
-            <span>Home</span>
+            <span class="text-xs">Home</span>
         </a>
-        <a class="icon-btn" href="prediction.html">
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="prediction.html">
             <span class="material-icons">star</span>
-            <span>Lucky</span>
+            <span class="text-xs">Lucky</span>
         </a>
-        <a class="icon-btn active" href="search.html">
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="search.html">
             <span class="material-icons">search</span>
-            <span>Search</span>
+            <span class="text-xs">Search</span>
         </a>
-        <a class="icon-btn" href="scanner.html">
+        <a class="flex flex-col items-center text-white font-bold" href="scanner.html">
             <span class="material-icons">qr_code_scanner</span>
-            <span>Scanner</span>
+            <span class="text-xs">Scanner</span>
         </a>
-        <a class="icon-btn" href="live.html">
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="live.html">
             <span class="material-icons">live_tv</span>
-            <span>Live</span>
+            <span class="text-xs">Live</span>
         </a>
     </nav>
+    <script src="https://unpkg.com/@zxing/browser@0.1.1/umd/index.min.js"></script>
     <script>
-        // Language logic (same as index.html/prediction.html)
-        const langIconBtn = document.getElementById('langIconBtn');
-        const langPopup = document.getElementById('langPopup');
-        const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
-        let currentLang = localStorage.getItem('lang') || 'en';
-        // Language strings
-        const langStrings = {
-            en: 'Search Lottery Numbers',
-            ml: 'ലോട്ടറി നമ്പർ തിരയുക',
-            ta: 'லாட்டரி எண் தேடு'
-        };
-        // Short language strings for mobile
-        const langStringsShort = {
-            en: 'Search Lottery',
-            ml: 'ലോട്ടറി തിരയുക',
-            ta: 'லாட்டரி தேடு'
-        };
-        function setLang(lang) {
-            currentLang = lang;
-            localStorage.setItem('lang', lang);
-            updateHeaderTitle();
-            document.getElementById('searchTitle').textContent = searchTitleStrings[lang] || searchTitleStrings['en'];
-            langPopupBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
-        }
-        function updateHeaderTitle() {
-            const w = window.innerWidth;
-            if (w < 400) {
-                document.getElementById('header-title').textContent = langStringsShort[currentLang] || langStringsShort['en'];
-            } else {
-                document.getElementById('header-title').textContent = langStrings[currentLang] || langStrings['en'];
-            }
-        }
-        window.addEventListener('resize', updateHeaderTitle);
-        langIconBtn.addEventListener('click', function() {
-            langPopup.classList.toggle('active');
-        });
-        document.body.addEventListener('click', function(e) {
-            if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
-                langPopup.classList.remove('active');
-            }
-        });
-        langPopupBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                setLang(this.getAttribute('data-lang'));
-                langPopup.classList.remove('active');
-            });
-        });
-        // Language strings
-        const searchTitleStrings = {
-            en: '🔍 Search Your Number',
-            ml: 'നിങ്ങളുടെ നമ്പർ പരിശോധിക്കുക',
-            ta: 'உங்கள் எண்ணை தேடு'
-        };
-        document.addEventListener('DOMContentLoaded', function() {
-            setLang(currentLang);
-            updateHeaderTitle();
-        });
-        function goBack() {
-            window.history.length > 1 ? window.history.back() : window.location.href = 'index.html';
-        }
-        // --- Real search using history.json ---
+        let stream = null;
         let historyData = [];
+        // Load real data
         fetch('history.json')
           .then(res => res.json())
           .then(data => { historyData = data; })
           .catch(() => { historyData = []; });
-        // Enable search button only if both fields are filled
-        const numberInput = document.getElementById('numberSearchInput');
-        const dateInput = document.getElementById('dateSearchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        function updateSearchBtnState() {
-            searchBtn.disabled = !(numberInput.value.trim() && dateInput.value);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFileUpload();
+            setLang(currentLang);
+            updateLangUI();
+        });
+
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    processFile(files[0]);
+                }
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    processFile(e.target.files[0]);
+                }
+            });
         }
-        numberInput.addEventListener('input', updateSearchBtnState);
-        dateInput.addEventListener('input', updateSearchBtnState);
-        // Search for a specific number on a specific date
-        function searchNumber() {
-            const searchNumber = numberInput.value.trim();
-            const searchDate = dateInput.value;
-            const resultsContainer = document.getElementById('numberSearchResults');
-            if (!searchNumber || !searchDate) {
-                resultsContainer.innerHTML = '<div class="no-win-result">Please enter a number and select a date to search</div>';
-                return;
+
+        function processFile(file) {
+            const loading = document.getElementById('loading');
+            const scanResult = document.getElementById('scanResult');
+            
+            loading.style.display = 'block';
+            scanResult.innerHTML = '';
+            
+            // Simulate file processing
+            setTimeout(() => {
+                loading.style.display = 'none';
+                
+                // Simulate OCR result (in real app, this would use actual OCR)
+                const mockResult = simulateOCR(file.name);
+                displayScanResult(mockResult);
+                
+            }, 2000);
+        }
+
+        function simulateOCR(filename) {
+            // Simulate different OCR results based on filename
+            const examples = [
+                { number: 'MW 501046', type: 'SS', draw: '10', date: '2025-07-06', status: 'winner', prize: '1st Prize - ₹1,00,00,000' },
+                { number: 'MR 594475', type: 'SS', draw: '10', date: '2025-07-06', status: 'winner', prize: '2nd Prize - ₹30,00,000' },
+                { number: '0875', type: 'SS', draw: '10', date: '2025-07-06', status: 'winner', prize: '4th Prize - ₹5,000' },
+                { number: '999999', type: 'SS', draw: '10', date: '2025-07-06', status: 'no-win', prize: 'No Win' }
+            ];
+            
+            return examples[Math.floor(Math.random() * examples.length)];
+        }
+
+        // ZXing barcode/QR scanner logic
+        let codeReader = null;
+        let scanActive = false;
+        async function startCamera() {
+            if (scanActive) return;
+            scanActive = true;
+            const video = document.getElementById('video');
+            document.getElementById('cameraSection').style.display = 'block';
+            if (!codeReader) {
+                codeReader = new ZXingBrowser.BrowserMultiFormatReader();
             }
-            // Format date to match draw_date in data (YYYY-MM-DD or DD/MM/YYYY)
-            let formattedDate = searchDate;
-            if (searchDate.includes('-')) {
-                const [yyyy, mm, dd] = searchDate.split('-');
-                formattedDate = `${dd}/${mm}/${yyyy}`;
-            }
-            // Find result for the selected date
-            const result = historyData.find(r => (r.date === formattedDate || r.date === searchDate));
-            if (!result) {
-                resultsContainer.innerHTML = `<div class="no-win-result">No lottery result found for the selected date.</div>`;
-                return;
-            }
-            // Search for the number in this result (4d and 6d)
-            const wins = [];
-            const searchLower = searchNumber.replace(/\s+/g, '').toLowerCase();
-            (result.numbers4 || []).forEach(num => {
-                if (num.replace(/\s+/g, '').toLowerCase().includes(searchLower) || searchLower.includes(num.replace(/\s+/g, '').toLowerCase())) {
-                    wins.push({ number: num, type: '4-digit' });
+            codeReader.decodeFromVideoDevice(null, video, (result, err, controls) => {
+                if (result) {
+                    stopCamera();
+                    handleScanResult(result.getText());
                 }
             });
-            (result.numbers6 || []).forEach(num => {
-                if (num.replace(/\s+/g, '').toLowerCase().includes(searchLower) || searchLower.includes(num.replace(/\s+/g, '').toLowerCase())) {
-                    wins.push({ number: num, type: '6-digit' });
-                }
-            });
-            let resultHtml = '';
-            if (wins.length > 0) {
-                resultHtml = `
-                    <div class="win-alert">
-                        🎊 YOU ARE A WINNER! Found ${wins.length} winning entry(ies)
-                    </div>
-                    ${wins.map(win => `
-                        <div class="win-result">
-                            🎉 CONGRATULATIONS! You won (${win.type})<br>
-                            <strong>Number:</strong> ${win.number}<br>
-                            <strong>Date:</strong> ${result.date}<br>
-                            <div style="margin-top:12px;text-align:center;">
-                                <a href="note/${getResultPageFilename(result.date)}" target="_blank" class="btn" style="background:linear-gradient(135deg,#7ecbff 0%,#2563eb 100%);color:#fff;font-weight:700;font-size:1.08em;padding:10px 22px;border-radius:12px;box-shadow:0 2px 8px #2563eb22;display:inline-block;">View Full Result Page</a>
-                            </div>
-                        </div>
-                    `).join('')}
-                `;
+        }
+        function stopCamera() {
+            scanActive = false;
+            if (codeReader) codeReader.reset();
+            document.getElementById('cameraSection').style.display = 'none';
+        }
+        function handleScanResult(text) {
+            // Try to extract ticket number and date from QR/barcode text
+            // Example: "MW 501046|2025-07-06" or just the number
+            let ticketNumber = '', drawDate = '';
+            if (text.includes('|')) {
+                [ticketNumber, drawDate] = text.split('|');
             } else {
-                resultHtml = `
-                    <div class="no-win-result">
-                        😔 Sorry, your number "${searchNumber}" was not found in any winning results for this date.
-                        <br>Keep trying with other numbers or check back for new results!
-                        <div style="margin-top:18px;text-align:center;">
-                            <a href="note/${getResultPageFilename(result.date)}" target="_blank" class="btn" style="background:linear-gradient(135deg,#7ecbff 0%,#2563eb 100%);color:#fff;font-weight:700;font-size:1.08em;padding:10px 22px;border-radius:12px;box-shadow:0 2px 8px #2563eb22;display:inline-block;">View Full Result Page</a>
-                        </div>
-                    </div>
-                `;
+                ticketNumber = text;
             }
-            resultsContainer.innerHTML = resultHtml;
+            document.getElementById('ticketNumber').value = ticketNumber.trim();
+            if (drawDate) document.getElementById('drawDate').value = drawDate.trim();
+            // Optionally, auto-search if both fields are filled
+            if (ticketNumber && drawDate) {
+                processManualInput();
+            }
         }
-        // Helper to get result page filename from date (expects DD/MM/YYYY)
+        function processManualInput() {
+            const t = langStrings[currentLang];
+            const number = document.getElementById('ticketNumber').value.trim();
+            const date = document.getElementById('drawDate').value;
+            if (!number || !date) {
+                alert(t.pleaseFill);
+                return;
+            }
+            // Search in history.json
+            const formattedDate = date.includes('-') ? date.split('-').reverse().join('/') : date;
+            const result = historyData.find(r => r.date === formattedDate || r.date === date);
+            let found = null;
+            let prizeInfo = null;
+            let fileParam = '';
+            if (result) {
+                // Always set fileParam if result found
+                if (result.lottery && result.draw && result.date) {
+                    let [dd, mm, yyyy] = result.date.split('/');
+                    fileParam = `${result.lottery}-${result.draw}-${yyyy}-${mm}-${dd}.json`;
+                }
+                const searchLower = number.replace(/\s+/g, '').toLowerCase();
+                // Check 6-digit prizes
+                if (result.prizes && Array.isArray(result.prizes)) {
+                    for (const prize of result.prizes) {
+                        if (Array.isArray(prize.winners)) {
+                            for (const winner of prize.winners) {
+                                // Match 6-digit or 4-digit
+                                const winnerNum = winner.replace(/[^0-9A-Z ]/gi, '').replace(/\s+/g, '').toLowerCase();
+                                if (winnerNum === searchLower) {
+                                    found = { number: number, date: result.date, status: 'winner', code: result.lottery, draw: result.draw, fileParam };
+                                    prizeInfo = { label: prize.label, amount: prize.amount };
+                                    break;
+                                }
+                            }
+                        }
+                        if (found) break;
+                    }
+                }
+            }
+            if (found) {
+                found.prizeInfo = prizeInfo;
+                displayScanResult(found);
+            } else {
+                displayScanResult({ number, date, status: 'no-win', prize: 'No Win', fileParam });
+            }
+        }
+
+        function clearManualEntry() {
+            document.getElementById('ticketNumber').value = '';
+            document.getElementById('drawDate').value = '';
+            document.getElementById('scanResult').innerHTML = '';
+            document.getElementById('ticketPreview').classList.remove('show');
+        }
+        function displayScanResult(result) {
+            const t = langStrings[currentLang];
+            const scanResult = document.getElementById('scanResult');
+            let resultClass = 'info';
+            let resultIcon = '📋';
+            let resultText = 'Ticket scanned successfully';
+            let prizeHtml = '';
+            let cardGradient = 'from-blue-400 to-blue-700';
+            if (result.status === 'winner') {
+                resultClass = 'success';
+                resultIcon = '🎉';
+                resultText = t.win;
+                cardGradient = 'from-green-500 to-emerald-600';
+                if (result.prizeInfo) {
+                    prizeHtml = `<div class="mt-3 text-2xl font-extrabold text-white drop-shadow">${result.prizeInfo.label} <span class="ml-2 text-yellow-200">₹${result.prizeInfo.amount.toLocaleString('en-IN')}</span></div>`;
+                }
+            } else if (result.status === 'no-win') {
+                resultClass = 'error';
+                resultIcon = '😔';
+                resultText = t.noWin;
+                cardGradient = 'from-red-400 to-red-700';
+            }
+            // Use fileParam from result (set even for no-win)
+            const fileParam = result.fileParam;
+            scanResult.innerHTML = `
+                <div class="w-full max-w-xl mx-auto bg-gradient-to-br ${cardGradient} rounded-2xl shadow-2xl p-8 flex flex-col items-center justify-center mt-8 animate-fadeIn">
+                    <span class="text-5xl mb-2">${resultIcon}</span>
+                    <span class="text-2xl font-bold text-white mb-2">${resultText}</span>
+                    ${prizeHtml}
+                    ${fileParam ? `<div class='mt-6 w-full flex justify-center'><a href='result.html?file=${fileParam}' target='_blank' class='bg-white text-blue-700 font-bold px-6 py-3 rounded-xl shadow hover:bg-blue-100 transition text-lg'>${t.viewResult}</a></div>` : ''}
+                </div>
+            `;
+        }
         function getResultPageFilename(dateStr) {
-            // Try to find a file in note/ that matches the date
-            // e.g. DL-08-2025-07-03 (1).html or similar
-            // We'll use a fallback: YYYY-MM-DD.html
             if (!dateStr) return '';
             const [dd, mm, yyyy] = dateStr.split('/');
-            // Try DL-??-YYYY-MM-DD.html
             return `${yyyy}-${mm}-${dd}.html`;
         }
-        // Update: search on Enter key in either field
-        numberInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') searchNumber();
-        });
-        dateInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') searchNumber();
-        });
-        // Clear number and date search
-        function clearNumberSearch() {
-            numberInput.value = '';
-            dateInput.value = '';
-            document.getElementById('numberSearchResults').innerHTML = '';
-            updateSearchBtnState();
+
+        function loadExampleTicket(number, type, draw, date) {
+            document.getElementById('ticketNumber').value = number;
+            document.getElementById('lotteryType').value = type;
+            document.getElementById('drawNumber').value = draw;
+            document.getElementById('drawDate').value = date;
+            
+            const result = checkTicketResult(number, type, date);
+            displayScanResult(result);
         }
-        // Search example number
-        function searchExample(number) {
-            document.getElementById('numberSearchInput').value = number;
-            searchNumber();
+
+        function clearScan() {
+            document.getElementById('scanResult').innerHTML = '';
+            document.getElementById('ticketPreview').classList.remove('show');
+            document.getElementById('fileInput').value = '';
+            stopCamera();
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-IN');
+        }
+
+        // Language logic (same as index.html/prediction.html)
+        let currentLang = localStorage.getItem('lang') || 'en';
+        // Language strings for all UI
+        const langStrings = {
+            en: {
+                header: 'Ticket Scanner',
+                manualEntry: 'Manual Entry',
+                ticketNumber: 'Ticket Number',
+                ticketPlaceholder: 'e.g., MW 501046 or 1234',
+                drawDate: 'Draw Date',
+                checkResult: 'Check Result',
+                clear: 'Clear',
+                scanTitle: 'Scan Your Lottery Ticket',
+                scanDesc: 'Upload a photo of your ticket or use camera to scan',
+                uploadDrop: 'Drop your ticket image here or click to browse',
+                uploadSupport: 'Supports JPG, PNG, PDF files',
+                chooseFile: 'Choose File',
+                useCamera: 'Use Camera',
+                noWin: 'Sorry, this ticket did not win',
+                win: 'CONGRATULATIONS! You are a WINNER!',
+                viewResult: 'View Full Result Page',
+                pleaseFill: 'Please fill in ticket number and date',
+            },
+            ml: {
+                header: 'ടിക്കറ്റ് സ്കാനർ',
+                manualEntry: 'മാനുവൽ എൻട്രി',
+                ticketNumber: 'ടിക്കറ്റ് നമ്പർ',
+                ticketPlaceholder: 'ഉദാ., MW 501046 അല്ലെങ്കിൽ 1234',
+                drawDate: 'ഡ്രോ തീയതി',
+                checkResult: 'ഫലം പരിശോധിക്കുക',
+                clear: 'ക്ലിയർ',
+                scanTitle: 'നിങ്ങളുടെ ലോട്ടറി ടിക്കറ്റ് സ്കാൻ ചെയ്യുക',
+                scanDesc: 'നിങ്ങളുടെ ടിക്കറ്റിന്റെ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക അല്ലെങ്കിൽ ക്യാമറ ഉപയോഗിക്കുക',
+                uploadDrop: 'ടിക്കറ്റ് ഇമേജ് ഇവിടെ ഡ്രോപ്പ് ചെയ്യുക അല്ലെങ്കിൽ ക്ലിക്ക് ചെയ്യുക',
+                uploadSupport: 'JPG, PNG, PDF ഫയലുകൾ പിന്തുണയ്ക്കുന്നു',
+                chooseFile: 'ഫയൽ തിരഞ്ഞെടുക്കുക',
+                useCamera: 'ക്യാമറ ഉപയോഗിക്കുക',
+                noWin: 'ക്ഷമിക്കണം, ഈ ടിക്കറ്റ് വിജയിച്ചില്ല',
+                win: 'അഭിനന്ദനങ്ങൾ! നിങ്ങൾ വിജയിച്ചിരിക്കുന്നു!',
+                viewResult: 'പൂർണ്ണ ഫലം കാണുക',
+                pleaseFill: 'ടിക്കറ്റ് നമ്പറും തീയതിയും നൽകുക',
+            },
+            ta: {
+                header: 'டிக்கெட் ஸ்கேனர்',
+                manualEntry: 'கைமுறை உள்ளீடு',
+                ticketNumber: 'டிக்கெட் எண்',
+                ticketPlaceholder: 'எ.கா., MW 501046 அல்லது 1234',
+                drawDate: 'டிரா தேதி',
+                checkResult: 'முடிவை சரிபார்க்கவும்',
+                clear: 'சரி',
+                scanTitle: 'உங்கள் லாட்டரி டிக்கெட்டை ஸ்கேன் செய்யவும்',
+                scanDesc: 'உங்கள் டிக்கெட் புகைப்படத்தை பதிவேற்றவும் அல்லது கேமரா பயன்படுத்தவும்',
+                uploadDrop: 'உங்கள் டிக்கெட் படத்தை இங்கே இழுக்கவும் அல்லது கிளிக் செய்யவும்',
+                uploadSupport: 'JPG, PNG, PDF கோப்புகள் ஆதரிக்கப்படுகின்றன',
+                chooseFile: 'கோப்பை தேர்ந்தெடுக்கவும்',
+                useCamera: 'கேமரா பயன்படுத்தவும்',
+                noWin: 'மன்னிக்கவும், இந்த டிக்கெட் வெல்லவில்லை',
+                win: 'வாழ்த்துகள்! நீங்கள் வெற்றிபெற்றுள்ளீர்கள்!',
+                viewResult: 'முழு முடிவுப் பக்கத்தைப் பார்க்கவும்',
+                pleaseFill: 'டிக்கெட் எண் மற்றும் தேதியை நிரப்பவும்',
+            }
+        };
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            updateLangUI();
+            const langPopupBtns = document.querySelectorAll('.lang-popup-btn');
+            langPopupBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
+        }
+        function updateLangUI() {
+            const t = langStrings[currentLang];
+            // Header
+            document.getElementById('header-title').textContent = t.header;
+            // Manual entry
+            const manualEntry = document.querySelector('.lang-manual-entry');
+            if (manualEntry) manualEntry.textContent = t.manualEntry;
+            const ticketLabel = document.querySelector('.lang-ticket-label');
+            if (ticketLabel) ticketLabel.textContent = t.ticketNumber;
+            const ticketInput = document.getElementById('ticketNumber');
+            if (ticketInput) ticketInput.placeholder = t.ticketPlaceholder;
+            const dateLabel = document.querySelector('.lang-date-label');
+            if (dateLabel) dateLabel.textContent = t.drawDate;
+            const checkBtn = document.querySelector('.lang-check-btn');
+            if (checkBtn) checkBtn.querySelector('span').textContent = t.checkResult;
+            const clearBtn = document.querySelector('.lang-clear-btn');
+            if (clearBtn) clearBtn.querySelector('span').textContent = t.clear;
+            // Scan section
+            const scanTitle = document.querySelector('.lang-scan-title');
+            if (scanTitle) scanTitle.textContent = t.scanTitle;
+            const scanDesc = document.querySelector('.lang-scan-desc');
+            if (scanDesc) scanDesc.textContent = t.scanDesc;
+            const uploadDrop = document.querySelector('.lang-upload-drop');
+            if (uploadDrop) uploadDrop.textContent = t.uploadDrop;
+            const uploadSupport = document.querySelector('.lang-upload-support');
+            if (uploadSupport) uploadSupport.textContent = t.uploadSupport;
+            const chooseFileBtn = document.querySelector('.lang-choose-file');
+            if (chooseFileBtn) chooseFileBtn.textContent = t.chooseFile;
+            const useCameraBtn = document.querySelector('.lang-use-camera');
+            if (useCameraBtn) useCameraBtn.textContent = t.useCamera;
+        }
+        // Short language strings for mobile
+        const langStringsShort = {
+            en: 'Scanner',
+            ml: 'സ്കാനർ',
+            ta: 'ஸ்கேனர்'
+        };
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFileUpload();
+            setLang(currentLang);
+            updateLangUI();
+            
+            // Language popup setup
+            const langIconBtn = document.getElementById('langIconBtn');
+            const langPopup = document.getElementById('langPopup');
+            const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
+            
+            langIconBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                langPopup.classList.toggle('hidden');
+            });
+            
+            document.body.addEventListener('click', function(e) {
+                if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
+                    langPopup.classList.add('hidden');
+                }
+            });
+            
+            langPopupBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    setLang(this.getAttribute('data-lang'));
+                    langPopup.classList.add('hidden');
+                });
+            });
+            
+            // Only add active class if nav-scan exists
+            var navScan = document.getElementById('nav-scan');
+            if (navScan) navScan.classList.add('active');
+        });
+        function goBack() {
+            window.history.length > 1 ? window.history.back() : window.location.href = 'index.html';
         }
     </script>
 </body>
