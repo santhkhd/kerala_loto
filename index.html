@@ -4,31 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ponkudam Lottery Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       background: #e9edf5;
       margin: 0;
       color: #222;
-    }
-    .header {
-      background: linear-gradient(90deg, #1a2980 0%, #2575fc 100%);
-      color: #fff;
-      padding: 18px 0 10px 0;
-      text-align: center;
-      font-size: 1.5em;
-      font-weight: 600;
-      letter-spacing: 1px;
-      position: relative;
-      box-shadow: 0 2px 8px rgba(30,60,120,0.08);
-    }
-    .welcome {
-      background: linear-gradient(90deg, #e66465 0%, #9198e5 100%);
-      color: #fff;
-      text-align: center;
-      font-size: 1.1em;
-      padding: 8px 0 8px 0;
-      letter-spacing: 1px;
     }
     .lottery-grid {
       display: grid;
@@ -143,7 +126,9 @@
       .lottery-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
-        padding: 12px 12px 18px 12px;
+        padding: 8px 2px 12px 2px;
+        max-width: 100vw;
+        margin: 0;
       }
       .lottery-card {
         width: 100%;
@@ -171,143 +156,77 @@
         min-height: 2.2em;
       }
     }
-    .bottom-panel {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100vw;
-      background: #181f36;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 8px 0 4px 0;
-      box-shadow: 0 -2px 12px rgba(0,0,0,0.13);
-      z-index: 200;
-    }
-    .icon-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #7ecbff !important;
-      font-size: 0.98em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: color 0.18s;
-      text-decoration: none !important;
-      border: none;
-      background: none;
-      outline: none;
-    }
-    .icon-btn .material-icons {
-      margin-bottom: 2px;
-      font-size: 28px;
-      line-height: 28px;
-    }
-    .icon-btn span {
-      font-size: 0.93em;
-      margin-top: 1px;
-    }
-    .icon-btn:hover, .icon-btn.active {
-      color: #fff !important;
-      text-decoration: none !important;
-    }
-    @media (max-width: 700px) {
-      .bottom-panel { font-size: 0.93em; }
-    }
     body { padding-bottom: 60px !important; }
   </style>
 </head>
-<body>
-  <div class="header" style="position:relative;display:flex;align-items:center;justify-content:center;">
-    <span id="header-title" style="flex:1;text-align:center;font-size:1.18em;font-weight:700;letter-spacing:1px;">Kerala Lottery Results</span>
-    <button class="lang-icon-btn" id="langIconBtn" title="Change language" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:1.15em;color:#fff;cursor:pointer;padding:2px 6px 2px 2px;border-radius:6px;transition:background 0.2s;min-width:32px;min-height:32px;">🌐</button>
-    <div class="lang-popup" id="langPopup" style="display:none;position:fixed;top:56px;right:12px;z-index:200;background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(30,60,120,0.13);padding:18px 24px 12px 24px;min-width:180px;">
-      <div class="lang-popup-title" style="font-weight:700;margin-bottom:10px;color:#2563eb;font-size:1em;">Select Language</div>
-      <button class="lang-popup-btn" data-lang="en" style="display:block;width:100%;background:none;border:none;color:#6b7280;font-size:0.93em;font-weight:600;text-align:left;padding:7px 0;border-radius:6px;cursor:pointer;transition:background 0.2s,color 0.2s;">English</button>
-      <button class="lang-popup-btn" data-lang="ml" style="display:block;width:100%;background:none;border:none;color:#6b7280;font-size:0.93em;font-weight:600;text-align:left;padding:7px 0;border-radius:6px;cursor:pointer;transition:background 0.2s,color 0.2s;">മലയാളം</button>
-      <button class="lang-popup-btn" data-lang="ta" style="display:block;width:100%;background:none;border:none;color:#6b7280;font-size:0.93em;font-weight:600;text-align:left;padding:7px 0;border-radius:6px;cursor:pointer;transition:background 0.2s,color 0.2s;">தமிழ்</button>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+  <!-- Header with language switcher -->
+  <div class="w-full bg-gradient-to-r from-blue-900 to-blue-500 text-white py-5 px-4 flex items-center justify-between shadow-md relative">
+    <span id="header-title" class="text-lg font-bold flex-1 text-center">Kerala Lottery Results</span>
+    <div class="flex items-center gap-3">
+      <a href="live.html" class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 animate-pulse" title="Watch Live Draw">
+        <span class="text-sm font-bold">LIVE </span>
+      </a>
+      <button class="text-2xl bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition" id="langIconBtn" title="Change language">🌐</button>
+    </div>
+    <div class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-lg p-6 min-w-[180px]" id="langPopup">
+      <div class="font-bold text-blue-700 mb-2">Select Language</div>
+      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="en">English</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ml">മലയാളം</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
     </div>
   </div>
-  <div style="text-align:center; margin: 18px 0 0 0;">
-    <a href="live.html" style="display:inline-block; background:#e53935; color:#fff; font-size:1.2em; font-weight:700; padding:14px 32px; border-radius:32px; text-decoration:none; box-shadow:0 2px 8px #e5393533; letter-spacing:1px; transition:background 0.2s;">
-        🔴 Watch Live Draw
-    </a>
+
+  <div class="w-full px-1 sm:px-4">
+    <div class="max-w-4xl mx-auto w-full">
+    <!-- Lottery Grid -->
+    <div class="lottery-grid" id="lottery-grid">
+      <!-- Lottery cards will be generated here by JavaScript -->
+    </div>
+    </div>
   </div>
-  <div class="lottery-grid" id="lottery-grid">
-    <!-- Lottery cards will be generated here by JavaScript -->
-  </div>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <nav class="bottom-panel">
-    <a class="icon-btn active" href="index.html">
+
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-2 shadow-lg z-40">
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="index.html">
       <span class="material-icons">home</span>
-      <span>Home</span>
+      <span class="text-xs">Home</span>
     </a>
-    <a class="icon-btn" href="prediction.html">
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="prediction.html">
       <span class="material-icons">star</span>
-      <span>Lucky</span>
+      <span class="text-xs">Lucky</span>
     </a>
-    <a class="icon-btn" href="search.html">
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="search.html">
       <span class="material-icons">search</span>
-      <span>Search</span>
+      <span class="text-xs">Search</span>
     </a>
-    <a class="icon-btn" href="scanner.html">
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="scanner.html">
       <span class="material-icons">qr_code_scanner</span>
-      <span>Scanner</span>
+      <span class="text-xs">Scanner</span>
     </a>
-    <a class="icon-btn" href="live.html">
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="live.html">
       <span class="material-icons">live_tv</span>
-      <span>Live</span>
+      <span class="text-xs">Live</span>
     </a>
   </nav>
+
   <script>
-    // Language logic (same as prediction.html)
-    const langIconBtn = document.getElementById('langIconBtn');
-    const langPopup = document.getElementById('langPopup');
-    const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
+    // Language logic
     let currentLang = localStorage.getItem('lang') || 'en';
-    function setLang(lang) {
-      currentLang = lang;
-      localStorage.setItem('lang', lang);
-      updateHeaderTitle();
-      document.title = langStrings[lang] || langStrings['en'];
-      langPopupBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
-      renderLotteryCards(lang);
-    }
-    function updateHeaderTitle() {
-      const w = window.innerWidth;
-      if (w < 400) {
-        document.getElementById('header-title').textContent = langStringsShort[currentLang] || langStringsShort['en'];
-      } else {
-        document.getElementById('header-title').textContent = langStrings[currentLang] || langStrings['en'];
-      }
-    }
-    window.addEventListener('resize', updateHeaderTitle);
-    langIconBtn.addEventListener('click', function() {
-      langPopup.style.display = langPopup.style.display === 'block' ? 'none' : 'block';
-    });
-    document.body.addEventListener('click', function(e) {
-      if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
-        langPopup.style.display = 'none';
-      }
-    });
-    langPopupBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
-        setLang(this.getAttribute('data-lang'));
-        langPopup.style.display = 'none';
-      });
-    });
-    // Language strings
+    
     const langStrings = {
       en: 'Kerala Lottery Results',
       ml: 'കേരള ലോട്ടറി ഫലം',
       ta: 'கேரளா லாட்டரி முடிவுகள்'
     };
+    
     // Short language strings for mobile
     const langStringsShort = {
       en: 'Kerala Lottery',
       ml: 'കേരള ലോട്ടറി',
       ta: 'கேரளா லாட்டரி'
     };
+    
     // Lottery name translations
     const lotteryNameTranslations = {
       SAMRUDHI: { en: 'SAMRUDHI', ml: 'സമൃദ്ധി', ta: 'சம்ருத்தி' },
@@ -318,6 +237,53 @@
       SUVARNA_KERALAM: { en: 'SUVARNA KERALAM', ml: 'സുവർണ കേരളം', ta: 'சுவர்ண கேரளம்' },
       KARUNYA: { en: 'KARUNYA', ml: 'കരുണ്യ', ta: 'கருண்யா' }
     };
+
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('lang', lang);
+      updateHeaderTitle();
+      document.title = langStrings[lang] || langStrings['en'];
+      renderLotteryCards(lang);
+    }
+
+    function updateHeaderTitle() {
+      const w = window.innerWidth;
+      if (w < 400) {
+        document.getElementById('header-title').textContent = langStringsShort[currentLang] || langStringsShort['en'];
+      } else {
+        document.getElementById('header-title').textContent = langStrings[currentLang] || langStrings['en'];
+      }
+    }
+
+    window.addEventListener('resize', updateHeaderTitle);
+
+    // Language popup setup
+    document.addEventListener('DOMContentLoaded', function() {
+      const langIconBtn = document.getElementById('langIconBtn');
+      const langPopup = document.getElementById('langPopup');
+      const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
+      
+      langIconBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        langPopup.classList.toggle('hidden');
+      });
+      
+      document.body.addEventListener('click', function(e) {
+        if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
+          langPopup.classList.add('hidden');
+        }
+      });
+      
+      langPopupBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          setLang(this.getAttribute('data-lang'));
+          langPopup.classList.add('hidden');
+        });
+      });
+      
+      setLang(currentLang);
+    });
+
     function renderLotteryCards(lang) {
       const grid = document.getElementById('lottery-grid');
       if (!grid) return;
@@ -369,6 +335,7 @@
         }
       }
     }
+
     document.addEventListener('DOMContentLoaded', function() {
       setLang(currentLang);
       updateHeaderTitle();
