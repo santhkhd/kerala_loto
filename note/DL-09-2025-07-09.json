@@ -1,6 +1,6 @@
 {
   "lottery_name": "DHANALEKSHMI (DL)",
-  "draw_number": "08",
+  "draw_number": "09",
   "draw_date": "09/07/2025",
   "venue": "GORKY BHAVAN, NEAR BAKERY JUNCTION, THIRUVANANTHAPURAM",
   "prizes": {
@@ -16,10 +16,13 @@
       "label": "Consolation Prize",
       "winners": [
         "DN 350667",
-        "DO 350667 DP 350667",
-        "DR 350667 DS 350667",
-        "DT 350667 DV 350667",
-        "DW 350667 DX 350667",
+        "DO 350667",
+        "DR 350667",
+        "DS 350667",
+        "DT 350667",
+        "DV 350667",
+        "DW 350667",
+        "DX 350667",
         "DY 350667",
         "DZ 350667"
       ]
