@@ -4,207 +4,291 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Draw - Kerala Lottery</title>
-    <style>
-        body {
-            background: #e9edf5;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #232946;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 24px 12px 80px 12px;
-        }
-        h1 {
-            text-align: center;
-            color: #2563eb;
-            margin-bottom: 18px;
-        }
-        .video-section {
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 4px 24px #2563eb11;
-            padding: 18px 12px 24px 12px;
-            margin-bottom: 28px;
-        }
-        .video-label {
-            font-weight: 700;
-            color: #2563eb;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-        .youtube-embed, .m3u8-player {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 18px;
-        }
-        iframe {
-            width: 100%;
-            max-width: 480px;
-            height: 270px;
-            border: none;
-            border-radius: 12px;
-        }
-        video {
-            width: 100%;
-            max-width: 480px;
-            height: 270px;
-            border-radius: 12px;
-            background: #000;
-        }
-        .numbers-section {
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 4px 24px #2563eb11;
-            padding: 18px 12px 24px 12px;
-            margin-bottom: 28px;
-            text-align: center;
-        }
-        .numbers-label {
-            font-weight: 700;
-            color: #2563eb;
-            margin-bottom: 12px;
-        }
-        .live-numbers {
-            display: flex;
-            justify-content: center;
-            gap: 18px;
-            margin-top: 10px;
-        }
-        .live-number {
-            background: #2563eb;
-            color: #fff;
-            font-size: 2em;
-            font-weight: 700;
-            border-radius: 12px;
-            padding: 12px 18px;
-            min-width: 48px;
-            box-shadow: 0 2px 8px #2563eb33;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 12px 2px 80px 2px; }
-            iframe, video { max-width: 99vw; height: 200px; }
-            .live-number { font-size: 1.3em; padding: 8px 10px; min-width: 32px; }
-        }
-        /* Bottom panel and icon-btn styles from index.html */
-        .bottom-panel {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100vw;
-            background: #181f36;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 8px 0 4px 0;
-            box-shadow: 0 -2px 12px rgba(0,0,0,0.13);
-            z-index: 200;
-        }
-        .icon-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #7ecbff;
-            font-size: 0.98em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: color 0.18s;
-            text-decoration: none;
-        }
-        .icon-btn .material-icons {
-            margin-bottom: 2px;
-            font-size: 28px;
-            line-height: 28px;
-        }
-        .icon-btn span {
-            font-size: 0.93em;
-            margin-top: 1px;
-        }
-        .icon-btn:hover, .icon-btn.active {
-            color: #fff;
-        }
-        @media (max-width: 700px) {
-            .bottom-panel { font-size: 0.93em; }
-        }
-        body { padding-bottom: 60px !important; }
-        .header {
-            background: linear-gradient(90deg, #1a2980 0%, #2575fc 100%);
-            color: #fff;
-            padding: 18px 0 10px 0;
-            text-align: center;
-            font-size: 1.5em;
-            font-weight: 600;
-            letter-spacing: 1px;
-            position: relative;
-            box-shadow: 0 2px 8px rgba(30,60,120,0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5em;
-        }
-        .header .back-btn {
-            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; color: #fff; font-size: 1.3em;
-            cursor: pointer; display: block;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
-<body>
-    <div class="header has-back">
-        <button class="back-btn" onclick="goBack()" title="Back">←</button>
-        <span id="header-title">Live Draw</span>
-    </div>
-    <div class="container">
-        <div style="text-align:center; margin-bottom: 18px;">
-            <a href="https://www.youtube.com/channel/UC4a-Gbdw7vOaccHmFo40b9g?sub_confirmation=1" target="_blank" style="display:inline-block; background:#ff0000; color:#fff; font-size:1.2em; font-weight:700; padding:14px 32px; border-radius:32px; text-decoration:none; box-shadow:0 2px 8px #ff000033; letter-spacing:1px; transition:background 0.2s;">
-                🔔 Subscribe to our YouTube Channel
-            </a>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header with language switcher -->
+    <div class="w-full bg-gradient-to-r from-blue-900 to-blue-500 text-white py-5 px-4 flex items-center justify-between shadow-md relative">
+        <button class="text-2xl absolute left-4 top-1/2 -translate-y-1/2 bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition" onclick="goBack()" title="Back">←</button>
+        <span id="header-title" class="text-lg font-bold flex-1 text-center">Live Draw</span>
+        <button class="text-2xl absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition" id="langIconBtn" title="Change language">🌐</button>
+        <div class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-lg p-6 min-w-[180px]" id="langPopup">
+            <div class="font-bold text-blue-700 mb-2">Select Language</div>
+            <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="en">English</button>
+            <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ml">മലയാളം</button>
+            <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
         </div>
-        <h1>🎥 Live Draw</h1>
-        <div class="video-section">
-            <div class="video-label">YouTube Live</div>
-            <div class="youtube-embed">
-                <!-- Replace the src with your YouTube live link -->
-                <iframe id="ytplayer" src="https://www.youtube.com/embed/live_stream?channel=UC4a-Gbdw7vOaccHmFo40b9g" allowfullscreen></iframe>
+    </div>
+
+    <div class="w-full py-8 px-2">
+      <div class="max-w-4xl mx-auto">
+        <!-- Beautiful YouTube Subscribe Section -->
+        <div class="bg-gradient-to-r from-red-500 via-red-600 to-red-700 rounded-3xl shadow-2xl p-8 mb-8 relative overflow-hidden">
+            <!-- Animated background elements -->
+            <div class="absolute top-0 left-0 w-full h-full opacity-10">
+                <div class="absolute top-4 left-4 w-20 h-20 bg-white rounded-full animate-pulse"></div>
+                <div class="absolute bottom-4 right-4 w-16 h-16 bg-white rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+                <div class="absolute top-1/2 left-1/4 w-12 h-12 bg-white rounded-full animate-pulse" style="animation-delay: 2s;"></div>
             </div>
-            <div class="video-label">Live Stream (m3u8)</div>
-            <div class="m3u8-player">
-                <video id="hls-video" controls poster="https://dummyimage.com/480x270/2563eb/fff&text=Live+Preview"></video>
+            
+            <div class="relative z-10 text-center">
+                <!-- YouTube Icon with Animation -->
+                <div class="flex justify-center mb-6">
+                    <div class="bg-white rounded-full p-4 shadow-lg animate-bounce">
+                        <span class="text-4xl">📺</span>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <h2 class="text-3xl font-bold text-white mb-3" id="subscribe-title">Subscribe to Our YouTube Channel</h2>
+                <p class="text-red-100 text-lg mb-6" id="subscribe-desc">Get notified about live draws and lottery results!</p>
+                
+                <!-- Subscribe Button -->
+                <a href="https://www.youtube.com/channel/UC4a-Gbdw7vOaccHmFo40b9g?sub_confirmation=1" 
+                   target="_blank" 
+                   class="inline-flex items-center gap-3 bg-white text-red-600 font-bold py-4 px-8 rounded-full text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 hover:bg-red-50 animate-pulse">
+                    <span class="text-2xl">🔔</span>
+                    <span id="subscribe-btn-text">Subscribe Now</span>
+                    <span class="text-xl">→</span>
+                </a>
+                
+                <!-- Stats -->
+                <div class="flex justify-center gap-8 mt-6 text-white">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">🎥</div>
+                        <div class="text-sm opacity-90">Live Streams</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">📊</div>
+                        <div class="text-sm opacity-90">Results</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">⚡</div>
+                        <div class="text-sm opacity-90">Updates</div>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Live numbers section removed as requested -->
+        
+        <!-- Kairali News Big YouTube Live Thumbnail Section -->
+        <div class="relative flex flex-col items-center bg-white rounded-2xl shadow-xl p-0 mb-8 overflow-hidden">
+          <a href="https://www.youtube.com/channel/UCnEvxaWfVL91XIYuyQRO5QA/live" target="_blank" class="block w-full group">
+            <div class="relative w-full">
+              <img src="https://img.youtube.com/vi/yiiqRHY1Bl8/hqdefault_live.jpg" alt="Kairali News Live Thumbnail" class="w-full h-auto object-cover aspect-video">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="inline-flex items-center justify-center rounded-full bg-black bg-opacity-60 group-hover:bg-opacity-80 transition p-6 sm:p-8">
+                  <svg class="w-16 h-16 sm:w-24 sm:h-24 text-white" fill="currentColor" viewBox="0 0 84 84"><circle cx="42" cy="42" r="42" fill="currentColor" opacity="0.3"/><polygon points="34,26 62,42 34,58" fill="#fff"/></svg>
+                </span>
+              </div>
+            </div>
+          </a>
+          <div class="w-full text-center py-4 bg-white">
+            <span class="text-xl font-bold text-red-700">Kairali News Live</span>
+          </div>
+        </div>
+
+            <div class="border-t border-gray-200 pt-8">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 text-center" id="kaumudy-title">Kaumudy TV Live Stream</h2>
+                <div class="flex justify-center">
+                    <div class="w-full max-w-2xl">
+                        <iframe 
+                            src="https://bradmax.com/client/embed-player/4e1bf55c403a5ce8290565ca431d65524a36f2db_7239?mediaUrl=https%3A%2F%2Foqgdrkxby4rm-hls-live.5centscdn.com%2Fkaumudytv%2Flive.stream%2Fplaylist.m3u8&title=kaumudytv%2Flive&id=30720"
+                            class="w-full h-64 md:h-80 rounded-xl shadow-lg"
+                            frameborder="0"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-8">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 text-center">Live Stream (m3u8)</h2>
+                <div class="flex justify-center">
+                    <div class="w-full max-w-2xl">
+                        <video id="hls-video" 
+                               controls 
+                               poster="https://dummyimage.com/480x270/2563eb/fff&text=Live+Preview"
+                               class="w-full h-64 md:h-80 rounded-xl shadow-lg bg-black">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+
     </div>
-    <nav class="bottom-panel">
-        <a class="icon-btn" href="index.html">
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-2 shadow-lg z-40">
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="index.html">
             <span class="material-icons">home</span>
-            <span>Home</span>
+            <span class="text-xs">Home</span>
         </a>
-        <a class="icon-btn" href="prediction.html">
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="prediction.html">
             <span class="material-icons">star</span>
-            <span>Lucky</span>
+            <span class="text-xs">Lucky</span>
         </a>
-        <a class="icon-btn" href="search.html">
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="search.html">
             <span class="material-icons">search</span>
-            <span>Search</span>
+            <span class="text-xs">Search</span>
         </a>
-        <a class="icon-btn" href="scanner.html">
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="scanner.html">
             <span class="material-icons">qr_code_scanner</span>
-            <span>Scanner</span>
+            <span class="text-xs">Scanner</span>
         </a>
-        <a class="icon-btn active" href="live.html">
+        <a class="flex flex-col items-center text-white font-bold" href="live.html">
             <span class="material-icons">live_tv</span>
-            <span>Live</span>
+            <span class="text-xs">Live</span>
         </a>
     </nav>
+
     <script>
+        // Language support
+        let currentLang = localStorage.getItem('lang') || 'en';
+        
+        const langStrings = {
+            en: {
+                header: 'Live Draw',
+                mainTitle: 'Live Draw',
+                youtubeLive: 'YouTube Live',
+                kaumudyLive: 'Kaumudy TV Live Stream',
+                liveStream: 'Live Stream (m3u8)',
+                subscribeTitle: 'Subscribe to Our YouTube Channel',
+                subscribeDesc: 'Get notified about live draws and lottery results!',
+                subscribeBtn: 'Subscribe Now'
+            },
+            ml: {
+                header: 'ലൈവ് ഡ്രോ',
+                mainTitle: 'ലൈവ് ഡ്രോ',
+                youtubeLive: 'യൂട്യൂബ് ലൈവ്',
+                kaumudyLive: 'കൗമുദി ടിവി ലൈവ് സ്ട്രീം',
+                liveStream: 'ലൈവ് സ്ട്രീം (m3u8)',
+                subscribeTitle: 'ഞങ്ങളുടെ യൂട്യൂബ് ചാനൽ സബ്സ്ക്രൈബ് ചെയ്യുക',
+                subscribeDesc: 'ലൈവ് ഡ്രോകളും ലോട്ടറി ഫലങ്ങളും കുറിച്ച് അറിയിക്കപ്പെടുക!',
+                subscribeBtn: 'ഇപ്പോൾ സബ്സ്ക്രൈബ് ചെയ്യുക'
+            },
+            ta: {
+                header: 'நேரலை டிரா',
+                mainTitle: 'நேரலை டிரா',
+                youtubeLive: 'யூடியூப் நேரலை',
+                kaumudyLive: 'கௌமுதி டிவி நேரலை ஸ்ட்ரீம்',
+                liveStream: 'நேரலை ஸ்ட்ரீம் (m3u8)',
+                subscribeTitle: 'எங்கள் யூடியூப் சேனலை சந்தா செய்யவும்',
+                subscribeDesc: 'நேரலை டிராக்கள் மற்றும் லாட்டரி முடிவுகளைப் பற்றி அறிவிக்கப்படுங்கள்!',
+                subscribeBtn: 'இப்போது சந்தா செய்யுங்கள்'
+            }
+        };
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            updateLangUI();
+        }
+
+        function updateLangUI() {
+            const t = langStrings[currentLang];
+            document.getElementById('header-title').textContent = t.header;
+            document.getElementById('main-title').textContent = t.mainTitle;
+            
+            // Update subscription section
+            const subscribeTitle = document.getElementById('subscribe-title');
+            const subscribeDesc = document.getElementById('subscribe-desc');
+            const subscribeBtnText = document.getElementById('subscribe-btn-text');
+            
+            if (subscribeTitle) subscribeTitle.textContent = t.subscribeTitle;
+            if (subscribeDesc) subscribeDesc.textContent = t.subscribeDesc;
+            if (subscribeBtnText) subscribeBtnText.textContent = t.subscribeBtn;
+            
+            // Update video section titles
+            const videoLabels = document.querySelectorAll('.video-label');
+            if (videoLabels.length >= 2) {
+                videoLabels[0].textContent = t.youtubeLive;
+                videoLabels[1].textContent = t.liveStream;
+            }
+            
+            // Update Kaumudy TV section title
+            const kaumudyTitle = document.getElementById('kaumudy-title');
+            if (kaumudyTitle) {
+                kaumudyTitle.textContent = t.kaumudyLive;
+            }
+        }
+
+        // Language popup setup
+        document.addEventListener('DOMContentLoaded', function() {
+            const langIconBtn = document.getElementById('langIconBtn');
+            const langPopup = document.getElementById('langPopup');
+            const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
+            
+            langIconBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                langPopup.classList.toggle('hidden');
+            });
+            
+            document.body.addEventListener('click', function(e) {
+                if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
+                    langPopup.classList.add('hidden');
+                }
+            });
+            
+            langPopupBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    setLang(this.getAttribute('data-lang'));
+                    langPopup.classList.add('hidden');
+                });
+            });
+            
+            setLang(currentLang);
+        });
+
         function goBack() {
             window.history.length > 1 ? window.history.back() : window.location.href = 'index.html';
         }
-        // m3u8 video preview setup (replace with your m3u8 link later)
+
+        // --- Dynamic YouTube Embed Logic ---
+        function getYouTubeIdFromParam(param) {
+            if (!param) return null;
+            // If full YouTube URL
+            if (param.includes('youtube.com') || param.includes('youtu.be')) {
+                const url = new URL(param, window.location.origin);
+                if (url.searchParams.get('v')) return url.searchParams.get('v');
+                // youtu.be short link
+                const path = url.pathname.split('/');
+                if (path.length > 1 && path[1].length === 11) return path[1];
+            }
+            // If just an ID
+            if (param.length === 11) return param; // Video ID
+            if (param.startsWith('UC')) return param; // Channel ID
+            return null;
+        }
+        function setYouTubeEmbed() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ytParam = urlParams.get('yt');
+            let embedUrl = '';
+            if (ytParam) {
+                const id = getYouTubeIdFromParam(ytParam);
+                if (!id) return;
+                if (id.startsWith('UC')) {
+                    // Channel ID: show live stream
+                    embedUrl = `https://www.youtube.com/embed/live_stream?channel=${id}`;
+                } else {
+                    // Video ID: show specific video
+                    embedUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
+                }
+            } else {
+                // Default channel live stream
+                embedUrl = 'https://www.youtube.com/embed/live_stream?channel=UCkCWitaToNG1_lR-Si1oMrg';
+            }
+            const ytplayer = document.getElementById('ytplayer');
+            if (ytplayer) ytplayer.src = embedUrl;
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            setYouTubeEmbed();
+        });
+
+        // m3u8 video setup (replace with your m3u8 link later)
         const video = document.getElementById('hls-video');
         const m3u8Url = '';
         if (Hls.isSupported() && m3u8Url) {
@@ -214,8 +298,8 @@
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             video.src = m3u8Url;
         }
-        // Placeholder: You can update the numbers dynamically later
-        // Example: document.getElementById('num1').textContent = '12345';
+
+
     </script>
 </body>
 </html> 
