@@ -4,64 +4,80 @@ const path = require('path');
 const NOTE_DIR = path.join(__dirname, 'note');
 const OUT_FILE = path.join(__dirname, 'history.json');
 
-function extractNumbers(text) {
-  // 4-digit: not part of a longer number, not part of a series
-  const fourDigit = Array.from(new Set(
-    (text.match(/(?<!\d)\b\d{4}\b(?!\d)/g) || [])
-  ));
-  // 6-digit: not part of a longer number, not part of a series
-  const sixDigit = Array.from(new Set(
-    (text.match(/(?<!\d)\b\d{6}\b(?!\d)/g) || [])
-  ));
-  // Also extract numbers like 'AB 123456'
-  const sixDigitWithPrefix = Array.from(new Set(
-    (text.match(/[A-Z]{1,3}\s?\d{6}/g) || [])
-  ));
-  return { fourDigit, sixDigit, sixDigitWithPrefix };
-}
-
-function parseHtmlFile(filePath) {
+function parseJsonFile(filePath, fileName) {
   const content = fs.readFileSync(filePath, 'utf8');
-  // Try to extract date from title or meta
+  let data;
+  try {
+    data = JSON.parse(content);
+  } catch (e) {
+    return null;
+  }
+  // Extract lottery code from filename if not in JSON
+  let lottery = '';
+  let draw = '';
   let date = '';
-  const titleMatch = content.match(/Date[:\s]*([0-9]{2}\/[0-9]{2}\/[0-9]{4})/i);
-  if (titleMatch) date = titleMatch[1];
-  // Fallback: try to find date in the first 200 lines
-  if (!date) {
-    const dateMatch = content.match(/\b([0-9]{2}\/[0-9]{2}\/[0-9]{4})\b/);
-    if (dateMatch) date = dateMatch[1];
+  if (data.lottery_name) {
+    // Try to extract code from name, e.g. "DHANALEKSHMI (DL)"
+    const codeMatch = data.lottery_name.match(/\(([A-Z]{2,3})\)/);
+    lottery = codeMatch ? codeMatch[1] : '';
   }
-  // Extract all winner numbers from the prizes section
-  const winnerMatches = Array.from(content.matchAll(/"winners"\s*:\s*\[(.*?)\]/gs));
-  let allNumbers = [];
-  for (const match of winnerMatches) {
-    // Remove quotes, split by comma/space, remove location in brackets
-    let nums = match[1]
-      .replace(/"/g, '')
-      .replace(/\([^)]+\)/g, '')
-      .split(/,|\s+/)
-      .map(s => s.trim())
-      .filter(s => s && /^[A-Z0-9 ]+$/.test(s));
-    allNumbers = allNumbers.concat(nums);
+  if (!lottery && fileName) {
+    const fileMatch = fileName.match(/^([A-Z]{2,3})-/);
+    lottery = fileMatch ? fileMatch[1] : '';
   }
-  // Fallback: also extract numbers from the whole file
-  if (allNumbers.length === 0) {
-    const { fourDigit, sixDigit, sixDigitWithPrefix } = extractNumbers(content);
-    allNumbers = allNumbers.concat(fourDigit, sixDigit, sixDigitWithPrefix);
+  draw = data.draw_number ? String(data.draw_number).padStart(2, '0') : '';
+  date = data.draw_date || '';
+  // Prizes array
+  const prizes = [];
+  // For prediction
+  const numbers4 = new Set();
+  const numbers6 = new Set();
+  if (data.prizes && typeof data.prizes === 'object') {
+    for (const [prize_key, prize_obj] of Object.entries(data.prizes)) {
+      prizes.push({
+        prize_key,
+        label: prize_obj.label || '',
+        amount: prize_obj.amount || 0,
+        winners: Array.isArray(prize_obj.winners) ? prize_obj.winners : []
+      });
+      // Collect numbers for prediction
+      if (["4th_prize","5th_prize","6th_prize","7th_prize","8th_prize","9th_prize"].includes(prize_key)) {
+        // 4-digit numbers
+        if (Array.isArray(prize_obj.winners)) {
+          prize_obj.winners.forEach(w => {
+            const m = String(w).match(/\b(\d{4})\b/);
+            if (m) numbers4.add(m[1]);
+          });
+        }
+      } else if (["1st_prize","2nd_prize","3rd_prize","consolation_prize"].includes(prize_key)) {
+        // 6-digit numbers
+        if (Array.isArray(prize_obj.winners)) {
+          prize_obj.winners.forEach(w => {
+            const m = String(w).match(/\b(\d{6})\b/);
+            if (m) numbers6.add(m[1]);
+          });
+        }
+      }
+    }
   }
-  // Separate 4-digit and 6-digit numbers
-  const numbers4 = Array.from(new Set(allNumbers.filter(n => /^\d{4}$/.test(n))));
-  const numbers6 = Array.from(new Set(allNumbers.filter(n => /^([A-Z]{1,3}\s?)?\d{6}$/.test(n))));
-  return { date, numbers4, numbers6 };
+  return {
+    date,
+    lottery,
+    draw,
+    filename: fileName,
+    prizes,
+    numbers4: Array.from(numbers4),
+    numbers6: Array.from(numbers6)
+  };
 }
 
 function main() {
-  const files = fs.readdirSync(NOTE_DIR).filter(f => f.endsWith('.html'));
+  const files = fs.readdirSync(NOTE_DIR).filter(f => f.endsWith('.json'));
   const history = [];
   for (const file of files) {
     const filePath = path.join(NOTE_DIR, file);
-    const result = parseHtmlFile(filePath);
-    if (result.date && (result.numbers4.length || result.numbers6.length)) {
+    const result = parseJsonFile(filePath, file);
+    if (result && result.date && result.prizes.length) {
       history.push(result);
     }
   }
