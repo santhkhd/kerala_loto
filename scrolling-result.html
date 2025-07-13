@@ -1,0 +1,387 @@
+<!--
+  scrolling-result.html
+  --------------------
+  - The result text will automatically load from today's JSON file in the note/SM-11-YYYY-MM-DD.json file.
+  - All winning numbers from 1st to 9th prize are shown.
+  - 6-digit numbers are shown in a single grid, 4-digit numbers in a 4-column grid, all very big and legible.
+  - The scroll animation duration is user-selectable (2-8 minutes).
+  - The display is mobile responsive and visually appealing.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Scrolling Result Video</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Fonts: Bebas Neue for big numbers -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      background: #000;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+    .date-banner {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      font-size: 2em;
+      padding: 0.3em 1.5em;
+      border-radius: 0.7em;
+      background: linear-gradient(90deg, #232946 0%, #2d3748 100%);
+      color: #ffe066;
+      font-weight: bold;
+      box-shadow: 0 2px 8px #0008;
+      letter-spacing: 0.08em;
+      text-align: center;
+      border: 2px solid #ffe06644;
+      width: max-content;
+      left: 50%;
+      right: auto;
+    }
+    .speed-control {
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      font-size: 1.1em;
+      color: #ffe066;
+      font-weight: bold;
+      text-align: center;
+    }
+    .speed-control select {
+      font-size: 1.1em;
+      padding: 0.2em 0.7em;
+      border-radius: 0.5em;
+      margin-left: 0.5em;
+    }
+    .marquee-container {
+      position: relative;
+      width: 100vw;
+      height: calc(100vh - 4.5em);
+      overflow-y: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 0;
+      margin-top: 4.5em;
+    }
+    .marquee-content {
+      position: absolute;
+      width: 100vw;
+      left: 0;
+      /* animation is set via JS */
+    }
+    @keyframes scrollUp {
+      0% { top: 100vh; }
+      100% { top: -100vh; }
+    }
+    .prize-section {
+      margin: 1.2em auto 2.2em auto;
+      max-width: 98vw;
+      border-radius: 1.2em;
+      padding: 1.2em 0.7em 1.2em 0.7em;
+      box-shadow: 0 2px 16px #0005;
+      background: linear-gradient(90deg, #232946 0%, #2d3748 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .prize-label {
+      font-size: 2.1em;
+      font-weight: bold;
+      color: #ffe066;
+      margin-bottom: 0.7em;
+      letter-spacing: 0.05em;
+      text-shadow: 0 2px 8px #000, 0 0 2px #fff2;
+      text-align: center;
+    }
+    .winner-grid-6d {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.7em;
+      width: 100%;
+      margin-bottom: 0.2em;
+    }
+    .winner-grid-4d {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.7em;
+      width: 100%;
+      margin-bottom: 0.2em;
+    }
+    .winner-number {
+      background: #fff;
+      color: #1a202c;
+      font-size: 4.2em;
+      font-weight: 900;
+      border-radius: 0.5em;
+      padding: 0.18em 0.7em;
+      margin: 0.1em 0.1em;
+      box-shadow: 0 2px 8px #0002;
+      letter-spacing: 0.12em;
+      min-width: 2.2em;
+      text-align: center;
+      line-height: 1.1;
+      transition: background 0.2s;
+      user-select: all;
+      display: inline-block;
+      font-family: 'Bebas Neue', 'Oswald', 'Montserrat', Arial, sans-serif;
+    }
+    @media (max-width: 900px) {
+      .prize-label { font-size: 1.3em; }
+      .winner-number { font-size: 2.7em; min-width: 1.3em; }
+    }
+    @media (max-width: 600px) {
+      .date-banner {
+        font-size: 1.1em;
+        padding: 0.2em 0.7em;
+        border-radius: 0.5em;
+      }
+      .speed-control { font-size: 0.95em; top: 60px; }
+      .prize-section {
+        padding: 0.7em 0.2em 0.9em 0.2em;
+        border-radius: 0.7em;
+      }
+      .prize-label {
+        font-size: 1.1em;
+      }
+      .winner-number {
+        font-size: 1.7em;
+        padding: 0.13em 0.3em;
+        min-width: 1.1em;
+      }
+      .winner-grid-4d {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="date-banner" id="dateBanner"></div>
+  <div style="position:fixed;top:10px;right:10px;z-index:30;background:#ff0000;color:#fff;padding:0.3em 0.8em;border-radius:0.5em;font-weight:bold;font-size:1.2em;animation:pulse 2s infinite;">LIVE</div>
+  <!-- Removed scroll control buttons -->
+  <div class="marquee-container" id="animated-container" style="overflow:hidden;height:calc(100vh - 4.5em);margin-top:4.5em;display:flex;align-items:flex-start;justify-content:center;">
+    <div class="marquee-content" id="marquee-content" style="position:static;width:100vw;">
+      <div class="marquee-text" id="marquee" style="display:flex;flex-direction:column;align-items:center;justify-content:flex-start;width:100%;"></div>
+    </div>
+  </div>
+  <script>
+    // Helper to get today's date in YYYY-MM-DD
+    function getTodayStr() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    // Helper to get today's date in DD/MM/YYYY for display
+    function getTodayDisplayStr() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      return `${dd}/${mm}/${yyyy}`;
+    }
+    document.getElementById('dateBanner').textContent = `Today: ${getTodayDisplayStr()}`;
+    const marquee = document.getElementById('marquee');
+    const marqueeContent = document.getElementById('marquee-content');
+    // Default to SM-11 (Samruddhi) for today
+    const code = 'SM-11';
+    // Show 1st to 9th prize
+    const PRIZE_ORDER = [
+      '1st_prize', '2nd_prize', '3rd_prize', '4th_prize', '5th_prize', '6th_prize', '7th_prize', '8th_prize', '9th_prize', 'consolation_prize'
+    ];
+    // Helper to extract series and number (removes location in parentheses)
+    function extractSeriesNumber(str) {
+      // Remove anything in parentheses and trim
+      return str.replace(/\s*\([^)]*\)/g, '').trim();
+    }
+    function is6Digit(num) {
+      return /^\d{6}$/.test(num) || /^[A-Z]{2} \d{6}$/.test(num) || /^[A-Z]{2} \d{6}/.test(num);
+    }
+    function is4Digit(num) {
+      return /^\d{4}$/.test(num);
+    }
+    function formatAmount(amount) {
+      if (!amount) return '';
+      // Format as Indian currency (e.g., ₹1,00,000)
+      return '₹' + amount.toLocaleString('en-IN');
+    }
+    function renderPrizes(prizes) {
+      let html = '';
+      for (const key of PRIZE_ORDER) {
+        const prize = prizes[key];
+        if (!prize || !prize.winners || !prize.winners.length) continue;
+        html += `<div class='prize-section'>`;
+        html += `<div class='prize-label'>${prize.label || key.replace(/_/g, ' ')}${prize.amount ? ' (' + formatAmount(prize.amount) + ')' : ''}</div>`;
+        // Separate 6-digit and 4-digit numbers
+        const winners6d = prize.winners.filter(is6Digit).map(extractSeriesNumber);
+        const winners4d = prize.winners.filter(is4Digit).map(extractSeriesNumber);
+        if (winners6d.length) {
+          html += `<div class='winner-grid-6d'>` +
+            winners6d.map(n => `<span class='winner-number'>${n}</span>`).join('') +
+            `</div>`;
+        }
+        if (winners4d.length) {
+          html += `<div class='winner-grid-4d'>` +
+            winners4d.map(n => `<span class='winner-number'>${n}</span>`).join('') +
+            `</div>`;
+        }
+        // Show any other numbers (not 6d or 4d), also strip location
+        const otherWinners = prize.winners.filter(n => !is6Digit(n) && !is4Digit(n)).map(extractSeriesNumber);
+        if (otherWinners.length) {
+          html += `<div class='winner-grid-6d'>` +
+            otherWinners.map(n => `<span class='winner-number'>${n}</span>`).join('') +
+            `</div>`;
+        }
+        html += `</div>`;
+      }
+      return html;
+    }
+    // Animated reveal logic
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function createPrizeLabel(prize) {
+      const div = document.createElement('div');
+      div.className = 'prize-label';
+      div.style.opacity = 0;
+      div.textContent = `${prize.label || ''}${prize.amount ? ' (' + formatAmount(prize.amount) + ')' : ''}`;
+      return div;
+    }
+    function createNumberSpan(num) {
+      const span = document.createElement('span');
+      span.className = 'winner-number';
+      span.style.opacity = 0;
+      span.textContent = num;
+      return span;
+    }
+    async function animatePrize(prize, container, batchSize = 8, delay = 400) {
+      console.log('Animating prize:', prize.label);
+      // Show label
+      const label = createPrizeLabel(prize);
+      container.appendChild(label);
+      await sleep(200);
+      label.style.transition = 'opacity 0.5s';
+      label.style.opacity = 1;
+      await sleep(800);
+      // Prepare numbers
+      const winners = (prize.winners || []).map(extractSeriesNumber);
+      console.log('Winners for', prize.label, ':', winners.length);
+      // Separate 6-digit and 4-digit numbers
+      const winners6d = winners.filter(is6Digit);
+      const winners4d = winners.filter(is4Digit);
+      const otherWinners = winners.filter(n => !is6Digit(n) && !is4Digit(n));
+      // Helper to animate a grid of numbers
+      async function animateGrid(numbers, gridClass, columns = 1) {
+        console.log('Animating grid:', gridClass, 'with', numbers.length, 'numbers');
+        let idx = 0;
+        const gridBatchSize = columns === 1 ? numbers.length : columns * 4; // 4 rows per batch for 4d
+        while (idx < numbers.length) {
+          const batch = numbers.slice(idx, idx + gridBatchSize);
+          const grid = document.createElement('div');
+          grid.className = gridClass;
+          grid.style.width = '100%';
+          grid.style.display = 'flex';
+          grid.style.flexWrap = 'wrap';
+          grid.style.justifyContent = 'center';
+          grid.style.marginBottom = '0.2em';
+          if (gridClass === 'winner-grid-4d') {
+            grid.style.display = 'grid';
+            grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+          }
+          for (const n of batch) {
+            const span = createNumberSpan(n);
+            grid.appendChild(span);
+          }
+          container.appendChild(grid);
+          await sleep(100);
+          // Animate in
+          for (const span of grid.children) {
+            span.style.transition = 'opacity 0.4s';
+            span.style.opacity = 1;
+          }
+          // Stay for 10 seconds
+          await sleep(10000);
+          idx += gridBatchSize;
+          if (idx < numbers.length) {
+            // Scroll up animation
+            grid.style.transition = 'transform 0.7s, opacity 0.7s';
+            grid.style.transform = 'translateY(-120%)';
+            grid.style.opacity = 0;
+            await sleep(700);
+            container.removeChild(grid);
+          } else {
+            await sleep(600);
+          }
+        }
+      }
+      if (winners6d.length) {
+        await animateGrid(winners6d, 'winner-grid-6d', 1);
+      }
+      if (winners4d.length) {
+        await animateGrid(winners4d, 'winner-grid-4d', 4);
+      }
+      if (otherWinners.length) {
+        await animateGrid(otherWinners, 'winner-grid-6d', 1);
+      }
+      // Remove label and last grid before next prize
+      await sleep(600);
+      container.innerHTML = '';
+    }
+    async function animateAllPrizes(prizes) {
+      console.log('Starting animation for all prizes');
+      const marquee = document.getElementById('marquee');
+      marquee.innerHTML = '';
+      for (const key of PRIZE_ORDER) {
+        const prize = prizes[key];
+        if (!prize || !prize.winners || !prize.winners.length) {
+          console.log('Skipping', key, '- no winners');
+          continue;
+        }
+        console.log('Processing', key);
+        await animatePrize(prize, marquee);
+      }
+      marquee.innerHTML = '<div class="prize-label">All Results Shown</div>';
+      // Loop the animation for live streaming
+      await sleep(5000);
+      animateAllPrizes(prizes);
+    }
+    function loadResultAnimated() {
+      console.log('Loading results...');
+      const file = `note/${code}-${getTodayStr()}.json`;
+      console.log('Fetching file:', file);
+      fetch(file)
+        .then(res => {
+          console.log('Response status:', res.status);
+          return res.json();
+        })
+        .then(data => {
+          console.log('Data loaded:', data);
+          if (data.prizes) {
+            animateAllPrizes(data.prizes);
+          } else {
+            document.getElementById('marquee').innerHTML = 'No results found';
+          }
+        })
+        .catch((error) => {
+          console.error('Error loading results:', error);
+          document.getElementById('marquee').innerHTML = 'Failed to load results';
+        });
+    }
+    // Initial load
+    loadResultAnimated();
+  </script>
+</body>
+</html> 
