@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lottery Result</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     /* --- COPY ALL CSS FROM BT-10-2025-07-07 (13).html --- */
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #10182a; color: #e6eaf3; margin: 0; padding: 0; }
     .header { background: #181f36; padding: 24px 0 18px 0; border-bottom: 2px solid #232c4b; box-shadow: 0 2px 12px rgba(0,0,0,0.13); }
-    .header-content { max-width: 900px; margin: 0 auto; padding: 0 18px; display: flex; flex-direction: column; gap: 10px; }
+    .header-content { width: 100%; max-width: 900px; margin: 0 auto; padding: 0 8px; display: flex; flex-direction: column; gap: 10px; }
     .lottery-title { font-size: 2em; font-weight: 700; color: #fff; margin-bottom: 2px; letter-spacing: 1px; }
     .lottery-meta { display: flex; flex-wrap: wrap; gap: 18px 32px; font-size: 1.08em; color: #b3b9c9; margin-bottom: 6px; }
     .lottery-meta span { background: #232c4b; border-radius: 7px; padding: 4px 14px; font-weight: 500; color: #7ecbff; margin-right: 6px; }
-    .main-content { max-width: 900px; margin: 28px auto; padding: 0 18px 36px 18px; }
+    .main-content { width: 100%; max-width: 900px; margin: 28px auto; padding: 0 8px 36px 8px; }
     .prize-section { margin-bottom: 32px; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.10); background: #181f36; border: 2.5px solid #232c4b; overflow: hidden; }
     .prize-header { display: flex; align-items: center; gap: 16px; padding: 18px 18px 10px 18px; border-bottom: 1.5px solid #232c4b; }
     .prize-title { font-size: 1.18em; font-weight: bold; color: #fff; letter-spacing: 0.5px; }
@@ -42,14 +44,6 @@
         .header-content, .main-content { padding: 0 4vw; } .prize-section { border-radius: 7px; } .lottery-title { font-size: 1.2em; } .prize-title { font-size: 1em; } .winner { font-size: 0.98em; padding: 7px 8px; }
         .info-cards { gap: 10px; } .info-card { min-width: 44vw; padding: 12px 4vw 8px 4vw; border-radius: 7px; } .info-label { font-size: 0.98em; } .info-value { font-size: 1.08em; }
     }
-    .top-panel { width: 100%; background: linear-gradient(90deg, #1a2980 0%, #2575fc 100%); color: #fff; padding: 18px 0 10px 0; text-align: center; font-size: 1.6em; font-weight: 700; letter-spacing: 1.5px; box-shadow: 0 2px 8px rgba(30,60,120,0.13); position: sticky; top: 0; z-index: 100; }
-    .live-title { color: #fff; text-shadow: 0 2px 8px rgba(30,60,120,0.10); }
-    .bottom-panel { position: fixed; bottom: 0; left: 0; width: 100vw; background: #181f36; display: flex; justify-content: space-around; align-items: center; padding: 8px 0 4px 0; box-shadow: 0 -2px 12px rgba(0,0,0,0.13); z-index: 200; }
-    .icon-btn { display: flex; flex-direction: column; align-items: center; color: #7ecbff; font-size: 0.98em; font-weight: 600; cursor: pointer; transition: color 0.18s; }
-    .icon-btn svg { margin-bottom: 2px; }
-    .icon-btn span { font-size: 0.93em; margin-top: 1px; }
-    .icon-btn:hover { color: #fff; }
-    @media (max-width: 700px) { .top-panel { font-size: 1.1em; padding: 12px 0 7px 0; } .bottom-panel { font-size: 0.93em; } }
     body { padding-bottom: 60px !important; }
     @media print {
       body { font-size: 12px !important; margin: 8px !important; padding: 0 !important; }
@@ -66,27 +60,42 @@
     }
   </style>
 </head>
-<body>
-  <div class="top-panel">
-    <span class="live-title">LIVE KERALA RESULTS</span>
+<body class="bg-gray-900 min-h-screen">
+  <!-- Header -->
+  <div class="w-full bg-gradient-to-r from-blue-900 to-blue-500 text-white py-5 px-4 shadow-md">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-2xl font-bold tracking-wide">LIVE KERALA RESULTS</h1>
+    </div>
   </div>
+
   <div id="main-content-area">
-    <div style="text-align:center; margin: 40px 0; font-size:1.2em;" id="loadingMsg">Loading result...</div>
+    <div class="text-center py-10 text-xl text-gray-300" id="loadingMsg">Loading result...</div>
   </div>
-  <div class="bottom-panel">
-    <a class="icon-btn" href="index.html">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-4h-4v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V11.5z" stroke="#7ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Home</span>
+
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-3 shadow-lg z-40 border-t border-gray-700">
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition-colors duration-200" href="index.html">
+      <span class="material-icons text-2xl mb-1">home</span>
+      <span class="text-xs font-semibold">Home</span>
     </a>
-    <a class="icon-btn" href="prediction.html">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#ffb347" stroke-width="2"/><path d="M8 12l2 2 4-4" stroke="#ffb347" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Lucky</span>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition-colors duration-200" href="prediction.html">
+      <span class="material-icons text-2xl mb-1">star</span>
+      <span class="text-xs font-semibold">Lucky</span>
     </a>
-    <a class="icon-btn" href="search.html">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="#a259ff" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#a259ff" stroke-width="2" stroke-linecap="round"/></svg><span>Search</span>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition-colors duration-200" href="search.html">
+      <span class="material-icons text-2xl mb-1">search</span>
+      <span class="text-xs font-semibold">Search</span>
     </a>
-    <a class="icon-btn" href="scanner.html">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="#00b894" stroke-width="2"/><path d="M8 8h8v8H8z" stroke="#00b894" stroke-width="2"/></svg><span>Scanner</span>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition-colors duration-200" href="scanner.html">
+      <span class="material-icons text-2xl mb-1">qr_code_scanner</span>
+      <span class="text-xs font-semibold">Scanner</span>
     </a>
-  </div>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition-colors duration-200" href="live.html">
+      <span class="material-icons text-2xl mb-1">live_tv</span>
+      <span class="text-xs font-semibold">Live</span>
+    </a>
+  </nav>
+
   <script>
     function escapeHtml(str) {
       return str ? str.replace(/[&<>"']/g, function(tag) {
@@ -164,8 +173,8 @@
       html += '  </div>';
       html += '</div>';
       html += '<div class="main-content">';
-      html += '  <div style="text-align:center; margin: 18px 0;">' +
-              '<button onclick="window.location.reload()" style="background:#7ecbff;color:#10182a;padding:12px 24px;border-radius:8px;font-weight:bold;border:none;cursor:pointer;">Refresh</button>' +
+      html += '  <div class="text-center mb-6">' +
+              '<button onclick="window.location.reload()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 shadow-lg">Refresh</button>' +
               '</div>';
       html += '  <div class="search-bar">';
       html += '    <div class="search-box">';
@@ -176,7 +185,9 @@
       html += '  </div>';
       html += '  <div id="results"></div>';
       html += '  <div id="noResult" class="no-result" style="display:none;">No matching ticket found.</div>';
-      html += '  <div style="text-align:center; margin: 24px 0 0 0;"><button onclick="window.print()" style="background:#7ecbff;color:#10182a;padding:12px 24px;border-radius:8px;font-weight:bold;border:none;cursor:pointer;">Download PDF</button></div>';
+      html += '  <div class="text-center mt-6">' +
+              '<button onclick="window.print()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 shadow-lg">Download PDF</button>' +
+              '</div>';
       html += '  <div class="info-cards">';
       html += '    <div class="info-card"><div class="info-label">Total Winners</div><div class="info-value" id="totalWinners"></div></div>';
       html += '    <div class="info-card"><div class="info-label">Total Prize Distributed</div><div class="info-value" id="prizeDistributed"></div></div>';
