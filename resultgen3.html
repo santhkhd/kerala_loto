@@ -394,7 +394,8 @@ document.getElementById('downloadJsonBtn').addEventListener('click', function() 
     draw_number: data.drawNumber || '',
     draw_date: formattedDate,
     venue: venue,
-    prizes: {}
+    prizes: {},
+    downloadLink: data.downloadLink || ''
   };
   prizes.forEach(p => {
     let winners = [];
