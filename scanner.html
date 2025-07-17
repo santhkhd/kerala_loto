@@ -246,8 +246,21 @@
             if (result) {
                 // Always set fileParam if result found
                 if (result.lottery && result.draw && result.date) {
-                    let [dd, mm, yyyy] = result.date.split('/');
-                    fileParam = `${result.lottery}-${result.draw}-${yyyy}-${mm}-${dd}.json`;
+                    let dd, mm, yyyy;
+                    if (result.date.includes('/')) {
+                        [dd, mm, yyyy] = result.date.split('/');
+                    } else if (result.date.includes('-')) {
+                        [yyyy, mm, dd] = result.date.split('-');
+                    }
+                    let drawStr = String(result.draw).padStart(2, '0');
+                    if (drawStr.startsWith(result.lottery + '-')) {
+                        drawStr = drawStr.replace(result.lottery + '-', '');
+                    }
+                    if (result.lottery && drawStr && yyyy && mm && dd) {
+                        fileParam = `${result.lottery}-${drawStr}-${yyyy}-${mm}-${dd}.json`;
+                    } else {
+                        fileParam = '';
+                    }
                 }
                 const searchLower = number.replace(/\s+/g, '').toLowerCase();
                 // Check 6-digit prizes
