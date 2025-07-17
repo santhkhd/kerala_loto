@@ -159,7 +159,7 @@
         min-width: 1.1em;
       }
       .winner-grid-4d {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr) !important;
       }
     }
     @keyframes pulse {
@@ -170,6 +170,7 @@
   </style>
 </head>
 <body>
+  <!-- Removed code and date selectors -->
   <div class="date-banner" id="dateBanner"></div>
   <div style="position:fixed;top:10px;right:10px;z-index:30;background:#ff0000;color:#fff;padding:0.3em 0.8em;border-radius:0.5em;font-weight:bold;font-size:1.2em;animation:pulse 2s infinite;">LIVE</div>
   <!-- Removed scroll control buttons -->
@@ -195,11 +196,30 @@
       const dd = String(today.getDate()).padStart(2, '0');
       return `${dd}/${mm}/${yyyy}`;
     }
+    // Set the date banner to always show today
     document.getElementById('dateBanner').textContent = `Today: ${getTodayDisplayStr()}`;
     const marquee = document.getElementById('marquee');
     const marqueeContent = document.getElementById('marquee-content');
-    // Default to SM-11 (Samruddhi) for today
-    const code = 'SM-11';
+    // Always use today's code and date based on weekly schedule
+    function getTodayLotteryShortName() {
+      const schedule = [
+        { dayOfWeek: 0, shortName: 'SM' }, // Sunday
+        { dayOfWeek: 1, shortName: 'BT' }, // Monday
+        { dayOfWeek: 2, shortName: 'SS' }, // Tuesday
+        { dayOfWeek: 3, shortName: 'DL' }, // Wednesday
+        { dayOfWeek: 4, shortName: 'KN' }, // Thursday
+        { dayOfWeek: 5, shortName: 'SK' }, // Friday
+        { dayOfWeek: 6, shortName: 'KR' }  // Saturday
+      ];
+      const today = new Date();
+      return schedule[today.getDay()].shortName;
+    }
+    function getSelectedCode() {
+      return getTodayLotteryShortName();
+    }
+    function getSelectedDate() {
+      return getTodayStr();
+    }
     // Show 1st to 9th prize
     const PRIZE_ORDER = [
       '1st_prize', '2nd_prize', '3rd_prize', '4th_prize', '5th_prize', '6th_prize', '7th_prize', '8th_prize', '9th_prize', 'consolation_prize'
@@ -359,29 +379,38 @@
       animateAllPrizes(prizes);
     }
     function loadResultAnimated() {
-      console.log('Loading results...');
-      const file = `note/${code}-${getTodayStr()}.json`;
-      console.log('Fetching file:', file);
+      const code = getSelectedCode();
+      const date = getSelectedDate();
+      const file = `note/${code}-${date}.json`;
+      marquee.innerHTML = '<div class="prize-label">Loading...</div>';
       fetch(file)
         .then(res => {
-          console.log('Response status:', res.status);
+          if (!res.ok) throw new Error('File not found');
           return res.json();
         })
         .then(data => {
-          console.log('Data loaded:', data);
           if (data.prizes) {
             animateAllPrizes(data.prizes);
           } else {
-            document.getElementById('marquee').innerHTML = 'No results found';
+            marquee.innerHTML = '<div class="prize-label">No results found</div>';
           }
         })
         .catch((error) => {
-          console.error('Error loading results:', error);
-          document.getElementById('marquee').innerHTML = 'Failed to load results';
+          marquee.innerHTML = `<div class='prize-label' style='color:#ff6a00;'>Result file not found for ${code}-${date}.json</div>`;
         });
     }
     // Initial load
     loadResultAnimated();
+    // Optionally, add auto-refresh every minute if result not found
+    setInterval(() => {
+      const marquee = document.getElementById('marquee');
+      if (
+        marquee.innerText.includes('Result file not found') ||
+        marquee.innerText.includes('Loading...')
+      ) {
+        loadResultAnimated();
+      }
+    }, 60 * 1000); // Check every 1 minute
   </script>
 </body>
 </html> 
