@@ -60,14 +60,20 @@ function parseJsonFile(filePath, fileName) {
       }
     }
   }
+  // Add downloadLink if present
+  const downloadLink = data.downloadLink || '';
+  // Add github_url for this file
+  const github_url = `https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/${encodeURIComponent(fileName)}`;
   return {
     date,
     lottery,
     draw,
     filename: fileName,
+    github_url,
     prizes,
     numbers4: Array.from(numbers4),
-    numbers6: Array.from(numbers6)
+    numbers6: Array.from(numbers6),
+    downloadLink
   };
 }
 
