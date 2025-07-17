@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lucky Number Prediction</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.1/dist/tailwind.min.css" rel="stylesheet">
+  <link href="output.css" rel="stylesheet">
   <style>
     /* Custom animation for number pop/fadeUp */
     @keyframes fadeUp {
@@ -41,26 +41,53 @@
       border: 2px solid #f59e42;
       color: #7c4700;
       position: relative;
+      box-shadow: 0 4px 16px #f59e4280, 0 1.5px 0 #fff7cc;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .number-badge.repeated.most-repeated {
+      border: 3px solid #f59e42;
+      box-shadow: 0 6px 24px #f59e4280, 0 2px 0 #fff7cc;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e42 100%);
+      color: #b45309;
+      z-index: 2;
     }
     .number-badge .repeat-count {
       position: absolute;
-      top: -8px;
-      right: -8px;
+      top: -14px;
+      right: -14px;
       background: #fff7cc;
       color: #b45309;
-      font-size: 0.6em;
-      font-weight: 800;
-      border-radius: 8px;
-      padding: 1px 4px;
-      box-shadow: 0 1px 4px #f59e4280;
+      font-size: 0.7em;
+      font-weight: 900;
+      border-radius: 9999px;
+      padding: 3px 8px;
+      box-shadow: 0 2px 8px #f59e4280;
       z-index: 10;
-      border: 1.5px solid #facc15;
+      border: 2px solid #facc15;
       pointer-events: none;
       display: block !important;
       opacity: 1 !important;
       visibility: visible !important;
-      min-width: 20px;
+      min-width: 28px;
       text-align: center;
+      transform: scale(1.1) rotate(-8deg);
+    }
+    .number-badge:hover, .number-badge:active {
+      box-shadow: 0 8px 32px #f59e4280, 0 2px 0 #fff7cc;
+      transform: scale(1.07) translateY(-2px);
+      z-index: 3;
+    }
+    @media (max-width: 480px) {
+      .number-badge {
+        font-size: 1.2rem !important;
+        padding: 0.7rem 0.5rem !important;
+      }
+      .number-badge .repeat-count {
+        top: -10px;
+        right: -10px;
+        font-size: 0.65em;
+        padding: 2px 6px;
+      }
     }
   </style>
 </head>
@@ -373,9 +400,10 @@
               const count = n[1];
               const badge = document.createElement('span');
               badge.className = 'repeat-count';
-              badge.textContent = `${count}times`;
+              badge.textContent = `${count}×`;
               div.appendChild(badge);
               div.title = `Appeared ${count} times. Tap to copy.`;
+              if (i === 0) div.classList.add('most-repeated');
             } else {
         div.textContent = n;
         div.title = 'Tap to copy';
@@ -428,9 +456,10 @@
               const count = n[1];
               const badge = document.createElement('span');
               badge.className = 'repeat-count';
-              badge.textContent = `${count}times`;
+              badge.textContent = `${count}×`;
               div.appendChild(badge);
               div.title = `Appeared ${count} times. Tap to copy.`;
+              if (i === 0) div.classList.add('most-repeated');
             } else {
           div.textContent = n;
           div.title = 'Tap to copy';
