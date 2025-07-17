@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lottery Result</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="output.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     /* --- COPY ALL CSS FROM BT-10-2025-07-07 (13).html --- */
@@ -293,7 +293,9 @@
         document.getElementById('loadingMsg').textContent = 'No result file specified.';
         return;
       }
-      fetch('note/' + encodeURIComponent(file))
+      // Updated to fetch from GitHub raw URL
+      const githubJsonBase = 'https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/';
+      fetch(githubJsonBase + encodeURIComponent(file))
         .then(res => {
           if (!res.ok) throw new Error('Not found');
           return res.json();
