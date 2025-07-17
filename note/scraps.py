@@ -18,8 +18,10 @@ def get_last_n_result_links(n=50):
     seen = set()
     next_url = MAIN_URL
     today = datetime.now().date()
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'}
     while next_url and len(links) < n:
-        res = requests.get(next_url)
+        print(f"Fetching: {next_url}")
+        res = requests.get(next_url, headers=headers)
         soup = BeautifulSoup(res.text, "html.parser")
         for a in soup.find_all("a", href=True):
             if re.search(r'/kerala-lottery-result-[A-Z]+-\d+', a['href']):
@@ -32,15 +34,18 @@ def get_last_n_result_links(n=50):
                     continue
                 # Fetch the result page to get the date
                 try:
-                    page_res = requests.get(url)
+                    print(f"Fetching result page: {url}")
+                    page_res = requests.get(url, headers=headers)
                     page_soup = BeautifulSoup(page_res.text, "html.parser")
-                except Exception:
+                except Exception as e:
+                    print(f"Error fetching {url}: {e}")
                     continue
                 # Try to extract date from title/h1/h2/h3
                 date_str = None
                 for tag in ["h1", "title", "h2", "h3"]:
                     t = page_soup.find(tag)
                     if t and t.text:
+                        print(f"Checking result page: {url}, tag: {tag}, title: {t.text}")
                         m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", t.text)
                         if m:
                             date_str = f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
@@ -53,7 +58,8 @@ def get_last_n_result_links(n=50):
                             seen.add(url)
                             if len(links) >= n:
                                 break
-                    except Exception:
+                    except Exception as e:
+                        print(f"Error parsing date for {url}: {e}")
                         continue
         # Pagination as before...
         next_link = soup.find("a", string=re.compile("Older Posts|Next", re.I))
