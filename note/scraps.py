@@ -223,3 +223,13 @@ if latest_links:
     process_result_page(result_soup, result_url)
 else:
     print("No latest result found.")
+    # Debug: print the first 1000 characters of the fetched HTML from the main page
+    MAIN_URL = "https://www.kllotteryresult.com/"
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'}
+    try:
+        res = requests.get(MAIN_URL, headers=headers)
+        html_content = res.text
+        print("DEBUG: Raw HTML fetched (first 1000 chars):")
+        print(html_content[:1000])
+    except Exception as e:
+        print(f"DEBUG: Error fetching main page for debug: {e}")
