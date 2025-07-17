@@ -18,10 +18,8 @@ def get_last_n_result_links(n=50):
     seen = set()
     next_url = MAIN_URL
     today = datetime.now().date()
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'}
     while next_url and len(links) < n:
-        print(f"Fetching: {next_url}")
-        res = requests.get(next_url, headers=headers)
+        res = requests.get(next_url)
         soup = BeautifulSoup(res.text, "html.parser")
         for a in soup.find_all("a", href=True):
             if re.search(r'/kerala-lottery-result-[A-Z]+-\d+', a['href']):
@@ -34,18 +32,15 @@ def get_last_n_result_links(n=50):
                     continue
                 # Fetch the result page to get the date
                 try:
-                    print(f"Fetching result page: {url}")
-                    page_res = requests.get(url, headers=headers)
+                    page_res = requests.get(url)
                     page_soup = BeautifulSoup(page_res.text, "html.parser")
-                except Exception as e:
-                    print(f"Error fetching {url}: {e}")
+                except Exception:
                     continue
                 # Try to extract date from title/h1/h2/h3
                 date_str = None
                 for tag in ["h1", "title", "h2", "h3"]:
                     t = page_soup.find(tag)
                     if t and t.text:
-                        print(f"Checking result page: {url}, tag: {tag}, title: {t.text}")
                         m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", t.text)
                         if m:
                             date_str = f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
@@ -58,8 +53,7 @@ def get_last_n_result_links(n=50):
                             seen.add(url)
                             if len(links) >= n:
                                 break
-                    except Exception as e:
-                        print(f"Error parsing date for {url}: {e}")
+                    except Exception:
                         continue
         # Pagination as before...
         next_link = soup.find("a", string=re.compile("Older Posts|Next", re.I))
@@ -223,13 +217,3 @@ if latest_links:
     process_result_page(result_soup, result_url)
 else:
     print("No latest result found.")
-    # Debug: print the first 1000 characters of the fetched HTML from the main page
-    MAIN_URL = "https://www.kllotteryresult.com/"
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'}
-    try:
-        res = requests.get(MAIN_URL, headers=headers)
-        html_content = res.text
-        print("DEBUG: Raw HTML fetched (first 1000 chars):")
-        print(html_content[:1000])
-    except Exception as e:
-        print(f"DEBUG: Error fetching main page for debug: {e}")
