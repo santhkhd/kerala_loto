@@ -1,0 +1,104 @@
+{
+  "lottery_name": "PLUS",
+  "draw_number": "KN-580",
+  "draw_date": "2025-07-10",
+  "venue": "",
+  "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "PX 344766"
+      ]
+    },
+    "consolation_prize": {
+      "amount": 5000,
+      "label": "Consolation Prize",
+      "winners": [
+        "PN 344766",
+        "PO 344766",
+        "PP 344766",
+        "PR 344766",
+        "PS 344766",
+        "PT 344766",
+        "PU 344766",
+        "PV 344766",
+        "PW 344766",
+        "PY 344766",
+        "PZ 344766"
+      ]
+    },
+    "2nd_prize": {
+      "amount": 3000000,
+      "label": "2nd Prize",
+      "winners": [
+        "PX 207580"
+      ]
+    },
+    "3rd_prize": {
+      "amount": 500000,
+      "label": "3rd Prize",
+      "winners": [
+        "PU 393564"
+      ]
+    },
+    "4th_prize": {
+      "amount": 5000,
+      "label": "4th Prize",
+      "winners": [
+        "4913",
+        "7434",
+        "4203",
+        "0609",
+        "7210",
+        "1931",
+        "5336",
+        "3655",
+        "2735",
+        "2066",
+        "8529",
+        "1641",
+        "6743",
+        "3795",
+        "1067",
+        "..."
+      ]
+    },
+    "5th_prize": {
+      "amount": 2000,
+      "label": "5th Prize",
+      "winners": [
+        "***"
+      ]
+    },
+    "6th_prize": {
+      "amount": 1000,
+      "label": "6th Prize",
+      "winners": [
+        "***"
+      ]
+    },
+    "7th_prize": {
+      "amount": 500,
+      "label": "7th Prize",
+      "winners": [
+        "***"
+      ]
+    },
+    "8th_prize": {
+      "amount": 200,
+      "label": "8th Prize",
+      "winners": [
+        "***"
+      ]
+    },
+    "9th_prize": {
+      "amount": 100,
+      "label": "9th Prize",
+      "winners": [
+        "***"
+      ]
+    }
+  },
+  "downloadLink": ""
+}
