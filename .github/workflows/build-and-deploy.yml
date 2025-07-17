@@ -2,7 +2,7 @@ name: Build and Deploy Kerala Lottery Site
 
 on:
   schedule:
-    - cron: '30 10 * * *'  # Every day at 10:30 UTC (4:00 PM IST)
+    - cron: '*/5 9-11 * * *'  # Every 5 mins from 2:30 PM to 5:29 PM IST
   push:
     branches: [ main ]
   workflow_dispatch:
@@ -12,48 +12,58 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Install Python dependencies
+      - name: 📦 Install Python dependencies
         run: pip install requests beautifulsoup4
 
-      - name: Fetch latest lottery result JSON
-        run: python scraps.py
+      - name: 🔍 Fetch latest lottery result JSON
         working-directory: ./note
-
-      - name: Commit and push new JSON files
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add note/*.json
-          git commit -m 'Auto-update latest lottery result JSON' || echo "No changes to commit"
-          git push
+          set -e
+          python scraps.py
 
-      - name: Set up Node.js
+      - name: 📂 Show contents of note/
+        run: ls -al note/
+
+      - name: 🧾 Show contents of generated JSON files
+        run: cat note/*.json || echo "No JSON files found"
+
+      - name: 🔧 Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Generate history.json
+      - name: 🛠️ Generate history.json
         run: node generate-history.js
 
-      - name: Commit and push changes
+      - name: 📑 Show contents of history.json
+        run: cat history.json || echo "history.json missing"
+
+      - name: 💾 Commit and push new JSON files
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add history.json
-          git commit -m 'Auto-update history.json' || echo "No changes to commit"
+          git add note/*.json history.json
+          git commit -m 'Auto-update lottery JSON files' || echo "No changes to commit"
           git push
 
-      - name: Deploy to GitHub Pages
+      - name: 🚀 Prepare deploy directory
+        run: |
+          mkdir -p deploy
+          cp -r note/*.json deploy/
+          cp history.json deploy/
+
+      - name: 🌐 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./ 
+          publish_dir: ./deploy
