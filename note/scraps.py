@@ -149,8 +149,9 @@ def process_result_page(result_soup, result_url):
     draw_number_match = re.search(r"\(([^)]+)\)", title_text)
     draw_number = draw_number_match.group(1) if draw_number_match else "XX"
 
-    lottery_name_match = re.search(r"([A-Za-z]+)[\s\-]*\(", title_text)
-    lottery_name = lottery_name_match.group(1).upper() if lottery_name_match else "Unknown"
+    # Updated: Capture full lottery name before parenthesis
+    lottery_name_match = re.search(r"([A-Za-z\s]+)\s*\(", title_text)
+    lottery_name = lottery_name_match.group(1).strip().upper() if lottery_name_match else "Unknown"
 
     # Try to extract venue (if present)
     venue = ""
