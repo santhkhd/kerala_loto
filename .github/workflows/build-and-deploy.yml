@@ -2,7 +2,7 @@ name: Build and Deploy Kerala Lottery Site
 
 on:
   schedule:
-    - cron: '*/5 9-11 * * *'  # Every 5 min from 9:00 to 11:59 UTC (2:30 PM to 5:29 PM IST)
+    - cron: '30 10 * * *'  # Every day at 10:30 UTC (4:00 PM IST)
   push:
     branches: [ main ]
   workflow_dispatch:
