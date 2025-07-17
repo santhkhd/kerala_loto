@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ponkudam Lottery Home</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="output.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     body {
@@ -183,6 +183,7 @@
     <div class="lottery-grid" id="lottery-grid">
       <!-- Lottery cards will be generated here by JavaScript -->
     </div>
+    <div id="pagination" class="flex justify-center items-center gap-2 my-4"></div>
     </div>
   </div>
 
@@ -284,10 +285,13 @@
       setLang(currentLang);
     });
 
+    const CARDS_PER_PAGE = 12;
+    let currentPage = 1;
+    let totalPages = 1;
+    let allCards = [];
+
     function renderLotteryCards(lang) {
-      const grid = document.getElementById('lottery-grid');
-      if (!grid) return;
-      grid.innerHTML = '';
+      allCards = [];
       const schedule = [
         { dayOfWeek: 0, name: 'SAMRUDHI', shortName: 'SM', baseNumber: 9, baseDate: '2025-06-29' },
         { dayOfWeek: 1, name: 'BHAGYATHARA', shortName: 'BT', baseNumber: 8, baseDate: '2025-06-23' },
@@ -301,7 +305,7 @@
       const istTime = new Date(now.getTime() + (330 * 60 * 1000));
       const today = new Date(Date.UTC(istTime.getUTCFullYear(), istTime.getUTCMonth(), istTime.getUTCDate()));
       const todayStr = today.toISOString().split('T')[0];
-      for (let i = 0; i < 14; i++) {
+      for (let i = 0; i < 90; i++) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
         const dayOfWeek = date.getDay();
@@ -319,9 +323,8 @@
           const isNew = (dataDateStr === todayStr);
           const drawNumberStr = String(currentNumber).padStart(2, '0');
           const link = `result.html?file=${lottery.shortName}-${drawNumberStr}-${dataDateStr}.json`;
-          // Get translated name
           const translatedName = lotteryNameTranslations[lottery.name][lang] || lotteryNameTranslations[lottery.name]['en'];
-          const cardHtml = `
+          allCards.push(`
             <a class="lottery-card" href="${link}">
                 <div class="card-top">
                     ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
@@ -330,11 +333,48 @@
                 </div>
                 <div class="card-bottom">${cardDateStr}</div>
             </a>
-          `;
-          grid.innerHTML += cardHtml;
+          `);
         }
       }
+      totalPages = Math.ceil(allCards.length / CARDS_PER_PAGE);
+      renderPage(currentPage);
+      renderPagination();
     }
+
+    function renderPage(page) {
+      const grid = document.getElementById('lottery-grid');
+      if (!grid) return;
+      const start = (page - 1) * CARDS_PER_PAGE;
+      const end = start + CARDS_PER_PAGE;
+      grid.innerHTML = allCards.slice(start, end).join('');
+    }
+
+    function renderPagination() {
+      const pagination = document.getElementById('pagination');
+      if (!pagination) return;
+      let html = '';
+      if (totalPages > 1) {
+        html += `<button onclick="gotoPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-3 py-1 rounded-full bg-gray-200 mx-1 hover:bg-blue-100 transition">Prev</button>`;
+        let start = Math.max(1, currentPage - 2);
+        let end = Math.min(totalPages, currentPage + 2);
+
+        if (start > 1) html += `<span class="mx-1">...</span>`;
+        for (let i = start; i <= end; i++) {
+          html += `<button onclick="gotoPage(${i})" class="px-3 py-1 rounded-full mx-1 ${i === currentPage ? 'bg-blue-600 text-white shadow' : 'bg-gray-200 hover:bg-blue-100'} transition">${i}</button>`;
+        }
+        if (end < totalPages) html += `<span class="mx-1">...</span>`;
+        html += `<button onclick="gotoPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="px-3 py-1 rounded-full bg-gray-200 mx-1 hover:bg-blue-100 transition">Next</button>`;
+      }
+      pagination.innerHTML = html;
+    }
+
+    function gotoPage(page) {
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+      renderPage(currentPage);
+      renderPagination();
+    }
+    window.gotoPage = gotoPage;
 
     document.addEventListener('DOMContentLoaded', function() {
       setLang(currentLang);
