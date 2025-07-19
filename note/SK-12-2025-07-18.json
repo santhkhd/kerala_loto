@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "RU 634706(MALAPPURAM)"
+        "RU 634706 (MALAPPURAM)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "RW 595453(KOLLAM)"
+        "RW 595453 (KOLLAM)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "RY 376814"
+        "RY 376814 (KOTTAYAM)"
       ]
     },
     "4th_prize": {
