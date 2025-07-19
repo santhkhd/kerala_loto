@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "KT 224817(IDUKKI)"
+        "KT 224817 (IDUKKI)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "KU 589552\r\n(THIRUVANANTHAPURAM)"
+        "KU 589552 (THIRUVANANTHAPURAM)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "KW 358051"
+        "KW 358051 (THRISSUR)"
       ]
     },
     "4th_prize": {
