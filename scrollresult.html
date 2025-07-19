@@ -113,9 +113,14 @@
     .winner-grid-4d {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0.7em;
+      grid-template-rows: repeat(4, 1fr);
+      gap: 1.1em;
       width: 100%;
       margin-bottom: 0.2em;
+      min-height: 40vh;
+      align-items: center;
+      justify-items: center;
+      overflow-x: auto;
     }
     .winner-number {
       background: #fff;
@@ -134,10 +139,17 @@
       user-select: all;
       display: inline-block;
       font-family: 'Bebas Neue', 'Oswald', 'Montserrat', Arial, sans-serif;
+      word-break: break-all;
     }
     @media (max-width: 900px) {
       .prize-label { font-size: 1.3em; }
-      .winner-number { font-size: 2.7em; min-width: 1.3em; }
+      .winner-grid-4d {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+        gap: 0.5em;
+        min-height: 40vh;
+      }
+      .winner-number { font-size: 1.1em; min-width: 0.9em; padding: 0.09em 0.13em; }
     }
     @media (max-width: 600px) {
       .date-banner {
@@ -153,13 +165,17 @@
       .prize-label {
         font-size: 1.1em;
       }
-      .winner-number {
-        font-size: 1.7em;
-        padding: 0.13em 0.3em;
-        min-width: 1.1em;
-      }
       .winner-grid-4d {
-        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        grid-template-rows: repeat(4, 1fr) !important;
+        gap: 0.2em;
+        min-height: 40vh;
+        overflow-x: auto;
+      }
+      .winner-number {
+        font-size: 0.7em;
+        padding: 0.05em 0.07em;
+        min-width: 0.7em;
       }
     }
     @keyframes pulse {
@@ -167,12 +183,108 @@
       50% { opacity: 0.5; }
       100% { opacity: 1; }
     }
+    /* Modal improvements */
+    #fileModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #000a;
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    #fileModal > div {
+      background: #232946;
+      padding: 2em 1.5em;
+      border-radius: 1em;
+      max-width: 95vw;
+      max-height: 80vh;
+      overflow: auto;
+      box-shadow: 0 2px 16px #000b;
+      width: 400px;
+      animation: modalIn 0.25s;
+    }
+    @keyframes modalIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    #fileList {
+      max-height: 60vh;
+      overflow: auto;
+      margin-bottom: 1em;
+    }
+    .file-select-btn {
+      background: #ffe066;
+      color: #232946;
+      font-weight: bold;
+      padding: 0.7em 1em;
+      border-radius: 0.7em;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      box-shadow: 0 2px 8px #0002;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.2em;
+      font-size: 1.1em;
+      transition: background 0.15s;
+    }
+    .file-select-btn:hover {
+      background: #ffe066cc;
+    }
+    #closeModalBtn {
+      margin-top: 1.5em;
+      background: #ffe066;
+      color: #232946;
+      font-weight: bold;
+      padding: 0.5em 1.2em;
+      border-radius: 0.5em;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1.1em;
+      box-shadow: 0 2px 8px #0002;
+    }
+    @media (max-width: 600px) {
+      #fileModal > div {
+        padding: 1em 0.3em;
+        border-radius: 0.7em;
+        width: 98vw;
+        max-width: 98vw;
+      }
+      .file-select-btn {
+        font-size: 0.98em;
+        padding: 0.6em 0.5em;
+      }
+      #closeModalBtn {
+        font-size: 1em;
+        padding: 0.5em 0.5em;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- Removed code and date selectors -->
   <div class="date-banner" id="dateBanner"></div>
   <div style="position:fixed;top:10px;right:10px;z-index:30;background:#ff0000;color:#fff;padding:0.3em 0.8em;border-radius:0.5em;font-weight:bold;font-size:1.2em;animation:pulse 2s infinite;">LIVE</div>
+  <!-- Add Select Result button -->
+  <button id="selectResultBtn" style="position:fixed;top:10px;right:90px;z-index:31;background:#232946;color:#ffe066;padding:0.3em 0.8em;border-radius:0.5em;font-weight:bold;font-size:1.1em;border:none;cursor:pointer;box-shadow:0 2px 8px #0005;">Select Result</button>
+  <!-- Mute/Unmute button -->
+  <button id="muteBtn" style="position:fixed;top:10px;right:200px;z-index:32;background:#232946;color:#ffe066;padding:0.3em 0.8em;border-radius:0.5em;font-weight:bold;font-size:1.1em;border:none;cursor:pointer;box-shadow:0 2px 8px #0005;">🔊</button>
+  <!-- Language toggle button -->
+  <button id="langBtn" style="position:fixed;top:10px;right:310px;z-index:33;background:#232946;color:#ffe066;padding:0.3em 0.8em;border-radius:0.5em;font-weight:bold;font-size:1.1em;border:none;cursor:pointer;box-shadow:0 2px 8px #0005;">EN</button>
+  <!-- Modal for file selection -->
+  <div id="fileModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000a;z-index:100;align-items:center;justify-content:center;">
+    <div style="background:#232946;padding:2em 1.5em;border-radius:1em;max-width:90vw;max-height:80vh;overflow:auto;box-shadow:0 2px 16px #000b;">
+      <div style="font-size:1.3em;font-weight:bold;color:#ffe066;margin-bottom:1em;">Select a Result File</div>
+      <div id="fileList" style="max-height:60vh;overflow:auto;"></div>
+      <button id="closeModalBtn" style="margin-top:1.5em;background:#ffe066;color:#232946;font-weight:bold;padding:0.5em 1.2em;border-radius:0.5em;border:none;cursor:pointer;">Close</button>
+    </div>
+  </div>
   <!-- Removed scroll control buttons -->
   <div class="marquee-container" id="animated-container" style="overflow:hidden;height:calc(100vh - 4.5em);margin-top:4.5em;display:flex;align-items:flex-start;justify-content:center;">
     <div class="marquee-content" id="marquee-content" style="position:static;width:100vw;">
@@ -200,25 +312,42 @@
     document.getElementById('dateBanner').textContent = `Today: ${getTodayDisplayStr()}`;
     const marquee = document.getElementById('marquee');
     const marqueeContent = document.getElementById('marquee-content');
-    // Always use today's code and date based on weekly schedule
-    function getTodayLotteryShortName() {
+    // Use the same schedule and draw number logic as index.html
+    function getTodayLotteryInfo() {
       const schedule = [
-        { dayOfWeek: 0, shortName: 'SM' }, // Sunday
-        { dayOfWeek: 1, shortName: 'BT' }, // Monday
-        { dayOfWeek: 2, shortName: 'SS' }, // Tuesday
-        { dayOfWeek: 3, shortName: 'DL' }, // Wednesday
-        { dayOfWeek: 4, shortName: 'KN' }, // Thursday
-        { dayOfWeek: 5, shortName: 'SK' }, // Friday
-        { dayOfWeek: 6, shortName: 'KR' }  // Saturday
+        { dayOfWeek: 0, name: 'SAMRUDHI', shortName: 'SM', baseNumber: 9, baseDate: '2025-06-29' }, // Sunday
+        { dayOfWeek: 1, name: 'BHAGYATHARA', shortName: 'BT', baseNumber: 8, baseDate: '2025-06-23' }, // Monday
+        { dayOfWeek: 2, name: 'STHREE_SAKTHI', shortName: 'SS', baseNumber: 473, baseDate: '2025-06-24' }, // Tuesday
+        { dayOfWeek: 3, name: 'DHANALEKSHMI', shortName: 'DL', baseNumber: 7, baseDate: '2025-06-25' }, // Wednesday
+        { dayOfWeek: 4, name: 'KARUNYA_PLUS', shortName: 'KN', baseNumber: 578, baseDate: '2025-06-26' }, // Thursday
+        { dayOfWeek: 5, name: 'SUVARNA_KERALAM', shortName: 'SK', baseNumber: 9, baseDate: '2025-06-27' }, // Friday
+        { dayOfWeek: 6, name: 'KARUNYA', shortName: 'KR', baseNumber: 712, baseDate: '2025-06-28' }  // Saturday
       ];
-      const today = new Date();
-      return schedule[today.getDay()].shortName;
+      const now = new Date();
+      const istOffset = 330 * 60 * 1000; // IST is UTC+5:30
+      const istTime = new Date(now.getTime() + istOffset);
+      const today = new Date(Date.UTC(istTime.getUTCFullYear(), istTime.getUTCMonth(), istTime.getUTCDate()));
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      const dayOfWeek = today.getDay();
+      const lottery = schedule.find(l => l.dayOfWeek === dayOfWeek);
+      if (!lottery) return null;
+      const baseDate = new Date(lottery.baseDate);
+      const daysDifference = (today - baseDate) / (1000 * 60 * 60 * 24);
+      const weeksPassed = Math.floor(daysDifference / 7);
+      const currentNumber = lottery.baseNumber + weeksPassed;
+      const drawNumberStr = String(currentNumber).padStart(2, '0');
+      return {
+        code: lottery.shortName,
+        drawNumber: drawNumberStr,
+        dateStr: `${yyyy}-${mm}-${dd}`
+      };
     }
-    function getSelectedCode() {
-      return getTodayLotteryShortName();
-    }
-    function getSelectedDate() {
-      return getTodayStr();
+    function getSelectedFile() {
+      const info = getTodayLotteryInfo();
+      if (!info) return null;
+      return `note/${info.code}-${info.drawNumber}-${info.dateStr}.json`;
     }
     // Show 1st to 9th prize
     const PRIZE_ORDER = [
@@ -360,28 +489,211 @@
       await sleep(600);
       container.innerHTML = '';
     }
+    // --- Speech Synthesis for numbers with language toggle ---
+    let soundOn = true;
+    let speechLang = 'en-IN'; // Default to English
+    const muteBtn = document.getElementById('muteBtn');
+    const langBtn = document.getElementById('langBtn');
+    langBtn.onclick = function() {
+      speechLang = (speechLang === 'en-IN') ? 'ml-IN' : 'en-IN';
+      langBtn.textContent = (speechLang === 'en-IN') ? 'EN' : 'ML';
+    };
+    function speakNumber(num) {
+      return new Promise(resolve => {
+        if (!soundOn || !window.speechSynthesis) return resolve();
+        let text = num.replace(/[^0-9A-Z ]/g, '');
+        // For Malayalam, speak as a whole number; for English, digit by digit
+        if (speechLang === 'en-IN') {
+          // For series+number, say series then digits
+          if (/^[A-Z]{2} ?\d{6}$/.test(num)) {
+            text = num.slice(0, 2).split('').join(' ') + ' ' + num.slice(-6).split('').join(' ');
+          } else {
+            text = text.split('').join(' ');
+          }
+        }
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = speechLang;
+        // Try to select a matching voice if available
+        const voices = window.speechSynthesis.getVoices();
+        const matchVoice = voices.find(v => v.lang === speechLang);
+        if (matchVoice) utter.voice = matchVoice;
+        utter.rate = 0.85;
+        utter.pitch = 1.1;
+        utter.volume = 1;
+        utter.onend = resolve;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utter);
+      });
+    }
+    muteBtn.onclick = function() {
+      soundOn = !soundOn;
+      muteBtn.textContent = soundOn ? '🔊' : '🔇';
+      if (!soundOn && window.speechSynthesis) window.speechSynthesis.cancel();
+    };
+    // In animatePrizeStepwise, speak each number as it appears
+    async function animatePrizeStepwise(prize, container) {
+      container.innerHTML = '';
+      // Prize label
+      const label = document.createElement('div');
+      label.className = 'prize-label';
+      label.textContent = `${prize.label || ''}${prize.amount ? ' (' + formatAmount(prize.amount) + ')' : ''}`;
+      container.appendChild(label);
+
+      // Combine all numbers into a single array
+      const allNumbers = [
+        ...prize.winners.filter(is6Digit).map(extractSeriesNumber),
+        ...prize.winners.filter(is4Digit).map(extractSeriesNumber),
+        ...prize.winners.filter(n => !is6Digit(n) && !is4Digit(n)).map(extractSeriesNumber)
+      ];
+
+      // Helper to read a batch of numbers, digit by digit
+      async function speakBatch(batchSpans) {
+        for (let span of batchSpans) {
+          if (typeof speakNumber === 'function') await speakNumber(span.textContent);
+          await sleep(200); // Small pause between numbers
+        }
+      }
+
+      // Show 16 numbers at a time in a 4x4 grid (desktop) or 2x8 grid (mobile)
+      let idx = 0;
+      while (idx < allNumbers.length) {
+        // Clear previous grid
+        let grid = container.querySelector('.winner-grid-4d');
+        if (grid) container.removeChild(grid);
+        // Determine if all numbers in this batch are 6-digit
+        let batch = allNumbers.slice(idx, idx + 16);
+        const allSixDigit = batch.every(n => /^\d{6}$/.test(n) || /^[A-Z]{2} ?\d{6}$/.test(n));
+        if (allSixDigit) {
+          // Show as single column, centered
+          grid = document.createElement('div');
+          grid.className = 'winner-grid-6d';
+          grid.style.display = 'flex';
+          grid.style.flexDirection = 'column';
+          grid.style.alignItems = 'center';
+          grid.style.justifyContent = 'center';
+          grid.style.width = '100%';
+          grid.style.margin = '1.5em 0 0.5em 0';
+          let batchSpans = [];
+          for (let j = 0; j < 16 && idx + j < allNumbers.length; j++) {
+            const span = document.createElement('span');
+            span.className = 'winner-number';
+            span.textContent = allNumbers[idx + j];
+            span.style.opacity = 0;
+            span.style.fontSize = '4.2em';
+            span.style.minWidth = '2.2em';
+            span.style.padding = '0.18em 0.7em';
+            span.style.margin = '0.3em 0';
+            grid.appendChild(span);
+            batchSpans.push(span);
+          }
+          container.appendChild(grid);
+          setTimeout(() => batchSpans.forEach(s => { s.style.transition = 'opacity 0.5s'; s.style.opacity = 1; }), 50);
+          await speakBatch(batchSpans);
+          await sleep(Math.max(5000 - batchSpans.length * 1200, 500));
+          idx += 16;
+        } else {
+          // Use grid for 4-digit/other numbers
+          grid = document.createElement('div');
+          grid.className = 'winner-grid-4d';
+          grid.style.display = 'grid';
+          grid.style.width = '100%';
+          grid.style.margin = '1.5em 0 0.5em 0';
+          let batchSpans = [];
+          for (let j = 0; j < 16 && idx + j < allNumbers.length; j++) {
+            const span = document.createElement('span');
+            span.className = 'winner-number';
+            span.textContent = allNumbers[idx + j];
+            span.style.opacity = 0;
+            span.style.fontSize = '4.2em';
+            span.style.minWidth = '2.2em';
+            span.style.padding = '0.18em 0.7em';
+            grid.appendChild(span);
+            batchSpans.push(span);
+          }
+          container.appendChild(grid);
+          setTimeout(() => batchSpans.forEach(s => { s.style.transition = 'opacity 0.5s'; s.style.opacity = 1; }), 50);
+          await speakBatch(batchSpans);
+          await sleep(10000 - batchSpans.length * 1200);
+          idx += 16;
+        }
+      }
+      // Wait a bit after last batch
+      await sleep(1000);
+    }
+
     async function animateAllPrizes(prizes) {
-      console.log('Starting animation for all prizes');
       const marquee = document.getElementById('marquee');
       marquee.innerHTML = '';
-      for (const key of PRIZE_ORDER) {
+      const prizeKeys = PRIZE_ORDER.filter(key => prizes[key] && prizes[key].winners && prizes[key].winners.length);
+
+      for (const key of prizeKeys) {
         const prize = prizes[key];
-        if (!prize || !prize.winners || !prize.winners.length) {
-          console.log('Skipping', key, '- no winners');
-          continue;
-        }
-        console.log('Processing', key);
-        await animatePrize(prize, marquee);
+        await animatePrizeStepwise(prize, marquee);
+        await sleep(500);
       }
+
       marquee.innerHTML = '<div class="prize-label">All Results Shown</div>';
-      // Loop the animation for live streaming
-      await sleep(5000);
-      animateAllPrizes(prizes);
+      await sleep(2000);
+      animateAllPrizes(prizes); // Loop for live
     }
-    function loadResultAnimated() {
-      const code = getSelectedCode();
-      const date = getSelectedDate();
-      const file = `note/${code}-${date}.json`;
+    // --- File selection modal logic ---
+    const selectResultBtn = document.getElementById('selectResultBtn');
+    const fileModal = document.getElementById('fileModal');
+    const fileList = document.getElementById('fileList');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    let selectedFile = null;
+    // Show modal
+    selectResultBtn.onclick = () => {
+      fileModal.style.display = 'flex';
+      if (!fileList.hasChildNodes()) {
+        loadFileList();
+      }
+    };
+    // Hide modal
+    closeModalBtn.onclick = () => { fileModal.style.display = 'none'; };
+    fileModal.onclick = (e) => { if (e.target === fileModal) fileModal.style.display = 'none'; };
+    // Fetch list of JSON files in note/ from GitHub API
+    async function loadFileList() {
+      fileList.innerHTML = '<div style="color:#ffe066;">Loading files...</div>';
+      try {
+        // Replace with your repo details
+        const owner = 'santhkhd';
+        const repo = 'kerala_loto';
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/note`;
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error('Failed to fetch file list');
+        const files = await res.json();
+        const jsonFiles = files.filter(f => f.name.endsWith('.json'));
+        // Sort: today's file first, then descending by date
+        const todayStr = getTodayStr();
+        jsonFiles.sort((a, b) => {
+          const aDate = (a.name.match(/\d{4}-\d{2}-\d{2}/) || [""])[0];
+          const bDate = (b.name.match(/\d{4}-\d{2}-\d{2}/) || [""])[0];
+          if (aDate === todayStr) return -1;
+          if (bDate === todayStr) return 1;
+          return bDate.localeCompare(aDate);
+        });
+        fileList.innerHTML = jsonFiles.map(f => {
+          const dateMatch = f.name.match(/\d{4}-\d{2}-\d{2}/);
+          const dateDisp = dateMatch ? dateMatch[0].split('-').reverse().join('/') : '';
+          return `<div style='margin:0.3em 0;'><button class='file-select-btn' data-path='note/${f.name}' style='background:#ffe066;color:#232946;font-weight:bold;padding:0.7em 1em;border-radius:0.7em;border:none;cursor:pointer;width:100%;text-align:left;box-shadow:0 2px 8px #0002;display:flex;justify-content:space-between;align-items:center;'><span>${f.name}</span><span style='font-size:0.95em;color:#232946bb;font-weight:normal;'>${dateDisp}</span></button></div>`;
+        }).join('');
+        // Add click listeners
+        document.querySelectorAll('.file-select-btn').forEach(btn => {
+          btn.onclick = (e) => {
+            selectedFile = btn.getAttribute('data-path');
+            fileModal.style.display = 'none';
+            loadResultAnimated(selectedFile);
+          };
+        });
+      } catch (err) {
+        fileList.innerHTML = `<div style='color:#ff6a00;'>Failed to load file list</div>`;
+      }
+    }
+    // --- End file selection modal logic ---
+    // Update loadResultAnimated to accept a file param
+    function loadResultAnimated(file) {
+      if (!file) file = getSelectedFile();
       marquee.innerHTML = '<div class="prize-label">Loading...</div>';
       fetch(file)
         .then(res => {
@@ -391,12 +703,17 @@
         .then(data => {
           if (data.prizes) {
             animateAllPrizes(data.prizes);
+            // Update date banner to file date
+            const match = file.match(/(\d{4}-\d{2}-\d{2})/);
+            if (match) {
+              document.getElementById('dateBanner').textContent = `Result Date: ${match[1].split('-').reverse().join('/')}`;
+            }
           } else {
             marquee.innerHTML = '<div class="prize-label">No results found</div>';
           }
         })
         .catch((error) => {
-          marquee.innerHTML = `<div class='prize-label' style='color:#ff6a00;'>Result file not found for ${code}-${date}.json</div>`;
+          marquee.innerHTML = `<div class='prize-label' style='color:#ff6a00;'>Result file not found</div>`;
         });
     }
     // Initial load
@@ -413,4 +730,4 @@
     }, 60 * 1000); // Check every 1 minute
   </script>
 </body>
-</html> 
+</html>
