@@ -1,0 +1,142 @@
+{
+  "lottery_name": "SAMRUDHI",
+  "draw_number": "SM-12",
+  "draw_date": "2025-07-20",
+  "venue": "",
+  "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "MR 184440(ALAPPUZHA)"
+      ]
+    },
+    "consolation_prize": {
+      "amount": 5000,
+      "label": "Consolation Prize",
+      "winners": [
+        "MN 184440",
+        "MO 184440",
+        "MP 184440",
+        "MS 184440",
+        "MT 184440",
+        "MU 184440",
+        "MV 184440",
+        "MW 184440",
+        "MX 184440",
+        "MY 184440",
+        "MZ 184440"
+      ]
+    },
+    "2nd_prize": {
+      "amount": 3000000,
+      "label": "2nd Prize",
+      "winners": [
+        "MX 376272(KOTTAYAM)"
+      ]
+    },
+    "3rd_prize": {
+      "amount": 500000,
+      "label": "3rd Prize",
+      "winners": [
+        "MT 770687"
+      ]
+    },
+    "4th_prize": {
+      "amount": 5000,
+      "label": "4th Prize",
+      "winners": [
+        "0292",
+        "0331",
+        "0661",
+        "0759",
+        "1048",
+        "1253",
+        "1508",
+        "1966",
+        "2529",
+        "3350",
+        "3502",
+        "4079",
+        "4390",
+        "4624",
+        "6111",
+        "6709",
+        "6875",
+        "8073",
+        "8226",
+        "9054"
+      ]
+    },
+    "5th_prize": {
+      "amount": 2000,
+      "label": "5th Prize",
+      "winners": [
+        "3042",
+        "3129",
+        "4497",
+        "7760",
+        "9035",
+        "9154"
+      ]
+    },
+    "6th_prize": {
+      "amount": 1000,
+      "label": "6th Prize",
+      "winners": [
+        "0085",
+        "0491",
+        "0667",
+        "0771",
+        "0792",
+        "1071",
+        "1196",
+        "1647",
+        "1718",
+        "2725",
+        "2811",
+        "3110",
+        "4962",
+        "5114",
+        "5356",
+        "5501",
+        "5623",
+        "6569",
+        "6882",
+        "6901",
+        "6903",
+        "7270",
+        "7295",
+        "8281",
+        "8493",
+        "8641",
+        "9001",
+        "9190",
+        "9263",
+        "9547"
+      ]
+    },
+    "7th_prize": {
+      "amount": 500,
+      "label": "7th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "8th_prize": {
+      "amount": 200,
+      "label": "8th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "9th_prize": {
+      "amount": 100,
+      "label": "9th Prize",
+      "winners": [
+        "**"
+      ]
+    }
+  },
+  "downloadLink": ""
+}
