@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ponkudam Lottery Home</title>
+  <title>Kerala Lotery Home</title>
   <link href="output.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
@@ -157,6 +157,38 @@
       }
     }
     body { padding-bottom: 60px !important; }
+    .tab-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      color: #374151;
+      background: #f3f4f6;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      white-space: nowrap;
+      margin-right: 0.5rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab-btn.active {
+      background: #2563eb;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+    }
+    /* Make tab bar scrollable and mobile-friendly */
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    #lotteryTabs {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      min-width: 100vw;
+    }
   </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
@@ -177,13 +209,26 @@
     </div>
   </div>
 
+  <!-- Scrolling Tab Bar for Lottery Categories -->
+  <div class="w-full overflow-x-auto bg-white shadow-sm border-b border-gray-200 scrollbar-hide">
+    <div class="flex space-x-4 px-4 py-2 min-w-max scrollbar-hide" id="lotteryTabs" tabindex="0" role="tablist">
+      <button class="tab-btn active" data-category="ALL">All</button>
+      <button class="tab-btn" data-category="KARUNYA">Karunya</button>
+      <button class="tab-btn" data-category="KARUNYA_PLUS">Karunya Plus</button>
+      <button class="tab-btn" data-category="SUVARNA_KERALAM">Suvarna Keralam</button>
+      <button class="tab-btn" data-category="STHREE_SAKTHI">Sthree Sakthi</button>
+      <button class="tab-btn" data-category="DHANALEKSHMI">Dhanalekshmi</button>
+      <button class="tab-btn" data-category="SAMRUDHI">Samrudhi</button>
+      <button class="tab-btn" data-category="BHAGYATHARA">Bhagyathara</button>
+    </div>
+  </div>
+
   <div class="w-full px-1 sm:px-4">
     <div class="max-w-4xl mx-auto w-full">
     <!-- Lottery Grid -->
     <div class="lottery-grid" id="lottery-grid">
       <!-- Lottery cards will be generated here by JavaScript -->
     </div>
-    <div id="pagination" class="flex justify-center items-center gap-2 my-4"></div>
     </div>
   </div>
 
@@ -285,12 +330,9 @@
       setLang(currentLang);
     });
 
-    const CARDS_PER_PAGE = 12;
-    let currentPage = 1;
-    let totalPages = 1;
     let allCards = [];
 
-    function renderLotteryCards(lang) {
+    function renderLotteryCards(lang, filterCategory = 'ALL') {
       allCards = [];
       const schedule = [
         { dayOfWeek: 0, name: 'SAMRUDHI', shortName: 'SM', baseNumber: 9, baseDate: '2025-06-29' },
@@ -305,12 +347,14 @@
       const istTime = new Date(now.getTime() + (330 * 60 * 1000));
       const today = new Date(Date.UTC(istTime.getUTCFullYear(), istTime.getUTCMonth(), istTime.getUTCDate()));
       const todayStr = today.toISOString().split('T')[0];
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 90; i++) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
         const dayOfWeek = date.getDay();
         const lottery = schedule.find(l => l.dayOfWeek === dayOfWeek);
         if (lottery) {
+          // Only add if matches filter
+          if (filterCategory === 'ALL' || lottery.name === filterCategory) {
           const baseDate = new Date(lottery.baseDate);
           const daysDifference = (date - baseDate) / (1000 * 60 * 60 * 24);
           const weeksPassed = Math.floor(daysDifference / 7);
@@ -336,49 +380,28 @@
           `);
         }
       }
-      totalPages = Math.ceil(allCards.length / CARDS_PER_PAGE);
-      renderPage(currentPage);
-      renderPagination();
     }
-
-    function renderPage(page) {
+      // Show all cards at once, no pagination
       const grid = document.getElementById('lottery-grid');
-      if (!grid) return;
-      const start = (page - 1) * CARDS_PER_PAGE;
-      const end = start + CARDS_PER_PAGE;
-      grid.innerHTML = allCards.slice(start, end).join('');
+      if (grid) grid.innerHTML = allCards.join('');
     }
-
-    function renderPagination() {
-      const pagination = document.getElementById('pagination');
-      if (!pagination) return;
-      let html = '';
-      if (totalPages > 1) {
-        html += `<button onclick="gotoPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-3 py-1 rounded-full bg-gray-200 mx-1 hover:bg-blue-100 transition">Prev</button>`;
-        let start = Math.max(1, currentPage - 2);
-        let end = Math.min(totalPages, currentPage + 2);
-
-        if (start > 1) html += `<span class="mx-1">...</span>`;
-        for (let i = start; i <= end; i++) {
-          html += `<button onclick="gotoPage(${i})" class="px-3 py-1 rounded-full mx-1 ${i === currentPage ? 'bg-blue-600 text-white shadow' : 'bg-gray-200 hover:bg-blue-100'} transition">${i}</button>`;
-        }
-        if (end < totalPages) html += `<span class="mx-1">...</span>`;
-        html += `<button onclick="gotoPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="px-3 py-1 rounded-full bg-gray-200 mx-1 hover:bg-blue-100 transition">Next</button>`;
-      }
-      pagination.innerHTML = html;
-    }
-
-    function gotoPage(page) {
-      if (page < 1 || page > totalPages) return;
-      currentPage = page;
-      renderPage(currentPage);
-      renderPagination();
-    }
-    window.gotoPage = gotoPage;
 
     document.addEventListener('DOMContentLoaded', function() {
       setLang(currentLang);
       updateHeaderTitle();
+    });
+
+    // Tab bar filtering logic
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabs = document.querySelectorAll('.tab-btn');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          const category = this.getAttribute('data-category');
+          renderLotteryCards(currentLang, category);
+        });
+      });
     });
   </script>
 </body>
