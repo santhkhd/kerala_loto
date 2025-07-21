@@ -365,7 +365,7 @@
           const cardDateStr = `${dd}/${mm}/${yyyy}`;
           const dataDateStr = `${yyyy}-${mm}-${dd}`;
           const isNew = (dataDateStr === todayStr);
-          const drawNumberStr = String(currentNumber).padStart(2, '0');
+          const drawNumberStr = String(currentNumber); // No leading zero
           const link = `result.html?file=${lottery.shortName}-${drawNumberStr}-${dataDateStr}.json`;
           const translatedName = lotteryNameTranslations[lottery.name][lang] || lotteryNameTranslations[lottery.name]['en'];
           allCards.push(`
