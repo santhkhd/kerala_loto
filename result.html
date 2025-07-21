@@ -47,6 +47,14 @@
         display: none !important;
       }
     }
+    @media (max-width: 600px) {
+      .text-3xl { font-size: 2em !important; }
+      .text-4xl { font-size: 2.3em !important; }
+      .text-lg { font-size: 1.2em !important; }
+      .text-xl { font-size: 1.4em !important; }
+      .font-extrabold { font-weight: 800 !important; }
+      .font-semibold { font-weight: 600 !important; }
+    }
   </style>
 </head>
 <body class="bg-gray-900 min-h-screen">
@@ -83,10 +91,14 @@
       let html = '';
       // Lottery title and meta
       html += `<div class="bg-blue-900 text-white rounded-lg shadow-lg p-4 mb-4">
-        <div class="text-2xl font-bold mb-2 tracking-wide text-center">${escapeHtml(data.lottery_name||'')}</div>
-        <div class="flex flex-col sm:flex-row sm:justify-center gap-2 text-sm text-blue-200 text-center">
-          <span>Draw: <b>${escapeHtml(data.draw_number||'')}</b></span>
-          <span>Date: <b>${escapeHtml(data.draw_date||'')}</b></span>
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+          <div class="w-full sm:w-auto text-center sm:text-left">
+            <div class="text-3xl sm:text-4xl font-extrabold tracking-wide mb-1" style="line-height:1.1;">${escapeHtml(data.lottery_name||'')}</div>
+          </div>
+          <div class="flex flex-col sm:items-end w-full sm:w-auto text-center sm:text-right text-blue-200">
+            <span class="text-lg sm:text-xl font-semibold">Draw: <b>${escapeHtml(data.draw_number||'')}</b></span>
+            <span class="text-base sm:text-lg font-semibold">Date: <b>${escapeHtml(data.draw_date||'')}</b></span>
+          </div>
         </div>
       </div>`;
       // Search bar
