@@ -8,49 +8,83 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "Draw is going on.\r\nResult updating start soon.\r\nPlease wait..."
+        "BS 538337"
       ]
     },
     "consolation_prize": {
       "amount": 5000,
       "label": "Consolation Prize",
       "winners": [
-        "**"
+        "BN 538337",
+        "BO 538337",
+        "BP 538337",
+        "BR 538337",
+        "BT 538337",
+        "BU 538337",
+        "BV 538337",
+        "BW 538337",
+        "BX 538337",
+        "BY 538337",
+        "BZ 538337"
       ]
     },
     "2nd_prize": {
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "**"
+        "BS 213553"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "**"
+        "BN 949071"
       ]
     },
     "4th_prize": {
       "amount": 5000,
       "label": "4th Prize",
       "winners": [
-        "**"
+        "1187",
+        "1340",
+        "1570",
+        "2702",
+        "2963",
+        "3052",
+        "3393",
+        "3855",
+        "4085",
+        "4358",
+        "4787",
+        "5506",
+        "5586",
+        "6544",
+        "6893",
+        "7507",
+        "7827",
+        "8131",
+        "9765",
+        "9839"
       ]
     },
     "5th_prize": {
       "amount": 2000,
       "label": "5th Prize",
       "winners": [
-        "**"
+        "1973",
+        "2638",
+        "5027",
+        "7046",
+        "8415",
+        "9010"
       ]
     },
     "6th_prize": {
       "amount": 1000,
       "label": "6th Prize",
       "winners": [
-        "**"
+        "..."
       ]
     },
     "7th_prize": {
