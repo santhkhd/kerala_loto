@@ -118,7 +118,7 @@
         let stream = null;
         let historyData = [];
         // Load real data
-        fetch('history.json')
+        fetch('https://raw.githubusercontent.com/santhkhd/kerala_loto/main/history.json')
           .then(res => res.json())
           .then(data => { historyData = data; })
           .catch(() => { historyData = []; });
