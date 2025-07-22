@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "BS 538337(VAIKKOM)"
+        "BS 538337 (VAIKKOM)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "BS 213553\r\n(THIRUVANANTHAPURAM)"
+        "BS 213553 (THIRUVANANTHAPURAM)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "BN 949071"
+        "BN 949071 (ALAPPUZHA)"
       ]
     },
     "4th_prize": {
