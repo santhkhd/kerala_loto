@@ -4654,7 +4654,7 @@
         "label": "1st Prize",
         "amount": 10000000,
         "winners": [
-          "BS 538337(VAIKKOM)"
+          "BS 538337 (VAIKKOM)"
         ]
       },
       {
@@ -4680,7 +4680,7 @@
         "label": "2nd Prize",
         "amount": 3000000,
         "winners": [
-          "BS 213553\r\n(THIRUVANANTHAPURAM)"
+          "BS 213553 (THIRUVANANTHAPURAM)"
         ]
       },
       {
@@ -4688,7 +4688,7 @@
         "label": "3rd Prize",
         "amount": 500000,
         "winners": [
-          "BN 949071"
+          "BN 949071 (ALAPPUZHA)"
         ]
       },
       {
@@ -89249,6 +89249,102 @@
       "697278",
       "433520",
       "259461"
+    ],
+    "downloadLink": ""
+  },
+  {
+    "date": "2025-07-22",
+    "lottery": "SS",
+    "draw": "SS-477",
+    "filename": "SS-477-2025-07-22.json",
+    "github_url": "https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/SS-477-2025-07-22.json",
+    "prizes": [
+      {
+        "prize_key": "1st_prize",
+        "label": "1st Prize",
+        "amount": 10000000,
+        "winners": [
+          "SV 238887"
+        ]
+      },
+      {
+        "prize_key": "consolation_prize",
+        "label": "Consolation Prize",
+        "amount": 5000,
+        "winners": [
+          "**"
+        ]
+      },
+      {
+        "prize_key": "2nd_prize",
+        "label": "2nd Prize",
+        "amount": 3000000,
+        "winners": [
+          "SN 433723"
+        ]
+      },
+      {
+        "prize_key": "3rd_prize",
+        "label": "3rd Prize",
+        "amount": 500000,
+        "winners": [
+          "SO 405559"
+        ]
+      },
+      {
+        "prize_key": "4th_prize",
+        "label": "4th Prize",
+        "amount": 5000,
+        "winners": [
+          "..."
+        ]
+      },
+      {
+        "prize_key": "5th_prize",
+        "label": "5th Prize",
+        "amount": 2000,
+        "winners": [
+          "**"
+        ]
+      },
+      {
+        "prize_key": "6th_prize",
+        "label": "6th Prize",
+        "amount": 1000,
+        "winners": [
+          "**"
+        ]
+      },
+      {
+        "prize_key": "7th_prize",
+        "label": "7th Prize",
+        "amount": 500,
+        "winners": [
+          "**"
+        ]
+      },
+      {
+        "prize_key": "8th_prize",
+        "label": "8th Prize",
+        "amount": 200,
+        "winners": [
+          "**"
+        ]
+      },
+      {
+        "prize_key": "9th_prize",
+        "label": "9th Prize",
+        "amount": 100,
+        "winners": [
+          "**"
+        ]
+      }
+    ],
+    "numbers4": [],
+    "numbers6": [
+      "238887",
+      "433723",
+      "405559"
     ],
     "downloadLink": ""
   },
