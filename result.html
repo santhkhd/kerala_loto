@@ -189,9 +189,8 @@
           <div class="text-red-700 font-semibold"><span class="font-bold">Ticket Number</span> <span class="bg-red-200 text-red-900 px-2 py-1 rounded font-mono">${escapeHtml(searchNumber)}</span> did not win any prize in this draw.</div>
         </div>`;
       }
-      // Render all prize cards (for non-bumper lotteries)
-      if (!isBumper) {
-        prizeKeys.forEach((key, idx) => {
+      // Render all prize cards
+      prizeKeys.forEach((key, idx) => {
         const prize = data.prizes[key];
         if (!prize) return;
         const highlight = (key==='1st_prize'||key==='bumper_prize') ? 'border-4 border-yellow-400 shadow-2xl' : 'border';
@@ -213,7 +212,6 @@
         }
         html += '</div>';
       });
-    }
       html += '</div>';
       // Info cards
       let totalWinners = 0, totalPrizeMoney = 0, prizeCategories = 0;
@@ -273,8 +271,9 @@
         The file contains the numbers of Winners of the day for all prizes. The Kerala lottery result is also published in the Kerala Government Gazette. The prize winners would have to verify the winning numbers with the result published in the Gazette and surrender the lottery ticket within 30 days of the draw date.
       </div>`;
 
-      // Stylish Prize Table
-      html += `<div class="max-w-xl mx-auto my-8 p-4 bg-gradient-to-br from-blue-900 to-blue-600 rounded-lg shadow-lg border border-blue-400 text-blue-100">
+      // Stylish Prize Table (for non-bumper lotteries)
+      if (!isBumper) {
+        html += `<div class="max-w-xl mx-auto my-8 p-4 bg-gradient-to-br from-blue-900 to-blue-600 rounded-lg shadow-lg border border-blue-400 text-blue-100">
         <h2 class="text-lg font-bold mb-3 text-blue-200 text-center tracking-wide">Prize Structure</h2>
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left border-collapse mb-2">
@@ -299,6 +298,7 @@
           </table>
         </div>
       </div>`;
+      }
 
       // Recent Results Table Placeholder
       html += `<div id="recentResultsContainer"></div>`;
