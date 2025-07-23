@@ -1642,7 +1642,7 @@
       {
         "prize_key": "1st_prize",
         "label": "1st Prize",
-        "amount": 10000000,
+        "amount": 100000000,
         "winners": [
           "MC 678572(PAYYANUR)"
         ]
@@ -1650,7 +1650,7 @@
       {
         "prize_key": "consolation_prize",
         "label": "Consolation Prize",
-        "amount": 5000,
+        "amount": 100000,
         "winners": [
           "MA 678572",
           "MB 678572",
@@ -1661,7 +1661,7 @@
       {
         "prize_key": "2nd_prize",
         "label": "2nd Prize",
-        "amount": 3000000,
+        "amount": 1000000,
         "winners": [
           "MA 719846",
           "MB 682584",
@@ -1685,7 +1685,7 @@
       {
         "prize_key": "4th_prize",
         "label": "4th Prize",
-        "amount": 5000,
+        "amount": 300000,
         "winners": [
           "MA 729545",
           "MB 168612",
@@ -1697,7 +1697,7 @@
       {
         "prize_key": "5th_prize",
         "label": "5th Prize",
-        "amount": 2000,
+        "amount": 5000,
         "winners": [
           "0354",
           "0503",
@@ -2144,7 +2144,7 @@
       {
         "prize_key": "8th_prize",
         "label": "8th Prize",
-        "amount": 200,
+        "amount": 250,
         "winners": [
           "0047",
           "0073",
