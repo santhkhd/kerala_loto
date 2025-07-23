@@ -193,7 +193,7 @@
       prizeKeys.forEach((key, idx) => {
         const prize = data.prizes[key];
         if (!prize) return;
-        const highlight = (key==='1st_prize'||key==='bumper_prize') ? 'border-4 border-yellow-400 shadow-2xl' : 'border';
+        const highlight = (key==='1st_prize') ? 'border-4 border-yellow-400 shadow-2xl' : 'border';
         html += `<div class="bg-white rounded-lg ${highlight} shadow p-4 mb-6">
           <div class="flex flex-row flex-nowrap items-center justify-between min-w-0 mb-3">
             <span class="font-bold text-lg text-blue-900 truncate" style="max-width:60%;">${escapeHtml(prize.label||key.replace(/_/g,' '))}</span>
