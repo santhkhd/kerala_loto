@@ -103,11 +103,16 @@
         <label for="searchInput" id="searchLabel" class="block text-blue-200 font-semibold mb-1">Search Ticket Number</label>
         <div class="w-full sm:w-2/3 flex flex-col gap-2 items-center">
           <input id="searchInput" type="text" placeholder="eg: AA 123456 or 1234" class="w-full px-4 py-3 rounded-lg border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg text-gray-900" value="${escapeHtml(searchNumber)}">
-          <button id="searchBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition-colors duration-200 shadow mt-2">Search</button>
-          <div class="w-full flex justify-end mt-2">
-             <button id="refreshBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 shadow text-sm">Refresh</button>
-          </div>
-        </div>
+          <button id="searchBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition-colors duration-200 shadow mt-2">Search</button>`;
+
+      const indianHour = parseInt(new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', hour12: false }));
+      if (indianHour >= 17 && indianHour < 18) { // TEMPORARY CHANGE FOR TESTING
+        html += `<div class="w-full flex justify-end mt-2">
+           <button id="refreshBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 shadow text-sm">Refresh</button>
+        </div>`;
+      }
+
+      html += `</div>
         <div id="searchResultMsg" class="mt-2 text-yellow-300 text-sm font-semibold"></div>
       </div>`;
       // Prize cards or Bumper Table
@@ -324,7 +329,7 @@
       setTimeout(() => {
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
-        const refreshBtn = document.getElementById('refreshBtn');
+        const refreshBtn = document.getElementById('refreshBtn'); // Will be null if not in time window
 
         if (searchBtn) {
           searchBtn.onclick = () => {
@@ -340,8 +345,13 @@
         }
         if (refreshBtn) {
           refreshBtn.onclick = () => {
-            document.getElementById('loadingMsg').style.display = 'block';
-            document.getElementById('main-content-area').innerHTML = ''; // Clear old results
+            const mainContent = document.getElementById('main-content-area');
+            const loadingMsg = document.getElementById('loadingMsg');
+            if(mainContent) mainContent.innerHTML = ''; // Clear old results
+            if(loadingMsg) {
+                loadingMsg.textContent = 'Refreshing...';
+                loadingMsg.style.display = 'block';
+            }
             fetchAndRenderData();
           };
         }
