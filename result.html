@@ -80,6 +80,11 @@
       return url.searchParams.get(name);
     }
     function renderResult(data, searchNumber = '') {
+      const file = getQueryParam('file') || '';
+      const lotteryShortName = file.split('-')[0].toUpperCase();
+      const bumperLotteryCodes = ['BR', 'NY', 'SB', 'CR', 'PM', 'VJ']; // Add other bumper codes here
+      const isBumper = bumperLotteryCodes.includes(lotteryShortName);
+
       let html = '';
       // Lottery title and meta
       html += `<div class="bg-blue-900 text-white rounded-lg shadow-lg p-4 mb-4">
@@ -102,8 +107,47 @@
         </div>
         <div id="searchResultMsg" class="mt-2 text-yellow-300 text-sm font-semibold"></div>
       </div>`;
-      // Prize cards
+      // Prize cards or Bumper Table
       html += '<div id="prizes">';
+
+      if (isBumper) {
+        // BUMPER PRIZE STRUCTURE TABLE
+        const bumperPrizeStructure = {
+          '1st_prize': { label: '1st Prize', winners: 1, amount: 1000000000, commission: 100000000 },
+          'consolation_prize': { label: 'Consolation', winners: 4, amount: 100000, commission: 40000 },
+          '2nd_prize': { label: '2nd Prize', winners: 5, amount: 1000000, commission: 500000 },
+          '3rd_prize': { label: '3rd Prize', winners: 5, amount: 500000, commission: 250000 },
+          '4th_prize': { label: '4th Prize', winners: 5, amount: 300000, commission: 150000 },
+          '5th_prize': { label: '5th Prize', winners: 13500, amount: 5000, commission: 6750000 },
+          '6th_prize': { label: '6th Prize', winners: 64800, amount: 1000, commission: 6480000 },
+          '7th_prize': { label: '7th Prize', winners: 113400, amount: 500, commission: 5670000 },
+          '8th_prize': { label: '8th Prize', winners: 137700, amount: 250, commission: 3442500 }
+        };
+
+        html += `<div class="max-w-4xl mx-auto my-4 p-3 bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg shadow-lg border border-blue-400 text-blue-100">
+          <h2 class="text-xl font-bold mb-3 text-blue-100 text-center tracking-wide">${escapeHtml(data.lottery_name)} - Prize Structure</h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left border-collapse mb-2">
+              <thead>
+                <tr class="bg-blue-900 text-blue-100">
+                  <th class="py-2 px-2 border-b border-blue-700">Prize</th>
+                  <th class="py-2 px-2 border-b border-blue-700 text-right">Prize Amount</th>
+                  <th class="py-2 px-2 border-b border-blue-700 text-right">No. of Prizes</th>
+                  <th class="py-2 px-2 border-b border-blue-700 text-right">Agent Commission</th>
+                </tr>
+              </thead>
+              <tbody>`;
+        Object.keys(bumperPrizeStructure).forEach(key => {
+          const prize = bumperPrizeStructure[key];
+          html += `<tr class="hover:bg-blue-700/40 transition">
+            <td class="py-2 px-2 border-b border-blue-700 font-semibold">${escapeHtml(prize.label)}</td>
+            <td class="py-2 px-2 border-b border-blue-700 text-green-300 font-mono text-right">₹${prize.amount.toLocaleString('en-IN')}</td>
+            <td class="py-2 px-2 border-b border-blue-700 font-mono text-right">${prize.winners.toLocaleString('en-IN')}</td>
+            <td class="py-2 px-2 border-b border-blue-700 font-mono text-right">₹${prize.commission.toLocaleString('en-IN')}</td>
+          </tr>`;
+        });
+        html += `</tbody></table></div></div>`;
+      }
       const prizeKeys = Object.keys(data.prizes||{});
       const order = [
         'bumper_prize','1st_prize','consolation_prize','2nd_prize','3rd_prize','4th_prize','5th_prize','6th_prize','7th_prize','8th_prize','9th_prize'
@@ -145,8 +189,9 @@
           <div class="text-red-700 font-semibold"><span class="font-bold">Ticket Number</span> <span class="bg-red-200 text-red-900 px-2 py-1 rounded font-mono">${escapeHtml(searchNumber)}</span> did not win any prize in this draw.</div>
         </div>`;
       }
-      // Render all prize cards
-      prizeKeys.forEach((key, idx) => {
+      // Render all prize cards (for non-bumper lotteries)
+      if (!isBumper) {
+        prizeKeys.forEach((key, idx) => {
         const prize = data.prizes[key];
         if (!prize) return;
         const highlight = (key==='1st_prize'||key==='bumper_prize') ? 'border-4 border-yellow-400 shadow-2xl' : 'border';
@@ -168,6 +213,7 @@
         }
         html += '</div>';
       });
+    }
       html += '</div>';
       // Info cards
       let totalWinners = 0, totalPrizeMoney = 0, prizeCategories = 0;
@@ -295,18 +341,29 @@
         document.getElementById('loadingMsg').textContent = 'No result file specified.';
         return;
       }
-      const githubJsonBase = 'https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/';
-      fetch(githubJsonBase + encodeURIComponent(file))
-        .then(res => {
-          if (!res.ok) throw new Error('Not found');
-          return res.json();
-        })
-        .then(data => {
+      // Detect if running locally or on GitHub Pages
+      const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      const base = isLocal ? 'note/' : 'https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/';
+      function tryFetch(fileName) {
+        return fetch(base + encodeURIComponent(fileName))
+          .then(res => res.ok ? res.json() : null);
+      }
+      tryFetch(file).then(data => {
+        if (data) {
           renderResult(data);
-        })
-        .catch(() => {
+        } else {
+          // General fallback: remove leading zero from draw number for any series (DL, SK, etc.)
+          const altFile = file.replace(/([A-Z]{2,3})-0(\d)-/, '$1-$2-');
+          if (altFile !== file) {
+            tryFetch(altFile).then(data2 => {
+              if (data2) renderResult(data2);
+              else document.getElementById('loadingMsg').textContent = 'Result not available yet. Please check back later.';
+            });
+          } else {
             document.getElementById('loadingMsg').textContent = 'Result not available yet. Please check back later.';
-        });
+          }
+        }
+      });
     })();
   </script>
   <script>
