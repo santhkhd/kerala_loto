@@ -337,7 +337,7 @@
 
         // Show refresh button based on time
         const indianHour = parseInt(new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', hour12: false }));
-        if (indianHour >= 17 && indianHour < 18) { // TEMPORARY CHANGE FOR TESTING
+        if (indianHour >= 15 && indianHour < 16) { // TEMPORARY CHANGE FOR TESTING
           if (refreshBtn) refreshBtn.style.display = 'block';
         }
 
