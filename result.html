@@ -113,16 +113,16 @@
       if (isBumper) {
         // BUMPER PRIZE STRUCTURE TABLE
         const bumperPrizeStructure = {
-          '1st_prize': { label: '1st Prize', winners: 1, amount: 1000000000, commission: 100000000 },
-          'consolation_prize': { label: 'Consolation', winners: 4, amount: 100000, commission: 40000 },
-          '2nd_prize': { label: '2nd Prize', winners: 5, amount: 1000000, commission: 500000 },
-          '3rd_prize': { label: '3rd Prize', winners: 5, amount: 500000, commission: 250000 },
-          '4th_prize': { label: '4th Prize', winners: 5, amount: 300000, commission: 150000 },
-          '5th_prize': { label: '5th Prize', winners: 13500, amount: 5000, commission: 6750000 },
-          '6th_prize': { label: '6th Prize', winners: 64800, amount: 1000, commission: 6480000 },
-          '7th_prize': { label: '7th Prize', winners: 113400, amount: 500, commission: 5670000 },
-          '8th_prize': { label: '8th Prize', winners: 137700, amount: 250, commission: 3442500 }
-        };
+        '1st_prize': { label: '1st Prize', winners: 1, amount: 100000000, commission: 10000000 },
+        'consolation_prize': { label: 'Consolation', winners: 4, amount: 100000, commission: 40000 },
+        '2nd_prize': { label: '2nd Prize', winners: 5, amount: 1000000, commission: 500000 },
+        '3rd_prize': { label: '3rd Prize', winners: 5, amount: 500000, commission: 250000 },
+        '4th_prize': { label: '4th Prize', winners: 5, amount: 300000, commission: 150000 },
+        '5th_prize': { label: '5th Prize', winners: 13500, amount: 5000, commission: 6750000 },
+        '6th_prize': { label: '6th Prize', winners: 64800, amount: 1000, commission: 6480000 },
+        '7th_prize': { label: '7th Prize', winners: 113400, amount: 500, commission: 5670000 },
+        '8th_prize': { label: '8th Prize', winners: 137700, amount: 250, commission: 3442500 }
+      };
 
         html += `<div class="max-w-4xl mx-auto my-4 p-3 bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg shadow-lg border border-blue-400 text-blue-100">
           <h2 class="text-xl font-bold mb-3 text-blue-100 text-center tracking-wide">${escapeHtml(data.lottery_name)} - Prize Structure</h2>
