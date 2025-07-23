@@ -259,20 +259,20 @@
   <script>
     // Language logic
     let currentLang = localStorage.getItem('lang') || 'en';
-    
+
     const langStrings = {
       en: 'Kerala Lottery Results',
       ml: 'കേരള ലോട്ടറി ഫലം',
       ta: 'கேரளா லாட்டரி முடிவுகள்'
     };
-    
+
     // Short language strings for mobile
     const langStringsShort = {
       en: 'Kerala Lottery',
       ml: 'കേരള ലോട്ടറി',
       ta: 'கேரளா லாட்டரி'
     };
-    
+
     // Lottery name translations
     const lotteryNameTranslations = {
       SAMRUDHI: { en: 'SAMRUDHI', ml: 'സമൃദ്ധി', ta: 'சம்ருத்தி' },
@@ -281,7 +281,8 @@
       DHANALEKSHMI: { en: 'DHANALEKSHMI', ml: 'ധനലക്ഷ്മി', ta: 'தனலட்சுமி' },
       KARUNYA_PLUS: { en: 'KARUNYA PLUS', ml: 'കരുണ്യ പ്ലസ്', ta: 'கருண்யா பிளஸ்' },
       SUVARNA_KERALAM: { en: 'SUVARNA KERALAM', ml: 'സുവർണ കേരളം', ta: 'சுவர்ண கேரளம்' },
-      KARUNYA: { en: 'KARUNYA', ml: 'കരുണ്യ', ta: 'கருண்யா' }
+      KARUNYA: { en: 'KARUNYA', ml: 'കരുണ്യ', ta: 'கருண்யா' },
+      'MONSOON BUMPER': { en: 'MONSOON BUMPER', ml: 'മൺസൂൺ ബമ്പർ', ta: 'மான்சூன் பம்பர்' } // Added Monsoon Bumper
     };
 
     function setLang(lang) {
@@ -308,25 +309,25 @@
       const langIconBtn = document.getElementById('langIconBtn');
       const langPopup = document.getElementById('langPopup');
       const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
-      
+
       langIconBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         langPopup.classList.toggle('hidden');
       });
-      
+
       document.body.addEventListener('click', function(e) {
         if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
           langPopup.classList.add('hidden');
         }
       });
-      
+
       langPopupBtns.forEach(btn => {
         btn.addEventListener('click', function() {
           setLang(this.getAttribute('data-lang'));
           langPopup.classList.add('hidden');
         });
       });
-      
+
       setLang(currentLang);
     });
 
@@ -347,40 +348,61 @@
       const istTime = new Date(now.getTime() + (330 * 60 * 1000));
       const today = new Date(Date.UTC(istTime.getUTCFullYear(), istTime.getUTCMonth(), istTime.getUTCDate()));
       const todayStr = today.toISOString().split('T')[0];
+
+      const specialResults = {
+          '2025-07-23': { name: 'MONSOON BUMPER', shortName: 'BR', drawNumber: '104' }
+      };
+
       for (let i = 0; i < 90; i++) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
-        const dayOfWeek = date.getDay();
-        const lottery = schedule.find(l => l.dayOfWeek === dayOfWeek);
-        if (lottery) {
-          // Only add if matches filter
-          if (filterCategory === 'ALL' || lottery.name === filterCategory) {
-          const baseDate = new Date(lottery.baseDate);
-          const daysDifference = (date - baseDate) / (1000 * 60 * 60 * 24);
-          const weeksPassed = Math.floor(daysDifference / 7);
-          const currentNumber = lottery.baseNumber + weeksPassed;
-          const yyyy = date.getFullYear();
-          const mm = String(date.getMonth() + 1).padStart(2, '0');
-          const dd = String(date.getDate()).padStart(2, '0');
-          const cardDateStr = `${dd}/${mm}/${yyyy}`;
-          const dataDateStr = `${yyyy}-${mm}-${dd}`;
-          const isNew = (dataDateStr === todayStr);
-          const drawNumberStr = String(currentNumber); // No leading zero
-          const link = `result.html?file=${lottery.shortName}-${drawNumberStr}-${dataDateStr}.json`;
-          const translatedName = lotteryNameTranslations[lottery.name][lang] || lotteryNameTranslations[lottery.name]['en'];
-          allCards.push(`
-            <a class="lottery-card" href="${link}">
-                <div class="card-top">
-                    ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
-                    <span class="badge">${lottery.shortName}-${drawNumberStr}</span>
-                    <div class="lottery-title">${translatedName}</div>
-                </div>
-                <div class="card-bottom">${cardDateStr}</div>
-            </a>
-          `);
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const dataDateStr = `${yyyy}-${mm}-${dd}`;
+        const cardDateStr = `${dd}/${mm}/${yyyy}`;
+        const isNew = (dataDateStr === todayStr);
+
+        let lotteryName, lotteryShortName, drawNumber, link;
+
+        if (specialResults[dataDateStr]) {
+            // Handle special result (e.g., Monsoon Bumper)
+            const special = specialResults[dataDateStr];
+            lotteryName = special.name;
+            lotteryShortName = special.shortName;
+            drawNumber = special.drawNumber;
+            link = `result.html?file=${lotteryShortName}-${drawNumber}-${dataDateStr}.json`;
+        } else {
+            // Handle regular scheduled lotteries
+            const dayOfWeek = date.getDay();
+            const lottery = schedule.find(l => l.dayOfWeek === dayOfWeek);
+            if (!lottery) continue; // Skip if no lottery scheduled for this day
+
+            lotteryName = lottery.name;
+            lotteryShortName = lottery.shortName;
+            const baseDate = new Date(lottery.baseDate);
+            const daysDifference = (date - baseDate) / (1000 * 60 * 60 * 24);
+            const weeksPassed = Math.floor(daysDifference / 7);
+            drawNumber = String(lottery.baseNumber + weeksPassed);
+            link = `result.html?file=${lotteryShortName}-${drawNumber}-${dataDateStr}.json`;
+        }
+
+        // Apply category filter
+        if (filterCategory === 'ALL' || lotteryName === filterCategory || (specialResults[dataDateStr] && specialResults[dataDateStr].name === filterCategory)) {
+             const translatedName = lotteryNameTranslations[lotteryName][lang] || lotteryNameTranslations[lotteryName]['en'];
+
+            allCards.push(`
+              <a class="lottery-card" href="${link}">
+                  <div class="card-top">
+                      ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
+                      <span class="badge">${lotteryShortName}-${drawNumber}</span>
+                      <div class="lottery-title">${translatedName}</div>
+                  </div>
+                  <div class="card-bottom">${cardDateStr}</div>
+              </a>
+            `);
         }
       }
-    }
       // Show all cards at once, no pagination
       const grid = document.getElementById('lottery-grid');
       if (grid) grid.innerHTML = allCards.join('');
