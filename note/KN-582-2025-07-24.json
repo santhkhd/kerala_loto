@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "Draw is going on.\r\nResult updating start soon.\r\nPlease wait..."
+        "PT 409455"
       ]
     },
     "consolation_prize": {
@@ -22,35 +22,59 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "**"
+        "PU 879661"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "**"
+        "PU 757466"
       ]
     },
     "4th_prize": {
       "amount": 5000,
       "label": "4th Prize",
       "winners": [
-        "**"
+        "0205",
+        "0450",
+        "0636",
+        "1909",
+        "2208",
+        "2407",
+        "2509",
+        "3239",
+        "4008",
+        "4079",
+        "4578",
+        "4849",
+        "5108",
+        "6282",
+        "6932",
+        "6939",
+        "8459",
+        "8881",
+        "8964",
+        "9355"
       ]
     },
     "5th_prize": {
       "amount": 2000,
       "label": "5th Prize",
       "winners": [
-        "**"
+        "0991",
+        "5866",
+        "7299",
+        "7855",
+        "8853",
+        "9900"
       ]
     },
     "6th_prize": {
       "amount": 1000,
       "label": "6th Prize",
       "winners": [
-        "**"
+        "..."
       ]
     },
     "7th_prize": {
