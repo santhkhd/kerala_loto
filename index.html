@@ -226,8 +226,10 @@
   <div class="w-full px-1 sm:px-4">
     <div class="max-w-4xl mx-auto w-full">
     <!-- Lottery Grid -->
-    <div class="lottery-grid" id="lottery-grid">
-      <!-- Lottery cards will be generated here by JavaScript -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" id="lottery-grid">
+      <!-- Lottery cards will be injected here -->
+    </div>
+
     </div>
     </div>
   </div>
@@ -330,10 +332,8 @@
       setLang(currentLang);
     });
 
-    let allCards = [];
-
     function renderLotteryCards(lang, filterCategory = 'ALL') {
-      allCards = [];
+      let cardData = [];
       const bumperLotteries = [
         {
           name: 'NEW YEAR BUMPER',
@@ -379,7 +379,9 @@
           const isNew = (bumper.date === todayStr);
           const link = `result.html?file=${bumper.shortName}-${bumper.drawNumber}-${bumper.date}.json`;
           const translatedName = bumper.translations[lang] || bumper.translations['en'];
-          allCards.push(`
+          cardData.push({
+            date: bumper.date,
+            html: `
             <a class="lottery-card" href="${link}">
                 <div class="card-top">
                     ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
@@ -388,7 +390,8 @@
                 </div>
                 <div class="card-bottom">${bumper.date.split('-').reverse().join('/')}</div>
             </a>
-          `);
+          `
+          });
           }
         });
       }
@@ -396,46 +399,42 @@
       for (let i = 0; i < 90; i++) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split('T')[0];
         const dayOfWeek = date.getDay();
-        const lottery = schedule.find(l => l.dayOfWeek === dayOfWeek);
-        const yyyy_check = date.getFullYear();
-        const mm_check = String(date.getMonth() + 1).padStart(2, '0');
-        const dd_check = String(date.getDate()).padStart(2, '0');
-        const checkDateStr = `${yyyy_check}-${mm_check}-${dd_check}`;
-        const isBumperDay = bumperLotteries.some(b => b.date === checkDateStr);
+        const lottery = schedule.find(s => s.dayOfWeek === dayOfWeek);
 
-        if (lottery && !isBumperDay) {
-          // Only add if matches filter
-          if (filterCategory === 'ALL' || lottery.name === filterCategory) {
-          const baseDate = new Date(lottery.baseDate);
-          const daysDifference = (date - baseDate) / (1000 * 60 * 60 * 24);
-          const weeksPassed = Math.floor(daysDifference / 7);
-          const currentNumber = lottery.baseNumber + weeksPassed;
-          const yyyy = date.getFullYear();
-          const mm = String(date.getMonth() + 1).padStart(2, '0');
-          const dd = String(date.getDate()).padStart(2, '0');
-          const cardDateStr = `${dd}/${mm}/${yyyy}`;
-          const dataDateStr = `${yyyy}-${mm}-${dd}`;
-          const isNew = (dataDateStr === todayStr);
-          const drawNumberStr = String(currentNumber); // No leading zero
-          const link = `result.html?file=${lottery.shortName}-${drawNumberStr}-${dataDateStr}.json`;
-          const translatedName = lotteryNameTranslations[lottery.name][lang] || lotteryNameTranslations[lottery.name]['en'];
-          allCards.push(`
+        if (lottery && (!filterCategory || filterCategory === 'ALL' || filterCategory === lottery.name)) {
+          const isBumperDay = bumperLotteries.some(b => b.date === dateStr);
+          if (isBumperDay) continue;
+
+          const baseDate = new Date(lottery.baseDate + 'T00:00:00Z');
+          const diffWeeks = Math.round((date - baseDate) / (7 * 24 * 60 * 60 * 1000));
+          const drawNumber = lottery.baseNumber + diffWeeks;
+          const isNew = (dateStr === todayStr);
+          const link = `result.html?file=${lottery.shortName}-${drawNumber}-${dateStr}.json`;
+          const translatedName = (lotteryNameTranslations[lottery.name] && lotteryNameTranslations[lottery.name][lang]) || lottery.name;
+
+          cardData.push({
+            date: dateStr,
+            html: `
             <a class="lottery-card" href="${link}">
                 <div class="card-top">
                     ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
-                    <span class="badge">${lottery.shortName}-${drawNumberStr}</span>
+                    <span class="badge">${lottery.shortName}-${drawNumber}</span>
                     <div class="lottery-title">${translatedName}</div>
                 </div>
-                <div class="card-bottom">${cardDateStr}</div>
+                <div class="card-bottom">${dateStr.split('-').reverse().join('/')}</div>
             </a>
-          `);
+          `
+          });
         }
       }
-    }
-      // Show all cards at once, no pagination
+
+      // Sort cards by date, newest first
+      cardData.sort((a, b) => new Date(b.date) - new Date(a.date));
+
       const grid = document.getElementById('lottery-grid');
-      if (grid) grid.innerHTML = allCards.join('');
+      grid.innerHTML = cardData.map(c => c.html).join('');
     }
 
     document.addEventListener('DOMContentLoaded', function() {
