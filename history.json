@@ -57386,6 +57386,98 @@
     "downloadLink": ""
   },
   {
+    "date": "2025-07-25",
+    "lottery": "SK",
+    "draw": "SK-13",
+    "filename": "SK-13-2025-07-25.json",
+    "github_url": "https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/SK-13-2025-07-25.json",
+    "prizes": [
+      {
+        "prize_key": "1st_prize",
+        "label": "1st Prize",
+        "amount": 10000000,
+        "winners": [
+          "***"
+        ]
+      },
+      {
+        "prize_key": "consolation_prize",
+        "label": "Consolation Prize",
+        "amount": 5000,
+        "winners": [
+          "***"
+        ]
+      },
+      {
+        "prize_key": "2nd_prize",
+        "label": "2nd Prize",
+        "amount": 3000000,
+        "winners": [
+          "***"
+        ]
+      },
+      {
+        "prize_key": "3rd_prize",
+        "label": "3rd Prize",
+        "amount": 500000,
+        "winners": [
+          "***"
+        ]
+      },
+      {
+        "prize_key": "4th_prize",
+        "label": "4th Prize",
+        "amount": 5000,
+        "winners": [
+          "***"
+        ]
+      },
+      {
+        "prize_key": "5th_prize",
+        "label": "5th Prize",
+        "amount": 2000,
+        "winners": [
+          "***"
+        ]
+      },
+      {
+        "prize_key": "6th_prize",
+        "label": "6th Prize",
+        "amount": 1000,
+        "winners": [
+          "***"
+        ]
+      },
+      {
+        "prize_key": "7th_prize",
+        "label": "7th Prize",
+        "amount": 500,
+        "winners": [
+          "***"
+        ]
+      },
+      {
+        "prize_key": "8th_prize",
+        "label": "8th Prize",
+        "amount": 200,
+        "winners": [
+          "***"
+        ]
+      },
+      {
+        "prize_key": "9th_prize",
+        "label": "9th Prize",
+        "amount": 100,
+        "winners": [
+          "***"
+        ]
+      }
+    ],
+    "numbers4": [],
+    "numbers6": [],
+    "downloadLink": ""
+  },
+  {
     "date": "2025-05-09",
     "lottery": "SK",
     "draw": "SK-2",
