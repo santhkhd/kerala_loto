@@ -5,14 +5,14 @@
   "venue": "",
   "prizes": {
     "1st_prize": {
-      "amount": 10000000,
+      "amount": 100000000,
       "label": "1st Prize",
       "winners": [
         "MC 678572 (PAYYANUR)"
       ]
     },
     "consolation_prize": {
-      "amount": 5000,
+      "amount": 100000,
       "label": "Consolation Prize",
       "winners": [
         "MA 678572",
@@ -44,7 +44,7 @@
       ]
     },
     "4th_prize": {
-      "amount": 5000,
+      "amount": 300000,
       "label": "4th Prize",
       "winners": [
         "MA 729545 (KOZHIKKODE)",
@@ -55,7 +55,7 @@
       ]
     },
     "5th_prize": {
-      "amount": 2000,
+      "amount": 5000,
       "label": "5th Prize",
       "winners": [
         "0354",
@@ -499,7 +499,7 @@
       ]
     },
     "8th_prize": {
-      "amount": 200,
+      "amount": 250,
       "label": "8th Prize",
       "winners": [
         "0047",
