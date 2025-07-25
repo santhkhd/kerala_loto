@@ -244,73 +244,32 @@
         The file contains the numbers of Winners of the day for all prizes. The Kerala lottery result is also published in the Kerala Government Gazette. The prize winners would have to verify the winning numbers with the result published in the Gazette and surrender the lottery ticket within 30 days of the draw date.
       </div>`;
 
-      // BUMPER PRIZE STRUCTURE TABLE
-      if (isBumper) {
-        const bumperPrizeStructure = {
-        '1st_prize': { label: '1st Prize', winners: 1, amount: 100000000, commission: 10000000 },
-        'consolation_prize': { label: 'Consolation', winners: 4, amount: 100000, commission: 40000 },
-        '2nd_prize': { label: '2nd Prize', winners: 5, amount: 1000000, commission: 500000 },
-        '3rd_prize': { label: '3rd Prize', winners: 5, amount: 500000, commission: 250000 },
-        '4th_prize': { label: '4th Prize', winners: 5, amount: 300000, commission: 150000 },
-        '5th_prize': { label: '5th Prize', winners: 13500, amount: 5000, commission: 6750000 },
-        '6th_prize': { label: '6th Prize', winners: 64800, amount: 1000, commission: 6480000 },
-        '7th_prize': { label: '7th Prize', winners: 113400, amount: 500, commission: 5670000 },
-        '8th_prize': { label: '8th Prize', winners: 137700, amount: 250, commission: 3442500 }
-      };
-
-        html += `<div class="max-w-4xl mx-auto my-8 p-3 bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg shadow-lg border border-blue-400 text-blue-100">
-          <h2 class="text-xl font-bold mb-3 text-blue-100 text-center tracking-wide">${escapeHtml(data.lottery_name)} - Prize Structure</h2>
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left border-collapse">
-              <thead>
-                <tr class="bg-blue-700/50">
-                  <th class="p-2 border-b border-r border-blue-500">Prize</th>
-                  <th class="p-2 border-b border-r border-blue-500">No. of Prizes</th>
-                  <th class="p-2 border-b border-r border-blue-500">Prize Amount</th>
-                  <th class="p-2 border-b border-r border-blue-500">Agent Commission</th>
-                </tr>
-              </thead>
-              <tbody class="text-blue-200">
-                ${Object.entries(bumperPrizeStructure).map(([key, prize]) => `
-                  <tr>
-                    <td class="p-2 border-b border-r border-blue-500">${escapeHtml(prize.label)}</td>
-                    <td class="p-2 border-b border-r border-blue-500 text-right">${prize.winners.toLocaleString()}</td>
-                    <td class="p-2 border-b border-r border-blue-500 text-right">₹${prize.amount.toLocaleString()}</td>
-                    <td class="p-2 border-b border-blue-500 text-right">₹${prize.commission.toLocaleString()}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>`;
-      } else {
-        // Stylish Prize Table (for non-bumper lotteries)
-        html += `<div class="max-w-xl mx-auto my-8 p-4 bg-gradient-to-br from-blue-900 to-blue-600 rounded-lg shadow-lg border border-blue-400 text-blue-100">
-        <h2 class="text-lg font-bold mb-3 text-blue-200 text-center tracking-wide">Prize Structure</h2>
+      // Prize Structure Table (dynamic for all lotteries)
+      html += `<div class="max-w-4xl mx-auto my-8 p-3 bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg shadow-lg border border-blue-400 text-blue-100">
+        <h2 class="text-xl font-bold mb-3 text-blue-100 text-center tracking-wide">${escapeHtml(data.lottery_name)} - Prize Structure</h2>
         <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left border-collapse mb-2">
+          <table class="w-full text-sm text-left border-collapse">
             <thead>
-              <tr class="bg-blue-800 text-blue-100">
-                <th class="py-2 px-2 border-b border-blue-700">Prize</th>
-                <th class="py-2 px-2 border-b border-blue-700">Amount</th>
-                <th class="py-2 px-2 border-b border-blue-700">No. of Winners</th>
+              <tr class="bg-blue-700/50">
+                <th class="p-2 border-b border-r border-blue-500">Prize</th>
+                <th class="p-2 border-b border-r border-blue-500">No. of Winners</th>
+                <th class="p-2 border-b border-blue-500">Prize Amount</th>
               </tr>
             </thead>
-            <tbody>`;
-        prizeKeys.forEach(key => {
-        const prize = data.prizes[key];
-        if (!prize) return;
-        html += `<tr class="hover:bg-blue-700/30 transition">
-          <td class="py-2 px-2 border-b border-blue-700 font-semibold">${escapeHtml(prize.label||key.replace(/_/g,' '))}</td>
-          <td class="py-2 px-2 border-b border-blue-700 text-green-200 font-mono">₹${prize.amount ? parseInt(prize.amount).toLocaleString() : ''}</td>
-          <td class="py-2 px-2 border-b border-blue-700 text-center">${prize.winners ? prize.winners.length : 0}</td>
-        </tr>`;
-        });
-        html += `</tbody>
+            <tbody class="text-blue-200">
+              ${prizeKeys.map(key => {
+                const prize = data.prizes[key];
+                if (!prize) return '';
+                return `<tr>
+                  <td class="p-2 border-b border-r border-blue-500">${escapeHtml(prize.label || key.replace(/_/g,' '))}</td>
+                  <td class="p-2 border-b border-r border-blue-500 text-right">${prize.winners ? prize.winners.length : 0}</td>
+                  <td class="p-2 border-b border-blue-500 text-right">₹${prize.amount ? parseInt(prize.amount).toLocaleString() : ''}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
           </table>
         </div>
       </div>`;
-      }
 
       // Recent Results Table Placeholder
       html += `<div id="recentResultsContainer"></div>`;
@@ -337,7 +296,7 @@
 
         // Show refresh button based on time
         const indianHour = parseInt(new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', hour12: false }));
-        if (indianHour >= 15 && indianHour < 16) { // TEMPORARY CHANGE FOR TESTING
+        if (indianHour >= 17 && indianHour < 18) { // TEMPORARY CHANGE FOR TESTING
           if (refreshBtn) refreshBtn.style.display = 'block';
         }
 
@@ -379,9 +338,7 @@
         document.getElementById('loadingMsg').textContent = 'No result file specified.';
         return;
       }
-      // Detect if running locally or on GitHub Pages
-      const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-      const base = isLocal ? 'note/' : 'https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/';
+      const base = 'https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/';
       
       // Add a cache-busting query parameter
       const cacheBuster = `?v=${new Date().getTime()}`;
