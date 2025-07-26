@@ -1642,7 +1642,7 @@
       {
         "prize_key": "1st_prize",
         "label": "1st Prize",
-        "amount": 100000000,
+        "amount": 10000000,
         "winners": [
           "MC 678572 (PAYYANUR)"
         ]
@@ -1650,7 +1650,7 @@
       {
         "prize_key": "consolation_prize",
         "label": "Consolation Prize",
-        "amount": 100000,
+        "amount": 5000,
         "winners": [
           "MA 678572",
           "MB 678572",
@@ -1685,7 +1685,7 @@
       {
         "prize_key": "4th_prize",
         "label": "4th Prize",
-        "amount": 300000,
+        "amount": 5000,
         "winners": [
           "MA 729545 (KOZHIKKODE)",
           "MB 168612 (THRISSUR)",
@@ -1697,7 +1697,7 @@
       {
         "prize_key": "5th_prize",
         "label": "5th Prize",
-        "amount": 5000,
+        "amount": 2000,
         "winners": [
           "0354",
           "0503",
@@ -2144,7 +2144,7 @@
       {
         "prize_key": "8th_prize",
         "label": "8th Prize",
-        "amount": 250,
+        "amount": 200,
         "winners": [
           "0047",
           "0073",
@@ -39743,7 +39743,7 @@
         "label": "1st Prize",
         "amount": 10000000,
         "winners": [
-          "PT 409455(PALAKKAD)"
+          "PT 409455 (PALAKKAD)"
         ]
       },
       {
@@ -39769,7 +39769,7 @@
         "label": "2nd Prize",
         "amount": 3000000,
         "winners": [
-          "PU 879661\r\n(MANANTHAVADY)"
+          "PU 879661 (MANANTHAVADY)"
         ]
       },
       {
@@ -39777,7 +39777,7 @@
         "label": "3rd Prize",
         "amount": 500000,
         "winners": [
-          "PU 757466"
+          "PU 757466 (WAYANADU)"
         ]
       },
       {
@@ -57489,7 +57489,7 @@
         "label": "1st Prize",
         "amount": 10000000,
         "winners": [
-          "RJ 433789(ERNAKULAM)"
+          "RJ 433789 (ERNAKULAM)"
         ]
       },
       {
@@ -57515,7 +57515,7 @@
         "label": "2nd Prize",
         "amount": 3000000,
         "winners": [
-          "RC 306890\r\n(NEYYATTINKKARA)"
+          "RC 306890 (NEYYATTINKARA)"
         ]
       },
       {
@@ -57523,7 +57523,7 @@
         "label": "3rd Prize",
         "amount": 500000,
         "winners": [
-          "RD 248214"
+          "RD 248214 (THRISSUR)"
         ]
       },
       {
@@ -94151,7 +94151,7 @@
         "label": "1st Prize",
         "amount": 10000000,
         "winners": [
-          "SV 238887(ALAPPUZHA)"
+          "SV 238887 (ALAPPUZHA)"
         ]
       },
       {
@@ -94177,7 +94177,7 @@
         "label": "2nd Prize",
         "amount": 3000000,
         "winners": [
-          "SN 433723(KOLLAM)"
+          "SN 433723 (KOLLAM)"
         ]
       },
       {
@@ -94185,7 +94185,7 @@
         "label": "3rd Prize",
         "amount": 500000,
         "winners": [
-          "SO 405559"
+          "SO 405559 (PALAKKAD)"
         ]
       },
       {
