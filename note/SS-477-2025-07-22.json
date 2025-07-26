@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "SV 238887(ALAPPUZHA)"
+        "SV 238887 (ALAPPUZHA)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "SN 433723(KOLLAM)"
+        "SN 433723 (KOLLAM)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "SO 405559"
+        "SO 405559 (PALAKKAD)"
       ]
     },
     "4th_prize": {
