@@ -49,11 +49,34 @@
     }
     .floating-refresh-btn {
       position: fixed;
-      bottom: 20px;
+      bottom: 80px; /* Move up to avoid bottom navigation */
       right: 20px;
-      z-index: 1000;
+      z-index: 1001; /* Higher than bottom nav */
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       display: none; /* Hidden by default */
+      min-width: 80px; /* Ensure minimum width on mobile */
+      font-size: 14px; /* Ensure readable text size */
+      padding: 12px 16px; /* Better touch target on mobile */
+      border-radius: 25px; /* More rounded on mobile */
+      background: #10b981 !important; /* Force green background */
+      color: white !important; /* Force white text */
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      /* Ensure it's visible on all devices */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+    /* Mobile specific adjustments */
+    @media (max-width: 768px) {
+      .floating-refresh-btn {
+        bottom: 90px; /* Slightly higher on mobile */
+        right: 15px;
+        min-width: 90px;
+        font-size: 16px;
+        padding: 15px 20px;
+      }
     }
   </style>
 </head>
@@ -301,8 +324,17 @@
         const hour = parseInt(hourStr, 10);
         const min = parseInt(minStr, 10);
         // Show between 15:00 (3:00 PM) and 16:30 (4:30 PM) IST
+        console.log('Current Indian time:', indianTime, 'Hour:', hour, 'Min:', min);
         if ((hour === 15) || (hour === 16 && min <= 30)) {
-          if (refreshBtn) refreshBtn.style.display = 'block';
+          console.log('Showing refresh button - time condition met');
+          if (refreshBtn) {
+            refreshBtn.style.display = 'block';
+            console.log('Refresh button display set to block');
+          } else {
+            console.log('Refresh button element not found');
+          }
+        } else {
+          console.log('Not showing refresh button - outside time window');
         }
 
         if (searchBtn) {
