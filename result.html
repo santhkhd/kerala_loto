@@ -295,8 +295,13 @@
         const refreshBtn = document.getElementById('refreshBtn');
 
         // Show refresh button based on time
-        const indianHour = parseInt(new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', hour12: false }));
-        if (indianHour >= 17 && indianHour < 18) { // TEMPORARY CHANGE FOR TESTING
+        const now = new Date();
+        const indianTime = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata', hour12: false });
+        const [hourStr, minStr] = indianTime.split(':');
+        const hour = parseInt(hourStr, 10);
+        const min = parseInt(minStr, 10);
+        // Show between 15:00 (3:00 PM) and 16:30 (4:30 PM) IST
+        if ((hour === 15) || (hour === 16 && min <= 30)) {
           if (refreshBtn) refreshBtn.style.display = 'block';
         }
 
