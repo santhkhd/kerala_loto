@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "RJ 433789(ERNAKULAM)"
+        "RJ 433789 (ERNAKULAM)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "RC 306890\r\n(NEYYATTINKKARA)"
+        "RC 306890 (NEYYATTINKARA)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "RD 248214"
+        "RD 248214 (THRISSUR)"
       ]
     },
     "4th_prize": {
