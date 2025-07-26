@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "PT 409455(PALAKKAD)"
+        "PT 409455 (PALAKKAD)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "PU 879661\r\n(MANANTHAVADY)"
+        "PU 879661 (MANANTHAVADY)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "PU 757466"
+        "PU 757466 (WAYANADU)"
       ]
     },
     "4th_prize": {
