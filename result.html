@@ -110,6 +110,16 @@
         return charsToReplace[tag] || tag;
       }) : '';
     }
+        const schedule = [
+        { dayOfWeek: 0, name: 'SAMRUDHI', shortName: 'SM', baseNumber: 9, baseDate: '2025-06-29' },
+        { dayOfWeek: 1, name: 'BHAGYATHARA', shortName: 'BT', baseNumber: 8, baseDate: '2025-06-23' },
+        { dayOfWeek: 2, name: 'STHREE_SAKTHI', shortName: 'SS', baseNumber: 473, baseDate: '2025-06-24' },
+        { dayOfWeek: 3, name: 'DHANALEKSHMI', shortName: 'DL', baseNumber: 6, baseDate: '2025-06-25' },
+        { dayOfWeek: 4, name: 'KARUNYA_PLUS', shortName: 'KN', baseNumber: 578, baseDate: '2025-06-26' },
+        { dayOfWeek: 5, name: 'SUVARNA_KERALAM', shortName: 'SK', baseNumber: 9, baseDate: '2025-06-27' },
+        { dayOfWeek: 6, name: 'KARUNYA', shortName: 'KR', baseNumber: 712, baseDate: '2025-06-28' }
+      ];
+
     function getQueryParam(name) {
       const url = new URL(window.location.href);
       return url.searchParams.get(name);
@@ -268,26 +278,26 @@
       </div>`;
 
       // Prize Structure Table (dynamic for all lotteries)
-      html += `<div class="max-w-4xl mx-auto my-8 p-3 bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg shadow-lg border border-blue-400 text-blue-100">
-        <h2 class="text-xl font-bold mb-3 text-blue-100 text-center tracking-wide">${escapeHtml(data.lottery_name)} - Prize Structure</h2>
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left border-collapse">
-            <thead>
-              <tr class="bg-blue-700/50">
-                <th class="p-2 border-b border-r border-blue-500">Prize</th>
+        html += `<div class="max-w-4xl mx-auto my-8 p-3 bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg shadow-lg border border-blue-400 text-blue-100">
+          <h2 class="text-xl font-bold mb-3 text-blue-100 text-center tracking-wide">${escapeHtml(data.lottery_name)} - Prize Structure</h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left border-collapse">
+              <thead>
+                <tr class="bg-blue-700/50">
+                  <th class="p-2 border-b border-r border-blue-500">Prize</th>
                 <th class="p-2 border-b border-r border-blue-500">No. of Winners</th>
                 <th class="p-2 border-b border-blue-500">Prize Amount</th>
               </tr>
             </thead>
             <tbody class="text-blue-200">
               ${prizeKeys.map(key => {
-                const prize = data.prizes[key];
+        const prize = data.prizes[key];
                 if (!prize) return '';
                 return `<tr>
                   <td class="p-2 border-b border-r border-blue-500">${escapeHtml(prize.label || key.replace(/_/g,' '))}</td>
                   <td class="p-2 border-b border-r border-blue-500 text-right">${prize.winners ? prize.winners.length : 0}</td>
                   <td class="p-2 border-b border-blue-500 text-right">₹${prize.amount ? parseInt(prize.amount).toLocaleString() : ''}</td>
-                </tr>`;
+        </tr>`;
               }).join('')}
             </tbody>
           </table>
@@ -370,11 +380,40 @@
     }
 
     function fetchAndRenderData() {
-      const file = getQueryParam('file');
+      let file = getQueryParam('file');
       if (!file) {
         document.getElementById('loadingMsg').textContent = 'No result file specified.';
         return;
       }
+
+      // Recalculate draw number for daily lotteries to ensure consistency
+      const bumperLotteryCodes = ['BR', 'NY', 'SB', 'CR', 'PM', 'VJ'];
+      const parts = file.match(/^([A-Z]{2,3})-(\d+)-(\d{4}-\d{2}-\d{2})\.json$/);
+      
+      if (parts) {
+        const shortName = parts[1];
+        const dateStr = parts[3];
+        const isBumper = bumperLotteryCodes.includes(shortName.toUpperCase());
+        
+        if (!isBumper) {
+          const lottery = schedule.find(s => s.shortName.toUpperCase() === shortName.toUpperCase());
+
+          if (lottery) {
+            const date = new Date(dateStr + 'T00:00:00Z');
+            const baseDate = new Date(lottery.baseDate + 'T00:00:00Z');
+            const diffTime = Math.abs(date - baseDate);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const drawNumber = lottery.baseNumber + Math.floor(diffDays / 7);
+            
+            const newFile = `${shortName}-${drawNumber}-${dateStr}.json`;
+            if (newFile !== file) {
+              console.log(`Corrected filename from ${file} to ${newFile}`);
+              file = newFile;
+            }
+          }
+        }
+      }
+
       const base = 'https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/';
       
       // Add a cache-busting query parameter
@@ -389,16 +428,7 @@
         if (data) {
           renderResult(data);
         } else {
-          // General fallback: remove leading zero from draw number for any series (DL, SK, etc.)
-          const altFile = file.replace(/([A-Z]{2,3})-0(\d)-/, '$1-$2-');
-          if (altFile !== file) {
-            tryFetch(altFile).then(data2 => {
-              if (data2) renderResult(data2);
-              else document.getElementById('loadingMsg').textContent = 'Result not available yet. Please check back later.';
-            });
-          } else {
-            document.getElementById('loadingMsg').textContent = 'Result not available yet. Please check back later.';
-          }
+          document.getElementById('loadingMsg').textContent = 'Result not available yet. Please check back later.';
         }
       });
     }
