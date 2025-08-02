@@ -8,28 +8,38 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "***"
+        "KY 354014"
       ]
     },
     "consolation_prize": {
       "amount": 5000,
       "label": "Consolation Prize",
       "winners": [
-        "***"
+        "KN 354014",
+        "KO 354014",
+        "KP 354014",
+        "KR 354014",
+        "KS 354014",
+        "KT 354014",
+        "KU 354014",
+        "KV 354014",
+        "KW 354014",
+        "KX 354014",
+        "KZ 354014"
       ]
     },
     "2nd_prize": {
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "***"
+        "KY 417547"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "***"
+        "KY 609981"
       ]
     },
     "4th_prize": {
