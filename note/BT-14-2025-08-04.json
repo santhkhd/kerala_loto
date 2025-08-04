@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "BT 418177"
+        "BT 418177(MALAPPURAM)"
       ]
     },
     "consolation_prize": {
@@ -32,7 +32,7 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "BW 204963"
+        "BW 204963(PALAKKAD)"
       ]
     },
     "3rd_prize": {
@@ -84,6 +84,12 @@
       "amount": 1000,
       "label": "6th Prize",
       "winners": [
+        "8021",
+        "1277",
+        "2526",
+        "2313",
+        "0440",
+        "0340",
         "..."
       ]
     },
