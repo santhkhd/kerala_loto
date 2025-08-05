@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "SR 299702"
+        "SR 299702(ATTINGAL)"
       ]
     },
     "consolation_prize": {
@@ -32,7 +32,7 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "SW 391513"
+        "SW 391513(KANNUR)"
       ]
     },
     "3rd_prize": {
@@ -84,7 +84,7 @@
       "amount": 1000,
       "label": "6th Prize",
       "winners": [
-        "**"
+        "..."
       ]
     },
     "7th_prize": {
