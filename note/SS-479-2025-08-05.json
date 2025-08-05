@@ -29,14 +29,20 @@
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "..."
+        "SY 364468"
       ]
     },
     "4th_prize": {
       "amount": 5000,
       "label": "4th Prize",
       "winners": [
-        "**"
+        "8491",
+        "5960",
+        "4767",
+        "1647",
+        "8702",
+        "1661",
+        "..."
       ]
     },
     "5th_prize": {
