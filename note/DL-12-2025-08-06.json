@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "DW 248735 (ALAPPUZHA)"
+        "DW 248735(ALAPPUZHA)"
       ]
     },
     "consolation_prize": {
@@ -32,7 +32,7 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "DR 225447 (PALAKKAD)"
+        "DR 225447(PALAKKAD)"
       ]
     },
     "3rd_prize": {
