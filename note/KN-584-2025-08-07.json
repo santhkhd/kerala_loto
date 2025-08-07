@@ -1,0 +1,104 @@
+{
+  "lottery_name": "KARUNYA PLUS",
+  "draw_number": "KN-584",
+  "draw_date": "2025-08-07",
+  "venue": "",
+  "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "PN 612922"
+      ]
+    },
+    "consolation_prize": {
+      "amount": 5000,
+      "label": "Consolation Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "2nd_prize": {
+      "amount": 3000000,
+      "label": "2nd Prize",
+      "winners": [
+        "PT 633404"
+      ]
+    },
+    "3rd_prize": {
+      "amount": 500000,
+      "label": "3rd Prize",
+      "winners": [
+        "PV 560902"
+      ]
+    },
+    "4th_prize": {
+      "amount": 5000,
+      "label": "4th Prize",
+      "winners": [
+        "0082",
+        "2085",
+        "2085",
+        "3111",
+        "3204",
+        "3970",
+        "5320",
+        "5497",
+        "5736",
+        "6022",
+        "6085",
+        "6131",
+        "6133",
+        "6289",
+        "6511",
+        "6779",
+        "7315",
+        "7577",
+        "7791",
+        "8138",
+        "8996"
+      ]
+    },
+    "5th_prize": {
+      "amount": 2000,
+      "label": "5th Prize",
+      "winners": [
+        "0119",
+        "1008",
+        "2056",
+        "6326",
+        "6896",
+        "8174"
+      ]
+    },
+    "6th_prize": {
+      "amount": 1000,
+      "label": "6th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "7th_prize": {
+      "amount": 500,
+      "label": "7th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "8th_prize": {
+      "amount": 200,
+      "label": "8th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "9th_prize": {
+      "amount": 100,
+      "label": "9th Prize",
+      "winners": [
+        "**"
+      ]
+    }
+  },
+  "downloadLink": ""
+}
