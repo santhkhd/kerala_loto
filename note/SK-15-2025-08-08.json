@@ -1,0 +1,113 @@
+{
+  "lottery_name": "SUVARNA KERALAM",
+  "draw_number": "SK-15",
+  "draw_date": "2025-08-08",
+  "venue": "",
+  "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "RG 748405(ADOOR)"
+      ]
+    },
+    "consolation_prize": {
+      "amount": 5000,
+      "label": "Consolation Prize",
+      "winners": [
+        "RA 748405",
+        "RB 748405",
+        "RC 748405",
+        "RD 748405",
+        "RE 748405",
+        "RF 748405",
+        "RH 748405",
+        "RJ 748405",
+        "RK 748405",
+        "RL 748405",
+        "RM 748405"
+      ]
+    },
+    "2nd_prize": {
+      "amount": 3000000,
+      "label": "2nd Prize",
+      "winners": [
+        "RH 296103(KAYAMKULAM)"
+      ]
+    },
+    "3rd_prize": {
+      "amount": 500000,
+      "label": "3rd Prize",
+      "winners": [
+        "RA 897240"
+      ]
+    },
+    "4th_prize": {
+      "amount": 5000,
+      "label": "4th Prize",
+      "winners": [
+        "0611",
+        "1234",
+        "1460",
+        "1515",
+        "1530",
+        "1551",
+        "2405",
+        "2602",
+        "3175",
+        "3935",
+        "4024",
+        "5449",
+        "5697",
+        "6097",
+        "6198",
+        "6380",
+        "7301",
+        "8918",
+        "9061",
+        "9216"
+      ]
+    },
+    "5th_prize": {
+      "amount": 2000,
+      "label": "5th Prize",
+      "winners": [
+        "2158",
+        "2946",
+        "5577",
+        "7039",
+        "8490",
+        "9723"
+      ]
+    },
+    "6th_prize": {
+      "amount": 1000,
+      "label": "6th Prize",
+      "winners": [
+        "..."
+      ]
+    },
+    "7th_prize": {
+      "amount": 500,
+      "label": "7th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "8th_prize": {
+      "amount": 200,
+      "label": "8th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "9th_prize": {
+      "amount": 100,
+      "label": "9th Prize",
+      "winners": [
+        "**"
+      ]
+    }
+  },
+  "downloadLink": ""
+}
