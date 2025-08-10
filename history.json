@@ -83007,6 +83007,163 @@
     "downloadLink": ""
   },
   {
+    "date": "2025-08-10",
+    "lottery": "SM",
+    "draw": "SM-15",
+    "filename": "SM-15-2025-08-10.json",
+    "github_url": "https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/SM-15-2025-08-10.json",
+    "prizes": [
+      {
+        "prize_key": "1st_prize",
+        "label": "1st Prize",
+        "amount": 10000000,
+        "winners": [
+          "MA 835995"
+        ]
+      },
+      {
+        "prize_key": "consolation_prize",
+        "label": "Consolation Prize",
+        "amount": 5000,
+        "winners": [
+          "MB 835995",
+          "MC 835995",
+          "MD 835995",
+          "ME 835995",
+          "MF 835995",
+          "MG 835995",
+          "MH 835995",
+          "MJ 835995",
+          "MK 835995",
+          "ML 835995",
+          "MM 835995"
+        ]
+      },
+      {
+        "prize_key": "2nd_prize",
+        "label": "2nd Prize",
+        "amount": 3000000,
+        "winners": [
+          "MF 837421"
+        ]
+      },
+      {
+        "prize_key": "3rd_prize",
+        "label": "3rd Prize",
+        "amount": 500000,
+        "winners": [
+          "ML 398655"
+        ]
+      },
+      {
+        "prize_key": "4th_prize",
+        "label": "4th Prize",
+        "amount": 5000,
+        "winners": [
+          "1617",
+          "1880",
+          "2476",
+          "2922",
+          "2999",
+          "3145",
+          "3797",
+          "4037",
+          "4059",
+          "4990",
+          "5023",
+          "5092",
+          "5154",
+          "7223",
+          "7400",
+          "7905",
+          "9054",
+          "9130",
+          "9647",
+          "9671"
+        ]
+      },
+      {
+        "prize_key": "5th_prize",
+        "label": "5th Prize",
+        "amount": 2000,
+        "winners": [
+          "0577",
+          "3633",
+          "5386",
+          "6135",
+          "6470",
+          "7888"
+        ]
+      },
+      {
+        "prize_key": "6th_prize",
+        "label": "6th Prize",
+        "amount": 1000,
+        "winners": [
+          "..."
+        ]
+      },
+      {
+        "prize_key": "7th_prize",
+        "label": "7th Prize",
+        "amount": 500,
+        "winners": [
+          "**"
+        ]
+      },
+      {
+        "prize_key": "8th_prize",
+        "label": "8th Prize",
+        "amount": 200,
+        "winners": [
+          "**"
+        ]
+      },
+      {
+        "prize_key": "9th_prize",
+        "label": "9th Prize",
+        "amount": 100,
+        "winners": [
+          "**"
+        ]
+      }
+    ],
+    "numbers4": [
+      "1617",
+      "1880",
+      "2476",
+      "2922",
+      "2999",
+      "3145",
+      "3797",
+      "4037",
+      "4059",
+      "4990",
+      "5023",
+      "5092",
+      "5154",
+      "7223",
+      "7400",
+      "7905",
+      "9054",
+      "9130",
+      "9647",
+      "9671",
+      "0577",
+      "3633",
+      "5386",
+      "6135",
+      "6470",
+      "7888"
+    ],
+    "numbers6": [
+      "835995",
+      "837421",
+      "398655"
+    ],
+    "downloadLink": ""
+  },
+  {
     "date": "2025-05-11",
     "lottery": "SM",
     "draw": "SM-2",
