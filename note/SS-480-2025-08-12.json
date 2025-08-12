@@ -1,0 +1,113 @@
+{
+  "lottery_name": "STHREE SAKTHI",
+  "draw_number": "SS-480",
+  "draw_date": "2025-08-12",
+  "venue": "",
+  "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "SM 351367"
+      ]
+    },
+    "consolation_prize": {
+      "amount": 5000,
+      "label": "Consolation Prize",
+      "winners": [
+        "SA 351367",
+        "SB 351367",
+        "SC 351367",
+        "SD 351367",
+        "SE 351367",
+        "SF 351367",
+        "SG 351367",
+        "SH 351367",
+        "SJ 351367",
+        "SK 351367",
+        "SL 351367"
+      ]
+    },
+    "2nd_prize": {
+      "amount": 3000000,
+      "label": "2nd Prize",
+      "winners": [
+        "SG 842859"
+      ]
+    },
+    "3rd_prize": {
+      "amount": 500000,
+      "label": "3rd Prize",
+      "winners": [
+        "SM 853549"
+      ]
+    },
+    "4th_prize": {
+      "amount": 5000,
+      "label": "4th Prize",
+      "winners": [
+        "0146",
+        "0391",
+        "0430",
+        "0508",
+        "0823",
+        "2426",
+        "2428",
+        "2517",
+        "4236",
+        "4809",
+        "5976",
+        "6067",
+        "6096",
+        "6252",
+        "6505",
+        "7977",
+        "8200",
+        "8594",
+        "8665",
+        "9932"
+      ]
+    },
+    "5th_prize": {
+      "amount": 2000,
+      "label": "5th Prize",
+      "winners": [
+        "4875",
+        "5498",
+        "6699",
+        "6770",
+        "7293",
+        "7673"
+      ]
+    },
+    "6th_prize": {
+      "amount": 1000,
+      "label": "6th Prize",
+      "winners": [
+        "..."
+      ]
+    },
+    "7th_prize": {
+      "amount": 500,
+      "label": "7th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "8th_prize": {
+      "amount": 200,
+      "label": "8th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "9th_prize": {
+      "amount": 100,
+      "label": "9th Prize",
+      "winners": [
+        "**"
+      ]
+    }
+  },
+  "downloadLink": ""
+}
