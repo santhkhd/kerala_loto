@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "SM 351367"
+        "SM 351367(KOTTAYAM)"
       ]
     },
     "consolation_prize": {
@@ -32,7 +32,7 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "SG 842859"
+        "SG 842859\r\n(KARUNAGAPPALLY)"
       ]
     },
     "3rd_prize": {
@@ -84,6 +84,12 @@
       "amount": 1000,
       "label": "6th Prize",
       "winners": [
+        "1459",
+        "2414",
+        "2099",
+        "6845",
+        "7726",
+        "3099",
         "..."
       ]
     },
