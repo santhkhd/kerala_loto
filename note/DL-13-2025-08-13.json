@@ -29,14 +29,20 @@
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "..."
+        "DG 229599"
       ]
     },
     "4th_prize": {
       "amount": 5000,
       "label": "4th Prize",
       "winners": [
-        "**"
+        "6932",
+        "1383",
+        "6472",
+        "0572",
+        "5131",
+        "8239",
+        "..."
       ]
     },
     "5th_prize": {
