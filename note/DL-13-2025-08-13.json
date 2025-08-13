@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "DA 807900"
+        "DA 807900(WAYANADU)"
       ]
     },
     "consolation_prize": {
@@ -32,7 +32,7 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "DL 144187"
+        "DL 144187(KOLLAM)"
       ]
     },
     "3rd_prize": {
@@ -84,6 +84,12 @@
       "amount": 1000,
       "label": "6th Prize",
       "winners": [
+        "8758",
+        "0340",
+        "0714",
+        "7080",
+        "6132",
+        "0499",
         "..."
       ]
     },
