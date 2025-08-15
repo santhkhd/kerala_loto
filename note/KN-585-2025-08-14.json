@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "PJ 583002(ERNAKULAM)"
+        "PJ 583002 (ERNAKULAM)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "PJ 658627(PATTAMBI)"
+        "PJ 658627 (PATTAMBI)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "PC 879180"
+        "PC 879180 (VAIKKOM)"
       ]
     },
     "4th_prize": {
