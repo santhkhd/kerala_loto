@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kerala Lotery Home</title>
+  <title>Kerala Lottery Home</title>
   <link href="output.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
@@ -117,6 +117,17 @@
       min-height: 2.5em;
       display: block;
     }
+    .no-results {
+      text-align: center;
+      padding: 20px;
+      font-size: 1.2em;
+      color: #666;
+      background: #fff;
+      border-radius: 10px;
+      margin: 20px auto;
+      max-width: 900px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
     @media (max-width: 900px) {
       .lottery-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -175,7 +186,6 @@
       color: #fff;
       box-shadow: 0 2px 8px rgba(37,99,235,0.10);
     }
-    /* Make tab bar scrollable and mobile-friendly */
     .scrollbar-hide::-webkit-scrollbar {
       display: none;
     }
@@ -225,14 +235,15 @@
 
   <div class="w-full px-1 sm:px-4">
     <div class="max-w-4xl mx-auto w-full">
-    <!-- Lottery Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" id="lottery-grid">
-      <!-- Lottery cards will be injected here -->
-    </div>
-
-    </div>
+      <!-- Lottery Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" id="lottery-grid">
+        <!-- Lottery cards will be injected here -->
+      </div>
     </div>
   </div>
+
+  <!-- No Results Message -->
+  <div id="no-results-message" class="no-results hidden">No lottery results available for today.</div>
 
   <!-- Bottom Navigation -->
   <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-2 shadow-lg z-40">
@@ -285,6 +296,12 @@
       SUVARNA_KERALAM: { en: 'SUVARNA KERALAM', ml: 'സുവർണ കേരളം', ta: 'சுவர்ண கேரளம்' },
       KARUNYA: { en: 'KARUNYA', ml: 'കരുണ്യ', ta: 'கருண்யா' }
     };
+
+    // Days with no draws (holidays)
+    const noDrawDays = [
+      '2025-08-15', // Today (e.g., Independence Day)
+     
+    ];
 
     function setLang(lang) {
       currentLang = lang;
@@ -339,14 +356,14 @@
           name: 'NEW YEAR BUMPER',
           shortName: 'NY',
           drawNumber: 'XX',
-          date: '2026-01-15', // EDIT THIS DATE
+          date: '2026-01-15',
           translations: { en: 'NEW YEAR BUMPER', ml: 'പുതുവത്സര ബമ്പർ', ta: 'புத்தாண்டு பம்பர்' }
         },
         {
           name: 'SUMMER BUMPER',
           shortName: 'SB',
           drawNumber: 'XX',
-          date: '2026-03-20', // EDIT THIS DATE
+          date: '2026-03-20',
           translations: { en: 'SUMMER BUMPER', ml: 'വേനൽ ബമ്പർ', ta: 'கோடை பம்பர்' }
         },
         {
@@ -370,28 +387,31 @@
       const istTime = new Date(now.getTime() + (330 * 60 * 1000));
       const today = new Date(Date.UTC(istTime.getUTCFullYear(), istTime.getUTCMonth(), istTime.getUTCDate()));
       const todayStr = today.toISOString().split('T')[0];
+      const noResultsMessage = document.getElementById('no-results-message');
+      let hasTodayResult = false;
 
       // Add bumper lotteries first if filter is ALL
       if (filterCategory === 'ALL') {
         bumperLotteries.forEach(bumper => {
           const bumperDate = new Date(bumper.date + 'T00:00:00Z');
-          if (bumperDate <= today) {
-          const isNew = (bumper.date === todayStr);
-          const link = `result.html?file=${bumper.shortName}-${bumper.drawNumber}-${bumper.date}.json`;
-          const translatedName = bumper.translations[lang] || bumper.translations['en'];
-          cardData.push({
-            date: bumper.date,
-            html: `
-            <a class="lottery-card" href="${link}">
-                <div class="card-top">
-                    ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
-                    <span class="badge">${bumper.shortName}-${bumper.drawNumber}</span>
-                    <div class="lottery-title">${translatedName}</div>
-                </div>
-                <div class="card-bottom">${bumper.date.split('-').reverse().join('/')}</div>
-            </a>
-          `
-          });
+          if (bumperDate <= today && !noDrawDays.includes(bumper.date)) {
+            const isNew = (bumper.date === todayStr);
+            if (isNew) hasTodayResult = true;
+            const link = `result.html?file=${bumper.shortName}-${bumper.drawNumber}-${bumper.date}.json`;
+            const translatedName = bumper.translations[lang] || bumper.translations['en'];
+            cardData.push({
+              date: bumper.date,
+              html: `
+              <a class="lottery-card" href="${link}">
+                  <div class="card-top">
+                      ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
+                      <span class="badge">${bumper.shortName}-${bumper.drawNumber}</span>
+                      <div class="lottery-title">${translatedName}</div>
+                  </div>
+                  <div class="card-bottom">${bumper.date.split('-').reverse().join('/')}</div>
+              </a>
+            `
+            });
           }
         });
       }
@@ -400,9 +420,12 @@
         const date = new Date(today);
         date.setDate(date.getDate() - i);
         const dateStr = date.toISOString().split('T')[0];
+
+        // Skip days with no draws
+        if (noDrawDays.includes(dateStr)) continue;
+
         const dayOfWeek = date.getDay();
         const lottery = schedule.find(s => s.dayOfWeek === dayOfWeek);
-
         if (lottery && (!filterCategory || filterCategory === 'ALL' || filterCategory === lottery.name)) {
           const isBumperDay = bumperLotteries.some(b => b.date === dateStr);
           if (isBumperDay) continue;
@@ -411,6 +434,7 @@
           const diffWeeks = Math.round((date - baseDate) / (7 * 24 * 60 * 60 * 1000));
           const drawNumber = lottery.baseNumber + diffWeeks;
           const isNew = (dateStr === todayStr);
+          if (isNew) hasTodayResult = true;
           const link = `result.html?file=${lottery.shortName}-${drawNumber}-${dateStr}.json`;
           const translatedName = (lotteryNameTranslations[lottery.name] && lotteryNameTranslations[lottery.name][lang]) || lottery.name;
 
@@ -435,6 +459,9 @@
 
       const grid = document.getElementById('lottery-grid');
       grid.innerHTML = cardData.map(c => c.html).join('');
+
+      // Show/hide no results message
+      noResultsMessage.classList.toggle('hidden', hasTodayResult || filterCategory !== 'ALL');
     }
 
     document.addEventListener('DOMContentLoaded', function() {
