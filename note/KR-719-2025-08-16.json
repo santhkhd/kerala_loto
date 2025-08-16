@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "Updating..."
+        "KZ 445643"
       ]
     },
     "consolation_prize": {
@@ -22,21 +22,21 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "**"
+        "KU 786025"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "**"
+        "KW 820794"
       ]
     },
     "4th_prize": {
       "amount": 5000,
       "label": "4th Prize",
       "winners": [
-        "**"
+        "..."
       ]
     },
     "5th_prize": {
