@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "MU 819960(MALAPPURAM)"
+        "MU 819960 (MALAPPURAM)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "MR 813336(KOLLAM)"
+        "MR 813336 (KOLLAM)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "MN 444621"
+        "MN 444621 (PALAKKAD)"
       ]
     },
     "4th_prize": {
