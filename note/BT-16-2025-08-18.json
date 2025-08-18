@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "BV 219851"
+        "BV 219851(KANNUR)"
       ]
     },
     "consolation_prize": {
@@ -32,7 +32,7 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "BV 769240"
+        "BV 769240\r\n(NEYYATTINKKARA)"
       ]
     },
     "3rd_prize": {
@@ -84,6 +84,12 @@
       "amount": 1000,
       "label": "6th Prize",
       "winners": [
+        "9964",
+        "5005",
+        "6394",
+        "1955",
+        "0245",
+        "4963",
         "..."
       ]
     },
