@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "SP 470148"
+        "SP 470148(PATTAMBI)"
       ]
     },
     "consolation_prize": {
@@ -32,7 +32,7 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "ST 823246"
+        "ST 823246(ERNAKULAM)"
       ]
     },
     "3rd_prize": {
@@ -84,6 +84,12 @@
       "amount": 1000,
       "label": "6th Prize",
       "winners": [
+        "7021",
+        "7262",
+        "0510",
+        "1859",
+        "6854",
+        "7726",
         "..."
       ]
     },
