@@ -1,0 +1,114 @@
+{
+  "lottery_name": "KARUNYA PLUS",
+  "draw_number": "KN-586",
+  "draw_date": "2025-08-21",
+  "venue": "",
+  "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "PS 763057"
+      ]
+    },
+    "consolation_prize": {
+      "amount": 5000,
+      "label": "Consolation Prize",
+      "winners": [
+        "PN 763057",
+        "PO 763057",
+        "PP 763057",
+        "PR 763057",
+        "PT 763057",
+        "PU 763057",
+        "PV 763057",
+        "PW 763057",
+        "PX 763057",
+        "PY 763057",
+        "PZ 763057"
+      ]
+    },
+    "2nd_prize": {
+      "amount": 3000000,
+      "label": "2nd Prize",
+      "winners": [
+        "PT 354012"
+      ]
+    },
+    "3rd_prize": {
+      "amount": 500000,
+      "label": "3rd Prize",
+      "winners": [
+        "PU 475795"
+      ]
+    },
+    "4th_prize": {
+      "amount": 5000,
+      "label": "4th Prize",
+      "winners": [
+        "0017",
+        "0074",
+        "0510",
+        "1412",
+        "1514",
+        "2122",
+        "2155",
+        "2448",
+        "2841",
+        "3767",
+        "3947",
+        "5803",
+        "5894",
+        "5937",
+        "5942",
+        "5966",
+        "6516",
+        "6690",
+        "7478",
+        "9490"
+      ]
+    },
+    "5th_prize": {
+      "amount": 2000,
+      "label": "5th Prize",
+      "winners": [
+        "0822",
+        "5076",
+        "6020",
+        "8578",
+        "9935",
+        "5520",
+        "..."
+      ]
+    },
+    "6th_prize": {
+      "amount": 1000,
+      "label": "6th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "7th_prize": {
+      "amount": 500,
+      "label": "7th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "8th_prize": {
+      "amount": 200,
+      "label": "8th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "9th_prize": {
+      "amount": 100,
+      "label": "9th Prize",
+      "winners": [
+        "**"
+      ]
+    }
+  },
+  "downloadLink": ""
+}
