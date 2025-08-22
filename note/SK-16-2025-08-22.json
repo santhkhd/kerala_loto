@@ -1,0 +1,119 @@
+{
+  "lottery_name": "SUVARNA KERALAM",
+  "draw_number": "SK-16",
+  "draw_date": "2025-08-22",
+  "venue": "",
+  "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "RV 209957(IDUKKI)"
+      ]
+    },
+    "consolation_prize": {
+      "amount": 5000,
+      "label": "Consolation Prize",
+      "winners": [
+        "RN 209957",
+        "RO 209957",
+        "RP 209957",
+        "RR 209957",
+        "RS 209957",
+        "RT 209957",
+        "RU 209957",
+        "RW 209957",
+        "RX 209957",
+        "RY 209957",
+        "RZ 209957"
+      ]
+    },
+    "2nd_prize": {
+      "amount": 3000000,
+      "label": "2nd Prize",
+      "winners": [
+        "RX 141148(ERNAKULAM)"
+      ]
+    },
+    "3rd_prize": {
+      "amount": 500000,
+      "label": "3rd Prize",
+      "winners": [
+        "RS 201072"
+      ]
+    },
+    "4th_prize": {
+      "amount": 5000,
+      "label": "4th Prize",
+      "winners": [
+        "0352",
+        "0566",
+        "0832",
+        "2383",
+        "2580",
+        "2590",
+        "2797",
+        "3155",
+        "3779",
+        "3929",
+        "4802",
+        "5295",
+        "5859",
+        "5955",
+        "6326",
+        "7039",
+        "7636",
+        "7669",
+        "8945",
+        "9184"
+      ]
+    },
+    "5th_prize": {
+      "amount": 2000,
+      "label": "5th Prize",
+      "winners": [
+        "0110",
+        "0376",
+        "0764",
+        "4371",
+        "8114",
+        "9935"
+      ]
+    },
+    "6th_prize": {
+      "amount": 1000,
+      "label": "6th Prize",
+      "winners": [
+        "8451",
+        "2433",
+        "6212",
+        "7180",
+        "6832",
+        "7167",
+        "..."
+      ]
+    },
+    "7th_prize": {
+      "amount": 500,
+      "label": "7th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "8th_prize": {
+      "amount": 200,
+      "label": "8th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "9th_prize": {
+      "amount": 100,
+      "label": "9th Prize",
+      "winners": [
+        "**"
+      ]
+    }
+  },
+  "downloadLink": ""
+}
