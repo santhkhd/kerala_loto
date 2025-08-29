@@ -379,58 +379,40 @@
       }
     }
 
-    function fetchAndRenderData() {
+    async function fetchAndRenderData() {
       let file = getQueryParam('file');
       if (!file) {
         document.getElementById('loadingMsg').textContent = 'No result file specified.';
         return;
       }
 
-      // Recalculate draw number for daily lotteries to ensure consistency
-      const bumperLotteryCodes = ['BR', 'NY', 'SB', 'CR', 'PM', 'VJ'];
-      const parts = file.match(/^([A-Z]{2,3})-(\d+)-(\d{4}-\d{2}-\d{2})\.json$/);
-      
-      if (parts) {
-        const shortName = parts[1];
-        const dateStr = parts[3];
-        const isBumper = bumperLotteryCodes.includes(shortName.toUpperCase());
-        
-        if (!isBumper) {
-          const lottery = schedule.find(s => s.shortName.toUpperCase() === shortName.toUpperCase());
+      // Fetch manifest to validate file
+      let manifest = [];
+      try {
+        const res = await fetch('result_manifest.json');
+        manifest = await res.json();
+      } catch (e) {
+        document.getElementById('loadingMsg').textContent = 'Could not load results manifest.';
+        return;
+      }
 
-          if (lottery) {
-            const date = new Date(dateStr + 'T00:00:00Z');
-            const baseDate = new Date(lottery.baseDate + 'T00:00:00Z');
-            const diffTime = Math.abs(date - baseDate);
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            const drawNumber = lottery.baseNumber + Math.floor(diffDays / 7);
-            
-            const newFile = `${shortName}-${drawNumber}-${dateStr}.json`;
-            if (newFile !== file) {
-              console.log(`Corrected filename from ${file} to ${newFile}`);
-              file = newFile;
-            }
+      // Only allow navigation to files present in manifest
+      const validEntry = manifest.find(m => m.filename === file);
+      if (!validEntry) {
+        document.getElementById('loadingMsg').textContent = 'Result not available or draw may have been cancelled.';
+        return;
+      }
+
+      // Local file fetch (relative path)
+      fetch('note/' + encodeURIComponent(file))
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data) {
+            renderResult(data);
+          } else {
+            document.getElementById('loadingMsg').textContent = 'Result not available yet. Please check back later.';
           }
-        }
-      }
-
-      const base = 'https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/';
-      
-      // Add a cache-busting query parameter
-      const cacheBuster = `?v=${new Date().getTime()}`;
-
-      function tryFetch(fileName) {
-        return fetch(base + encodeURIComponent(fileName) + cacheBuster)
-          .then(res => res.ok ? res.json() : null);
-      }
-
-      tryFetch(file).then(data => {
-        if (data) {
-          renderResult(data);
-        } else {
-          document.getElementById('loadingMsg').textContent = 'Result not available yet. Please check back later.';
-        }
-      });
+        });
     }
 
     (function() {
