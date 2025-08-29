@@ -24,12 +24,15 @@ jobs:
       - name: Generate history.json
         run: node generate-history.js
 
+      - name: Generate result_manifest.json
+        run: node generate-manifest.js
+
       - name: Commit and push changes
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add history.json
-          git commit -m 'Auto-update history.json' || echo "No changes to commit"
+          git add history.json note/result_manifest.json
+          git commit -m 'Auto-update history.json and result_manifest.json' || echo "No changes to commit"
           git push
 
       - name: Deploy to GitHub Pages
