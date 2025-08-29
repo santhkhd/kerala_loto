@@ -62,14 +62,19 @@
       "amount": 2000,
       "label": "5th Prize",
       "winners": [
-        "**"
+        "0523",
+        "7182",
+        "7561",
+        "7632",
+        "7649",
+        "9646"
       ]
     },
     "6th_prize": {
       "amount": 1000,
       "label": "6th Prize",
       "winners": [
-        "**"
+        "..."
       ]
     },
     "7th_prize": {
