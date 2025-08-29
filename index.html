@@ -349,7 +349,7 @@
       setLang(currentLang);
     });
 
-    function renderLotteryCards(lang, filterCategory = 'ALL') {
+    async function renderLotteryCards(lang, filterCategory = 'ALL') {
       let cardData = [];
       const bumperLotteries = [
         {
@@ -374,15 +374,15 @@
           translations: { en: 'MONSOON BUMPER 2025', ml: 'മൺസൂൺ ബമ്പർ 2025', ta: 'மான்சூன் பம்பர் 2025' }
         }
       ];
-      const schedule = [
-        { dayOfWeek: 0, name: 'SAMRUDHI', shortName: 'SM', baseNumber: 9, baseDate: '2025-06-29' },
-        { dayOfWeek: 1, name: 'BHAGYATHARA', shortName: 'BT', baseNumber: 8, baseDate: '2025-06-23' },
-        { dayOfWeek: 2, name: 'STHREE_SAKTHI', shortName: 'SS', baseNumber: 473, baseDate: '2025-06-24' },
-        { dayOfWeek: 3, name: 'DHANALEKSHMI', shortName: 'DL', baseNumber: 6, baseDate: '2025-06-25' },
-        { dayOfWeek: 4, name: 'KARUNYA_PLUS', shortName: 'KN', baseNumber: 578, baseDate: '2025-06-26' },
-        { dayOfWeek: 5, name: 'SUVARNA_KERALAM', shortName: 'SK', baseNumber: 8, baseDate: '2025-06-27' },
-        { dayOfWeek: 6, name: 'KARUNYA', shortName: 'KR', baseNumber: 712, baseDate: '2025-06-28' }
-      ];
+      const catMap = {
+        'SAMRUDHI': 'SM',
+        'BHAGYATHARA': 'BT',
+        'STHREE_SAKTHI': 'SS',
+        'DHANALEKSHMI': 'DL',
+        'KARUNYA_PLUS': 'KN',
+        'SUVARNA_KERALAM': 'SK',
+        'KARUNYA': 'KR'
+      };
       const now = new Date();
       const istTime = new Date(now.getTime() + (330 * 60 * 1000));
       const today = new Date(Date.UTC(istTime.getUTCFullYear(), istTime.getUTCMonth(), istTime.getUTCDate()));
@@ -390,69 +390,94 @@
       const noResultsMessage = document.getElementById('no-results-message');
       let hasTodayResult = false;
 
-      // Add bumper lotteries first if filter is ALL
+      // Fetch manifest
+      let manifest = [];
+      try {
+        const res = await fetch('result_manifest.json');
+        manifest = await res.json();
+      } catch (e) {
+        noResultsMessage.textContent = 'Could not load results manifest.';
+        noResultsMessage.classList.remove('hidden');
+        return;
+      }
+
+      // Add bumper lotteries if filter is ALL and present in manifest
       if (filterCategory === 'ALL') {
         bumperLotteries.forEach(bumper => {
-          const bumperDate = new Date(bumper.date + 'T00:00:00Z');
-          if (bumperDate <= today && !noDrawDays.includes(bumper.date)) {
+          const m = manifest.find(x => x.code === bumper.shortName && x.date === bumper.date);
+          if (m) {
             const isNew = (bumper.date === todayStr);
             if (isNew) hasTodayResult = true;
-            const link = `result.html?file=${bumper.shortName}-${bumper.drawNumber}-${bumper.date}.json`;
             const translatedName = bumper.translations[lang] || bumper.translations['en'];
             cardData.push({
               date: bumper.date,
               html: `
-              <a class="lottery-card" href="${link}">
+                <a class="lottery-card" href="result.html?file=${m.filename}">
                   <div class="card-top">
-                      ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
-                      <span class="badge">${bumper.shortName}-${bumper.drawNumber}</span>
-                      <div class="lottery-title">${translatedName}</div>
+                    ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
+                    <span class="badge">${bumper.shortName}-${bumper.drawNumber}</span>
+                    <div class="lottery-title">${translatedName}</div>
                   </div>
                   <div class="card-bottom">${bumper.date.split('-').reverse().join('/')}</div>
-              </a>
-            `
+                </a>
+              `
             });
           }
         });
       }
 
-      for (let i = 0; i < 90; i++) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        const dateStr = date.toISOString().split('T')[0];
+      // Filter manifest for regular draws
+      let filtered = manifest.filter(item => {
+        if (filterCategory === 'ALL') return true;
+        // Map tab category to code
+        const catMap = {
+          'SAMRUDHI': 'SM',
+          'BHAGYATHARA': 'BT',
+          'STHREE_SAKTHI': 'SS',
+          'DHANALEKSHMI': 'DL',
+          'KARUNYA_PLUS': 'KN',
+          'SUVARNA_KERALAM': 'SK',
+          'KARUNYA': 'KR'
+        };
+        return item.code === catMap[filterCategory];
+      });
 
-        // Skip days with no draws
-        if (noDrawDays.includes(dateStr)) continue;
+      // Only show results up to today
+      filtered = filtered.filter(item => item.date <= todayStr);
 
-        const dayOfWeek = date.getDay();
-        const lottery = schedule.find(s => s.dayOfWeek === dayOfWeek);
-        if (lottery && (!filterCategory || filterCategory === 'ALL' || filterCategory === lottery.name)) {
-          const isBumperDay = bumperLotteries.some(b => b.date === dateStr);
-          if (isBumperDay) continue;
-
-          const baseDate = new Date(lottery.baseDate + 'T00:00:00Z');
-          const diffWeeks = Math.round((date - baseDate) / (7 * 24 * 60 * 60 * 1000));
-          const drawNumber = lottery.baseNumber + diffWeeks;
-          const isNew = (dateStr === todayStr);
-          if (isNew) hasTodayResult = true;
-          const link = `result.html?file=${lottery.shortName}-${drawNumber}-${dateStr}.json`;
-          const translatedName = (lotteryNameTranslations[lottery.name] && lotteryNameTranslations[lottery.name][lang]) || lottery.name;
-
-          cardData.push({
-            date: dateStr,
-            html: `
-            <a class="lottery-card" href="${link}">
-                <div class="card-top">
-                    ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
-                    <span class="badge">${lottery.shortName}-${drawNumber}</span>
-                    <div class="lottery-title">${translatedName}</div>
-                </div>
-                <div class="card-bottom">${dateStr.split('-').reverse().join('/')}</div>
+      // Add cards for filtered draws
+      filtered.forEach(item => {
+        // Skip bumper draws already handled
+        if (bumperLotteries.some(b => b.shortName === item.code && b.date === item.date)) return;
+        const isNew = (item.date === todayStr);
+        if (isNew) hasTodayResult = true;
+        // Find translated name
+        let translatedName = item.code;
+        for (const [cat, val] of Object.entries(lotteryNameTranslations)) {
+          if (val && val.en && val.en.replace(/\s/g, '').toUpperCase() === cat.replace(/_/g, '').toUpperCase()) {
+            if (val.en.toUpperCase().replace(/\s/g, '') === cat.replace(/_/g, '').toUpperCase() && item.code === catMap[cat]) {
+              translatedName = val[lang] || val.en;
+              break;
+            }
+          } else if (catMap[cat] === item.code) {
+            translatedName = val[lang] || val.en;
+            break;
+          }
+        }
+        cardData.push({
+          date: item.date,
+          html: `
+            <a class="lottery-card" href="result.html?file=${item.filename}">
+              <div class="card-top">
+                ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
+                <span class="badge">${item.code}-${item.draw_number}</span>
+                <div class="lottery-title">${translatedName}</div>
+              </div>
+              <div class="card-bottom">${item.date.split('-').reverse().join('/')}</div>
             </a>
           `
-          });
-        }
-      }
+        });
+      });
 
       // Sort cards by date, newest first
       cardData.sort((a, b) => new Date(b.date) - new Date(a.date));
