@@ -1,107 +1,101 @@
-{
-  "ads_config": {
-    "enabled": true,
-    "app_open_ads": {
+  {
+    "ads_config": {
       "enabled": true,
-      "ad_unit_id": "YOUR_APP_OPEN_AD_UNIT_ID",
-      "min_background_time_hours": 0.1,
-      "timeout_hours": 0.1,
-      "show_frequency": "on_app_open"
-    },
-    "banner_ads": {
-      "enabled": true,
-      "ad_unit_id": "YOUR_BANNER_AD_UNIT_ID",
-      "show_in_main": true,
-      "show_in_details": true,
-      "show_in_comments": true,
-      "show_in_rss": true,
-      "show_at_bottom": false,
-      "hide_on_scroll": false
-    },
-    "native_ads": {
-      "enabled": true,
-      "ad_unit_id": "YOUR_NATIVE_AD_UNIT_ID",
-      "drawer_ad_unit_id": "YOUR_DRAWER_NATIVE_AD_UNIT_ID",
-      "video_detail_ad_unit_id": "YOUR_VIDEO_DETAIL_NATIVE_AD_UNIT_ID",
-      "exit_dialog_ad_unit_id": "YOUR_EXIT_DIALOG_NATIVE_AD_UNIT_ID",
-      "items_per_ad": 2,
-      "show_in_feed": true,
-      "show_in_details": false,
-      "show_label": true,
-      "label_text": "Ad"
-    },
-    "interstitial_ads": {
-      "enabled": true,
-      "ad_unit_id": "YOUR_INTERSTITIAL_AD_UNIT_ID",
-      "frequency": 1,
-      "show_on_thumbnail_click": false,
-      "show_on_rss_click": false,
-      "show_on_webview_open": false,
-      "show_on_external_browser": false,
-      "show_on_exit": false,
-      "show_frequency": "every_n_clicks",
-      "min_interval_seconds": 30,
-      "frequency_based_ad_ids": {
-        "frequency_1": {
-          "ad_unit_id": "YOUR_INTERSTITIAL_AD_UNIT_ID_FREQ_1",
-          "description": "High frequency - shows every click"
+      "app_open_ads": {
+        "enabled": true,
+        "ad_unit_id": "ca-app-pub-3940256099942544/3419835294",
+        "min_background_time_hours": 0.1,
+        "timeout_hours": 0.1,
+        "show_frequency": "on_app_open"
+      },
+      "banner_ads": {
+        "enabled": true,
+        "ad_unit_id": "ca-app-pub-3940256099942544/6300978111",
+        "show_in_main": true,
+        "show_in_details": true,
+        "show_in_comments": true,
+        "show_in_rss": true,
+        "show_at_bottom": false,
+        "hide_on_scroll": false
+      },
+      "native_ads": {
+        "enabled": true,
+        "ad_unit_id": "ca-app-pub-3940256099942544/2247696110",
+        "drawer_ad_unit_id": "ca-app-pub-3940256099942544/2247696110",
+        "video_detail_ad_unit_id": "ca-app-pub-3940256099942544/2247696110",
+        "exit_dialog_ad_unit_id": "ca-app-pub-3940256099942544/2247696110",
+        "items_per_ad": 6,
+        "show_in_feed": true,
+        "show_in_details": false,
+        "show_label": true,
+        "label_text": "Ad"
+      },
+      "interstitial_ads": {
+        "enabled": true,
+        "ad_unit_id": "ca-app-pub-3940256099942544/1033173712",
+        "frequency": 1,
+        "show_on_thumbnail_click": false,
+        "show_on_rss_click": false,
+        "show_on_webview_open": false,
+        "show_on_external_browser": false,
+        "show_on_exit": false,
+        "show_frequency": "every_n_clicks",
+        "min_interval_seconds": 30,
+        "frequency_based_ad_ids": {
+          "frequency_1": {
+            "ad_unit_id": "ca-app-pub-3940256099942544/1033173712",
+            "description": "High frequency - shows every click"
+          },
+          "frequency_2": {
+            "ad_unit_id": "ca-app-pub-3940256099942544/1033173712",
+            "description": "Medium frequency - shows every 2 clicks"
+          },
+          "frequency_3": {
+            "ad_unit_id": "ca-app-pub-3940256099942544/1033173712",
+            "description": "Low frequency - shows every 3 clicks"
+          },
+          "frequency_5": {
+            "ad_unit_id": "ca-app-pub-3940256099942544/1033173712",
+            "description": "Very low frequency - shows every 5 clicks"
+          }
         },
-        "frequency_2": {
-          "ad_unit_id": "YOUR_INTERSTITIAL_AD_UNIT_ID_FREQ_2",
-          "description": "Medium frequency - shows every 2 clicks"
-        },
-        "frequency_3": {
-          "ad_unit_id": "YOUR_INTERSTITIAL_AD_UNIT_ID_FREQ_3",
-          "description": "Low frequency - shows every 3 clicks"
-        },
-        "frequency_5": {
-          "ad_unit_id": "YOUR_INTERSTITIAL_AD_UNIT_ID_FREQ_5",
-          "description": "Very low frequency - shows every 5 clicks"
+        "production_ad_ids": {
+          "frequency_1": {
+            "ad_unit_id": "ca-app-pub-PRODUCTION_ID_FREQ_1",
+            "description": "Production ID for high frequency"
+          },
+          "frequency_2": {
+            "ad_unit_id": "ca-app-pub-PRODUCTION_ID_FREQ_2",
+            "description": "Production ID for medium frequency"
+          },
+          "frequency_3": {
+            "ad_unit_id": "ca-app-pub-PRODUCTION_ID_FREQ_3",
+            "description": "Production ID for low frequency"
+          },
+          "frequency_5": {
+            "ad_unit_id": "ca-app-pub-PRODUCTION_ID_FREQ_5",
+            "description": "Production ID for very low frequency"
+          }
         }
       },
-      "production_ad_ids": {
-        "frequency_1": {
-          "ad_unit_id": "YOUR_PROD_INTERSTITIAL_AD_UNIT_ID_FREQ_1",
-          "description": "Production ID for high frequency"
-        },
-        "frequency_2": {
-          "ad_unit_id": "YOUR_PROD_INTERSTITIAL_AD_UNIT_ID_FREQ_2",
-          "description": "Production ID for medium frequency"
-        },
-        "frequency_3": {
-          "ad_unit_id": "YOUR_PROD_INTERSTITIAL_AD_UNIT_ID_FREQ_3",
-          "description": "Production ID for low frequency"
-        },
-        "frequency_5": {
-          "ad_unit_id": "YOUR_PROD_INTERSTITIAL_AD_UNIT_ID_FREQ_5",
-          "description": "Production ID for very low frequency"
-        }
+      "test_mode": {
+        "enabled": true,
+        "test_device_ids": [
+          "02DC0787CED2F9571E337DB96097298B"
+        ]
+      },
+      "purchase_integration": {
+        "disable_ads_on_purchase": true,
+        "premium_user_no_ads": true
+      },
+      "privacy": {
+        "respect_user_consent": true,
+        "require_consent_for_ads": true
       }
     },
-    "rewarded_ads": {
-      "enabled": false,
-      "ad_unit_id": "YOUR_REWARDED_AD_UNIT_ID",
-      "reward_amount": 1,
-      "reward_type": "coins"
-    },
-    "test_mode": {
-      "enabled": true,
-      "test_device_ids": [
-        "YOUR_TEST_DEVICE_ID"
-      ]
-    },
-    "purchase_integration": {
-      "disable_ads_on_purchase": true,
-      "premium_user_no_ads": true
-    },
-    "privacy": {
-      "respect_user_consent": true,
-      "require_consent_for_ads": true
+    "remote_config": {
+      "update_interval_hours": 24,
+      "cache_duration_hours": 6,
+      "fallback_to_local": true
     }
-  },
-  "remote_config": {
-    "update_interval_hours": 24,
-    "cache_duration_hours": 6,
-    "fallback_to_local": true
-  }
-}
+  } 
