@@ -21,12 +21,12 @@ jobs:
           node-version: '18'
       - name: Generate result_manifest.json
         run: node generate-manifest.js
-      - name: Commit and push manifest
+      - name: Commit and push new results and manifest
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add note/result_manifest.json
-          git commit -m 'Auto-update result_manifest.json' || echo "No changes to commit"
+          git add note/*.json result_manifest.json
+          git commit -m 'Auto-update results and manifest' || echo "No changes to commit"
           git push
 
   history:
