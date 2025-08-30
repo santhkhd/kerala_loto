@@ -25,6 +25,8 @@ fs.readdir(NOTE_DIR, (err, files) => {
     .filter(f => f.endsWith('.json'))
     .map(parseResultFilename)
     .filter(Boolean);
+  // Sort by date descending
+  manifest.sort((a, b) => new Date(b.date) - new Date(a.date));
   fs.writeFileSync(MANIFEST_FILE, JSON.stringify(manifest, null, 2));
   console.log(`Manifest written to ${MANIFEST_FILE} with ${manifest.length} results.`);
 });
