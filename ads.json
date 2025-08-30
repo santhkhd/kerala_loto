@@ -9,7 +9,7 @@
         "show_frequency": "on_app_open"
       },
       "banner_ads": {
-        "enabled": true,
+        "enabled": false,
         "ad_unit_id": "ca-app-pub-3940256099942544/6300978111",
         "show_in_main": true,
         "show_in_details": true,
@@ -24,7 +24,7 @@
         "drawer_ad_unit_id": "ca-app-pub-3940256099942544/2247696110",
         "video_detail_ad_unit_id": "ca-app-pub-3940256099942544/2247696110",
         "exit_dialog_ad_unit_id": "ca-app-pub-3940256099942544/2247696110",
-        "items_per_ad": 6,
+        "items_per_ad": 3,
         "show_in_feed": true,
         "show_in_details": false,
         "show_label": true,
@@ -34,11 +34,11 @@
         "enabled": true,
         "ad_unit_id": "ca-app-pub-3940256099942544/1033173712",
         "frequency": 1,
-        "show_on_thumbnail_click": false,
+        "show_on_thumbnail_click": true,
         "show_on_rss_click": false,
-        "show_on_webview_open": false,
-        "show_on_external_browser": false,
-        "show_on_exit": false,
+        "show_on_webview_open": true,
+        "show_on_external_browser": true,
+        "show_on_exit": true,
         "show_frequency": "every_n_clicks",
         "min_interval_seconds": 30,
         "frequency_based_ad_ids": {
