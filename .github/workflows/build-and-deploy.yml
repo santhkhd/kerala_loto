@@ -2,41 +2,51 @@ name: Build and Deploy Kerala Lottery Site
 
 on:
   schedule:
-    - cron: '30 10 * * *'  # Every day at 10:30 UTC (4:00 PM IST)
+    - cron: '40 9 * * *'   # generate-manifest.js at 3:10 PM IST
+    - cron: '0 11 * * *'   # generate-history.js at 4:30 PM IST
   push:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  build-deploy:
+  manifest:
+    if: github.event.schedule == '40 9 * * *'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Generate history.json
-        run: node generate-history.js
-
       - name: Generate result_manifest.json
         run: node generate-manifest.js
-
-      - name: Commit and push changes
+      - name: Commit and push manifest
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add history.json note/result_manifest.json
-          git commit -m 'Auto-update history.json and result_manifest.json' || echo "No changes to commit"
+          git add note/result_manifest.json
+          git commit -m 'Auto-update result_manifest.json' || echo "No changes to commit"
           git push
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+  history:
+    if: github.event.schedule == '0 11 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          node-version: '18'
+      - name: Generate history.json
+        run: node generate-history.js
+      - name: Commit and push history
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add history.json
+          git commit -m 'Auto-update history.json' || echo "No changes to commit"
+          git push
+
           publish_dir: ./ 
