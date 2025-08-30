@@ -11,7 +11,7 @@
       "banner_ads": {
         "enabled": false,
         "ad_unit_id": "ca-app-pub-3940256099942544/6300978111",
-        "show_in_main": true,
+        "show_in_main": false,
         "show_in_details": true,
         "show_in_comments": true,
         "show_in_rss": true,
@@ -24,7 +24,7 @@
         "drawer_ad_unit_id": "ca-app-pub-3940256099942544/2247696110",
         "video_detail_ad_unit_id": "ca-app-pub-3940256099942544/2247696110",
         "exit_dialog_ad_unit_id": "ca-app-pub-3940256099942544/2247696110",
-        "items_per_ad": 3,
+        "items_per_ad": 6,
         "show_in_feed": true,
         "show_in_details": false,
         "show_label": true,
