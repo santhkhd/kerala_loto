@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "BX 357510(PALAKKAD)"
+        "BX 357510 (PALAKKAD)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "BZ 432819(IDUKKI)"
+        "BZ 432819 (IDUKKI)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "BY 970561"
+        "BY 970561 (KAYAMKULAM)"
       ]
     },
     "4th_prize": {
