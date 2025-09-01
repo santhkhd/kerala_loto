@@ -2,10 +2,11 @@ name: Kerala Lottery Results Updater
 
 on:
   schedule:
-    # Run daily at 3:30 PM IST (10:00 AM UTC) to catch results
-    - cron: '0 10 * * *'
-    # Run every 10 minutes between 3:00 PM and 4:00 PM IST (9:30 AM to 10:30 AM UTC)
-    - cron: '30/10 9-10 * * *'
+    # Run daily at 3:10 PM IST (9:40 AM UTC) to start checking for results
+    - cron: '40 9 * * *'   # 3:10 PM IST
+    # Check every 5 minutes between 3:10 PM and 4:45 PM IST for manifest updates
+    - cron: '10-45/5 9-10 * * *'  # 3:10 PM to 4:45 PM IST (every 5 minutes)
+
   push:
     branches: [ main ]
   workflow_dispatch:  # Allow manual triggering
@@ -28,13 +29,37 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4 pytz
+          pip install -r requirements.txt
+          pip install beautifulsoup4 requests pytz
 
-      - name: Run lottery results updater
+      - name: Run updater script with retry
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python updateloto.py ${{ secrets.GITHUB_TOKEN }}
+          MAX_RETRIES=3
+          ATTEMPT=0
+          
+          while [ $ATTEMPT -lt $MAX_RETRIES ]; do
+            echo "Attempt $((ATTEMPT + 1)) of $MAX_RETRIES"
+            
+            # Run the updater script
+            if python updateloto.py ${{ secrets.GITHUB_TOKEN }}; then
+              echo "Script completed successfully"
+              break
+            else
+              echo "Script failed or no new results found"
+              if [ $ATTEMPT -lt $((MAX_RETRIES-1)) ]; then
+                echo "Waiting 5 minutes before next attempt..."
+                sleep 300  # Wait 5 minutes
+              fi
+              ((ATTEMPT++))
+            fi
+          done
+          
+          if [ $ATTEMPT -eq $MAX_RETRIES ]; then
+            echo "Script failed after $MAX_RETRIES attempts"
+            exit 1
+          fi
           
       - name: Commit and push changes
         run: |
@@ -73,8 +98,8 @@ jobs:
             if git diff --name-only --exit-code note/; then
               echo "No new JSON files found in attempt $((ATTEMPT + 1))"
               if [ $ATTEMPT -lt $((MAX_RETRIES-1)) ]; then
-                echo "Waiting 10 minutes before next attempt..."
-                sleep 600  # Wait 10 minutes
+                echo "Waiting 5 minutes before next attempt..."
+                sleep 300  # Wait 5 minutes
               fi
               ((ATTEMPT++))
             else
@@ -101,8 +126,8 @@ jobs:
           git push origin HEAD:${GITHUB_REF}
 
   history:
-    # Run at 4:30 PM IST or on manual trigger
-    if: github.event.schedule == '0 11 * * *' || (github.event_name == 'workflow_dispatch' && github.event.inputs.job_to_run == 'history')
+    # Run at 4:45 PM IST or on manual trigger
+    if: github.event.schedule == '45 10 * * *' || (github.event_name == 'workflow_dispatch' && github.event.inputs.job_to_run == 'history')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -128,8 +153,8 @@ jobs:
             if git diff --exit-code history.json; then
               echo "No changes to history.json in attempt $((ATTEMPT + 1))"
               if [ $ATTEMPT -lt $((MAX_RETRIES-1)) ]; then
-                echo "Waiting 10 minutes before next attempt..."
-                sleep 600  # Wait 10 minutes
+                echo "Waiting 5 minutes before next attempt..."
+                sleep 300  # Wait 5 minutes
               fi
               ((ATTEMPT++))
             else
