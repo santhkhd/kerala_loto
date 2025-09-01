@@ -7,10 +7,19 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      job_to_run:
+        description: 'Which job to run (manifest/history)'
+        required: true
+        default: 'manifest'
+        type: choice
+        options:
+          - manifest
+          - history
 
 jobs:
   manifest:
-    if: github.event.schedule == '40 9 * * *'
+    if: github.event.schedule == '40 9 * * *' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'manifest' || !github.event.inputs.job_to_run))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -33,7 +42,7 @@ jobs:
           git push origin HEAD:${GITHUB_REF}
 
   history:
-    if: github.event.schedule == '0 11 * * *'
+    if: github.event.schedule == '0 11 * * *' || (github.event_name == 'workflow_dispatch' && github.event.inputs.job_to_run == 'history')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
