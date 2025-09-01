@@ -28,9 +28,40 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - name: Generate result_manifest.json
-        run: node generate-manifest.js
+      - name: Generate result_manifest.json with retry
+        id: generate_manifest
+        continue-on-error: true
+        run: |
+          MAX_RETRIES=3
+          ATTEMPT=0
+          
+          while [ $ATTEMPT -lt $MAX_RETRIES ]; do
+            echo "Attempt $((ATTEMPT + 1)) of $MAX_RETRIES"
+            
+            # Generate the manifest
+            node generate-manifest.js
+            
+            # Check if any new JSON files were added to the note directory
+            if git diff --name-only --exit-code note/; then
+              echo "No new JSON files found in attempt $((ATTEMPT + 1))"
+              if [ $ATTEMPT -lt $((MAX_RETRIES-1)) ]; then
+                echo "Waiting 10 minutes before next attempt..."
+                sleep 600  # Wait 10 minutes
+              fi
+              ((ATTEMPT++))
+            else
+              echo "New JSON files found!"
+              break
+            fi
+          done
+          
+          if [ $ATTEMPT -eq $MAX_RETRIES ]; then
+            echo "No new JSON files found after $MAX_RETRIES attempts"
+            exit 1
+          fi
+          
       - name: Commit and push new results and manifest
+        if: steps.generate_manifest.outcome == 'success' || steps.generate_manifest.outcome == 'failure'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -51,9 +82,40 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - name: Generate history.json
-        run: node generate-history.js
+      - name: Generate history.json with retry
+        id: generate_history
+        continue-on-error: true
+        run: |
+          MAX_RETRIES=3
+          ATTEMPT=0
+          
+          while [ $ATTEMPT -lt $MAX_RETRIES ]; do
+            echo "Attempt $((ATTEMPT + 1)) of $MAX_RETRIES"
+            
+            # Generate the history
+            node generate-history.js
+            
+            # Check if history.json was modified
+            if git diff --exit-code history.json; then
+              echo "No changes to history.json in attempt $((ATTEMPT + 1))"
+              if [ $ATTEMPT -lt $((MAX_RETRIES-1)) ]; then
+                echo "Waiting 10 minutes before next attempt..."
+                sleep 600  # Wait 10 minutes
+              fi
+              ((ATTEMPT++))
+            else
+              echo "Changes detected in history.json!"
+              break
+            fi
+          done
+          
+          if [ $ATTEMPT -eq $MAX_RETRIES ]; then
+            echo "No changes detected after $MAX_RETRIES attempts"
+            exit 1
+          fi
+          
       - name: Commit and push history
+        if: steps.generate_history.outcome == 'success' || steps.generate_history.outcome == 'failure'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -63,5 +125,3 @@ jobs:
           git add history.json
           git commit -m 'Auto-update history.json' || echo "No changes to commit"
           git push origin HEAD:${GITHUB_REF}
-
-          publish_dir: ./ 
