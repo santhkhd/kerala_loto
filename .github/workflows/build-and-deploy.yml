@@ -22,12 +22,15 @@ jobs:
       - name: Generate result_manifest.json
         run: node generate-manifest.js
       - name: Commit and push new results and manifest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           git add note/*.json result_manifest.json
           git commit -m 'Auto-update results and manifest' || echo "No changes to commit"
-          git push
+          git push origin HEAD:${GITHUB_REF}
 
   history:
     if: github.event.schedule == '0 11 * * *'
@@ -42,11 +45,14 @@ jobs:
       - name: Generate history.json
         run: node generate-history.js
       - name: Commit and push history
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           git add history.json
           git commit -m 'Auto-update history.json' || echo "No changes to commit"
-          git push
+          git push origin HEAD:${GITHUB_REF}
 
           publish_dir: ./ 
