@@ -1,5 +1,17 @@
 [
   {
+    "code": "BT",
+    "draw_number": "18",
+    "date": "2025-09-01",
+    "filename": "BT-18-2025-09-01.json"
+  },
+  {
+    "code": "SM",
+    "draw_number": "18",
+    "date": "2025-08-31",
+    "filename": "SM-18-2025-08-31.json"
+  },
+  {
     "code": "KR",
     "draw_number": "721",
     "date": "2025-08-30",
