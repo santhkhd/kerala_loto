@@ -3,9 +3,8 @@ name: Kerala Lottery Results Updater
 on:
   schedule:
     # Run every 5 minutes between 3:00 PM and 4:45 PM IST (9:30-11:15 UTC)
-    - cron: '0,5,10,15,20,25,30,35,40,45 9 * * *'  # 3:00 PM - 3:45 PM IST
-    - cron: '0,5,10,15 10 * * *'                   # 4:00 PM - 4:15 PM IST
-    - cron: '20,25,30,35,40,45 10 * * *'           # 4:20 PM - 4:45 PM IST
+    - cron: '0,5,10,15,20,25,30,35,40,45,50,55 9 * * *'  # 3:00 PM - 3:55 PM IST
+    - cron: '0,5,10,15,20,25,30,35,40,45 10 * * *'       # 4:00 PM - 4:45 PM IST
 
   push:
     branches: [ main ]
@@ -36,39 +35,75 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          MAX_RETRIES=3
-          ATTEMPT=0
-          
-          while [ $ATTEMPT -lt $MAX_RETRIES ]; do
-            echo "Attempt $((ATTEMPT + 1)) of $MAX_RETRIES"
+          # Function to run a command with retries
+          run_with_retry() {
+            local cmd=$1
+            local max_retries=3
+            local attempt=0
             
-            # Run the updater script
-            if python updateloto.py ${{ secrets.GITHUB_TOKEN }}; then
-              echo "Script completed successfully"
-              break
-            else
-              echo "Script failed or no new results found"
-              if [ $ATTEMPT -lt $((MAX_RETRIES-1)) ]; then
-                echo "Waiting 5 minutes before next attempt..."
-                sleep 300  # Wait 5 minutes
+            while [ $attempt -lt $max_retries ]; do
+              echo "Attempt $((attempt + 1)) of $max_retries - Running: $cmd"
+              
+              if eval "$cmd"; then
+                echo "Command completed successfully"
+                return 0
+              else
+                echo "Command failed"
+                if [ $attempt -lt $((max_retries-1)) ]; then
+                  echo "Waiting 2 minutes before next attempt..."
+                  sleep 120  # Wait 2 minutes
+                fi
+                ((attempt++))
               fi
-              ((ATTEMPT++))
-            fi
-          done
+            done
+            
+            echo "Command failed after $max_retries attempts"
+            return 1
+          }
           
-          if [ $ATTEMPT -eq $MAX_RETRIES ]; then
-            echo "Script failed after $MAX_RETRIES attempts"
+          # 1. Run updateloto.py to fetch new results
+          if ! run_with_retry "python updateloto.py $GITHUB_TOKEN"; then
+            echo "Warning: updateloto.py did not find new results or failed"
+          fi
+          
+          # 2. Generate/update manifest
+          if ! run_with_retry "node generate-manifest.js"; then
+            echo "Error: Failed to generate manifest"
             exit 1
           fi
           
+          # 3. Only run history update after 4:30 PM IST (11:00 UTC) or on manual trigger
+          CURRENT_HOUR=$(TZ="Asia/Kolkata" date +%H)
+          CURRENT_MINUTE=$(TZ="Asia/Kolkata" date +%M)
+          
+          if [ "$CURRENT_HOUR" -ge 16 ] && [ "$CURRENT_HOUR" -lt 17 ] || [ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]; then
+            if ! run_with_retry "node generate-history.js"; then
+              echo "Error: Failed to generate history"
+              exit 1
+            fi
+          else
+            echo "Skipping history update - will run after 4:30 PM IST"
+          fi
+          
       - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
-          git add note/
-          git diff --quiet && git diff --staged --quiet || \
-            (git commit -m "Update lottery results [skip ci]" && \
-             git push origin HEAD:main)
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          
+          # Add all changed files
+          git add note/ result_manifest.json history.json
+          
+          # Check if there are changes to commit
+          if ! git diff --quiet && ! git diff --cached --quiet; then
+            git commit -m "Auto-update: New lottery results and metadata"
+            git push origin HEAD:${GITHUB_REF}
+            echo "Changes pushed successfully"
+          else
+            echo "No changes to commit"
+          fi
 
   manifest:
     # Run on schedule between 3:10 PM and 5:00 PM IST, or on manual trigger
