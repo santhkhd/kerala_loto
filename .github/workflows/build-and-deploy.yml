@@ -2,10 +2,10 @@ name: Kerala Lottery Results Updater
 
 on:
   schedule:
-    # Run daily at 3:10 PM IST (9:40 AM UTC) to start checking for results
-    - cron: '40 9 * * *'   # 3:10 PM IST
-    # Check every 5 minutes between 3:10 PM and 4:45 PM IST for manifest updates
-    - cron: '10-45/5 9-10 * * *'  # 3:10 PM to 4:45 PM IST (every 5 minutes)
+    # Run every 5 minutes between 3:00 PM and 4:45 PM IST (9:30-11:15 UTC)
+    - cron: '0,5,10,15,20,25,30,35,40,45 9 * * *'  # 3:00 PM - 3:45 PM IST
+    - cron: '0,5,10,15 10 * * *'                   # 4:00 PM - 4:15 PM IST
+    - cron: '20,25,30,35,40,45 10 * * *'           # 4:20 PM - 4:45 PM IST
 
   push:
     branches: [ main ]
