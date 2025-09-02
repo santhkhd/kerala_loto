@@ -13,6 +13,8 @@ on:
 jobs:
   update_results:
     runs-on: ubuntu-latest
+    outputs:
+      has_updates: ${{ steps.update.outputs.has_updates }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -32,6 +34,7 @@ jobs:
           pip install beautifulsoup4 requests pytz
 
       - name: Run updater script with retry
+        id: update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -62,27 +65,12 @@ jobs:
           }
           
           # 1. Run updateloto.py to fetch new results
-          if ! run_with_retry "python updateloto.py $GITHUB_TOKEN"; then
-            echo "Warning: updateloto.py did not find new results or failed"
-          fi
-          
-          # 2. Generate/update manifest
-          if ! run_with_retry "node generate-manifest.js"; then
-            echo "Error: Failed to generate manifest"
-            exit 1
-          fi
-          
-          # 3. Only run history update after 4:30 PM IST (11:00 UTC) or on manual trigger
-          CURRENT_HOUR=$(TZ="Asia/Kolkata" date +%H)
-          CURRENT_MINUTE=$(TZ="Asia/Kolkata" date +%M)
-          
-          if [ "$CURRENT_HOUR" -ge 16 ] && [ "$CURRENT_HOUR" -lt 17 ] || [ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]; then
-            if ! run_with_retry "node generate-history.js"; then
-              echo "Error: Failed to generate history"
-              exit 1
-            fi
+          if run_with_retry "python updateloto.py $GITHUB_TOKEN"; then
+            echo "Found new results"
+            echo "has_updates=true" >> $GITHUB_OUTPUT
           else
-            echo "Skipping history update - will run after 4:30 PM IST"
+            echo "No new results found"
+            echo "has_updates=false" >> $GITHUB_OUTPUT
           fi
           
       - name: Commit and push changes
@@ -106,8 +94,8 @@ jobs:
           fi
 
   manifest:
-    # Run on schedule between 3:10 PM and 5:00 PM IST, or on manual trigger
-    if: (github.event.schedule || (github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'manifest' || !github.event.inputs.job_to_run)))
+    needs: update_results
+    if: needs.update_results.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -161,8 +149,8 @@ jobs:
           git push origin HEAD:${GITHUB_REF}
 
   history:
-    # Run at 4:45 PM IST or on manual trigger
-    if: github.event.schedule == '45 10 * * *' || (github.event_name == 'workflow_dispatch' && github.event.inputs.job_to_run == 'history')
+    needs: [update_results, manifest]
+    if: (needs.update_results.outputs.has_updates == 'true' && (github.event.schedule || github.event_name == 'workflow_dispatch'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
