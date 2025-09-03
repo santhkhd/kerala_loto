@@ -1,3 +1,4 @@
+
 import os
 import os
 import base64
@@ -251,6 +252,7 @@ def is_within_time_window():
     start_time = now.replace(hour=15, minute=10, second=0, microsecond=0)  # 3:10 PM
     end_time = now.replace(hour=16, minute=45, second=0, microsecond=0)    # 4:45 PM
     return start_time <= now <= end_time
+    return start_time <= now <= end_time
 
 def main():
     # Get GitHub token from command line arguments or environment variable
@@ -262,49 +264,52 @@ def main():
             print("Error: GitHub token not provided. Please provide it as a command line argument or set the GITHUB_TOKEN environment variable.")
             return
     
-    while True:
+    # Check if we're within the active time window
+    if not is_within_time_window():
+        print(f"Current time {datetime.now(IST).strftime('%H:%M:%S')} is outside the 3:10 PM - 4:45 PM IST window. "
+              f"Script will run but may not find new results.")
+    
+    try:
         current_time = datetime.now(IST)
-        if not is_within_time_window():
-            print(f"Current time {current_time.strftime('%H:%M:%S')} is outside the 3:10 PM - 4:45 PM IST window. Exiting...")
-            break
-            
         print(f"\n{'='*50}")
         print(f"Checking for new results at {current_time.strftime('%Y-%m-%d %H:%M:%S')} IST")
         print(f"{'='*50}")
         
-        try:
-            latest_links = get_last_n_result_links(1)
+        latest_links = get_last_n_result_links(1)
+        
+        if not latest_links:
+            print("No latest result found.")
+        else:
+            result_url = latest_links[0]
+            print(f"Processing latest result: {result_url}")
             
-            if not latest_links:
-                print("No latest result found.")
-            else:
-                result_url = latest_links[0]
-                print(f"Processing latest result: {result_url}")
-                
-                result_res = requests.get(result_url)
-                result_res.raise_for_status()
-                result_soup = BeautifulSoup(result_res.text, "html.parser")
-                
-                # Process and save the result
-                local_path, filename = process_result_page(result_soup, result_url)
-                
-                # Upload to GitHub
-                if local_path and filename:
-                    print(f"\nUploading {filename} to GitHub...")
-                    upload_success = upload_to_github(local_path, filename, github_token)
+            result_res = requests.get(result_url)
+            result_res.raise_for_status()
+            result_soup = BeautifulSoup(result_res.text, "html.parser")
+            
+            # Process and save the result
+            process_result_page(result_soup, result_url)
+            
+            # Upload to GitHub if we have files to upload
+            if os.path.exists('note'):
+                # Find the latest JSON file in the note directory
+                json_files = [f for f in os.listdir('note') if f.endswith('.json') and f != 'latest.json']
+                if json_files:
+                    latest_json = max(json_files, key=lambda x: os.path.getmtime(os.path.join('note', x)))
+                    print(f"\nUploading {latest_json} to GitHub...")
+                    upload_success = upload_to_github(f"note/{latest_json}", latest_json, github_token)
                     
                     # Also upload latest.json
                     if upload_success and os.path.exists("note/latest.json"):
                         print("\nUploading latest.json to GitHub...")
                         upload_to_github("note/latest.json", "latest.json", github_token)
-        
-            print(f"Error processing result: {e}")
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-        
-        # Wait for 5 minutes before next check
-        print("\nWaiting 5 minutes before next check...")
-        time.sleep(300)  # 5 minutes
+    
+    except Exception as e:
+        print(f"Error: {e}")
+    
+    # Wait for 5 minutes before next check
+    print("\nWaiting 5 minutes before next check...")
+    time.sleep(300)  # 5 minutes
 
 if __name__ == "__main__":
     try:
