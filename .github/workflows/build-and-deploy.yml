@@ -9,9 +9,8 @@ permissions:
 
 on:
   schedule:
-    # Run every 5 minutes between 3:00 PM and 4:45 PM IST (9:30-11:15 UTC)
-    - cron: '0,5,10,15,20,25,30,35,40,45,50,55 9 * * *'  # 3:00 PM - 3:55 PM IST
-    - cron: '0,5,10,15,20,25,30,35,40,45 10 * * *'       # 4:00 PM - 4:45 PM IST
+    # Run every 5 minutes between 3:00 PM and 5:00 PM IST (9:30-11:30 UTC)
+    - cron: '*/5 9-11 * * *'
 
   push:
     branches: [ main ]
