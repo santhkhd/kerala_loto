@@ -122,6 +122,9 @@ def process_result_page(result_soup, result_url):
     lottery_name_match = re.search(r"([A-Za-z\s]+)\s*\(", title_text)
     lottery_name = lottery_name_match.group(1).strip().upper() if lottery_name_match else "Unknown"
 
+    lottery_code_match = re.search(r'\(([A-Z]{2,3})\)', title_text)
+    lottery_code = lottery_code_match.group(1) if lottery_code_match else 'XX'
+
     # Try to extract venue
     venue = ""
     venue_tag = result_soup.find(string=re.compile(r"Venue|At", re.I))
@@ -181,76 +184,29 @@ def process_result_page(result_soup, result_url):
 
     # Create note directory if it doesn't exist
     os.makedirs('note', exist_ok=True)
-    
-    # Generate filename
-    filename = f"{draw_number}-{draw_date}.json"
+
+    # Generate filename with lottery code
+    filename = f"{lottery_code}-{draw_number}-{draw_date}.json"
     local_path = f"note/{filename}"
-    
+
     # Save to note folder
     with open(local_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
     print(f"Saved to: {os.path.abspath(local_path)}")
-    
+
     # Also save as latest.json for easy access
     latest_path = "note/latest.json"
     with open(latest_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
     print(f"Latest result saved to: {os.path.abspath(latest_path)}")
-    
+
     return local_path, filename
-
-def upload_to_github(file_path, filename, token):
-    """Uploads a file to the GitHub repository."""
-    github_api_url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FOLDER_PATH}/{filename}"
-    headers = {
-        "Authorization": f"token {token}",
-        "Content-Type": "application/json"
-    }
-
-    try:
-        with open(file_path, "rb") as f:
-            content = base64.b64encode(f.read()).decode('utf-8')
-    except FileNotFoundError:
-        print(f"Error: File {file_path} not found.")
-        return False
-
-    # Check if file exists to get its SHA
-    sha = None
-    try:
-        response = requests.get(github_api_url, headers=headers)
-        if response.status_code == 200:
-            sha = response.json().get("sha")
-    except requests.exceptions.RequestException as e:
-        if response.status_code != 404:  # 404 is expected if file doesn't exist
-            print(f"Error checking for existing file on GitHub: {e}")
-            return False
-
-    data = {
-        "message": f"Update {filename}",
-        "content": content,
-        "sha": sha
-    }
-
-    try:
-        response = requests.put(github_api_url, headers=headers, json=data)
-        response.raise_for_status()
-        print(f"Successfully uploaded {filename} to GitHub.")
-        return True
-    except requests.exceptions.RequestException as e:
-        print(f"Failed to upload {filename} to GitHub. Error: {e}")
-        if hasattr(response, 'status_code'):
-            if response.status_code in [401, 403]:
-                print("Error: Check your GitHub token permissions.")
-            elif response.status_code == 404:
-                print("Error: Repository or folder path not found.")
-        return False
 
 def is_within_time_window():
     """Check if current time is within 3:10 PM to 4:45 PM IST"""
     now = datetime.now(IST)
     start_time = now.replace(hour=15, minute=10, second=0, microsecond=0)  # 3:10 PM
     end_time = now.replace(hour=16, minute=45, second=0, microsecond=0)    # 4:45 PM
-    return start_time <= now <= end_time
     return start_time <= now <= end_time
 
 def main():
@@ -262,53 +218,35 @@ def main():
         if not github_token:
             print("Error: GitHub token not provided. Please provide it as a command line argument or set the GITHUB_TOKEN environment variable.")
             return
-    
+
     # Check if we're within the active time window
     if not is_within_time_window():
         print(f"Current time {datetime.now(IST).strftime('%H:%M:%S')} is outside the 3:10 PM - 4:45 PM IST window. "
               f"Script will run but may not find new results.")
-    
+
     try:
         current_time = datetime.now(IST)
         print(f"\n{'='*50}")
         print(f"Checking for new results at {current_time.strftime('%Y-%m-%d %H:%M:%S')} IST")
         print(f"{'='*50}")
-        
+
         latest_links = get_last_n_result_links(1)
-        
+
         if not latest_links:
             print("No latest result found.")
         else:
             result_url = latest_links[0]
             print(f"Processing latest result: {result_url}")
-            
+
             result_res = requests.get(result_url)
             result_res.raise_for_status()
             result_soup = BeautifulSoup(result_res.text, "html.parser")
-            
+
             # Process and save the result
             process_result_page(result_soup, result_url)
-            
-            # Upload to GitHub if we have files to upload
-            if os.path.exists('note'):
-                # Find the latest JSON file in the note directory
-                json_files = [f for f in os.listdir('note') if f.endswith('.json') and f != 'latest.json']
-                if json_files:
-                    latest_json = max(json_files, key=lambda x: os.path.getmtime(os.path.join('note', x)))
-                    print(f"\nUploading {latest_json} to GitHub...")
-                    upload_success = upload_to_github(f"note/{latest_json}", latest_json, github_token)
-                    
-                    # Also upload latest.json
-                    if upload_success and os.path.exists("note/latest.json"):
-                        print("\nUploading latest.json to GitHub...")
-                        upload_to_github("note/latest.json", "latest.json", github_token)
-    
+
     except Exception as e:
         print(f"Error: {e}")
-    
-    # Wait for 5 minutes before next check
-    print("\nWaiting 5 minutes before next check...")
-    time.sleep(300)  # 5 minutes
 
 if __name__ == "__main__":
     try:
