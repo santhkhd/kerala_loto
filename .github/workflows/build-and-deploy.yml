@@ -1,5 +1,12 @@
 name: Kerala Lottery Results Updater
 
+# Set default permissions for all jobs
+permissions:
+  contents: write  # Required for pushing changes
+  pull-requests: write
+  issues: write
+  actions: read
+
 on:
   schedule:
     # Run every 5 minutes between 3:00 PM and 4:45 PM IST (9:30-11:15 UTC)
@@ -12,7 +19,9 @@ on:
 
 jobs:
   update_results:
+    name: Update Lottery Results
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       has_updates: ${{ steps.update.outputs.has_updates }}
     steps:
@@ -97,6 +106,9 @@ jobs:
     needs: update_results
     if: needs.update_results.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -152,6 +164,9 @@ jobs:
     needs: [update_results, manifest]
     if: (needs.update_results.outputs.has_updates == 'true' && (github.event.schedule || github.event_name == 'workflow_dispatch'))
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
