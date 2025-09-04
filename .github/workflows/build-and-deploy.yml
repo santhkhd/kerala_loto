@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
-      has_updates: ${{ steps.update.outputs.has_updates }}
+      has_updates: ${{ steps.check_updates.outcome == 'success' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -41,46 +41,11 @@ jobs:
           pip install -r requirements.txt
           pip install beautifulsoup4 requests pytz
 
-      - name: Run updater script with retry
-        id: update
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run updater script to fetch new results
+        id: check_updates
         run: |
-          # Function to run a command with retries
-          run_with_retry() {
-            local cmd=$1
-            local max_retries=3
-            local attempt=0
-            
-            while [ $attempt -lt $max_retries ]; do
-              echo "Attempt $((attempt + 1)) of $max_retries - Running: $cmd"
-              
-              if eval "$cmd"; then
-                echo "Command completed successfully"
-                return 0
-              else
-                echo "Command failed"
-                if [ $attempt -lt $((max_retries-1)) ]; then
-                  echo "Waiting 2 minutes before next attempt..."
-                  sleep 120  # Wait 2 minutes
-                fi
-                ((attempt++))
-              fi
-            done
-            
-            echo "Command failed after $max_retries attempts"
-            return 1
-          }
-          
-          # 1. Run updateloto.py to fetch new results
-          if run_with_retry "python updateloto.py $GITHUB_TOKEN"; then
-            echo "Found new results"
-            echo "has_updates=true" >> $GITHUB_OUTPUT
-          else
-            echo "No new results found"
-            echo "has_updates=false" >> $GITHUB_OUTPUT
-          fi
-          
+          python updateloto.py
+      
       - name: Commit and push changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -89,18 +54,18 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           
-          # Add all changed files
-          git add note/ result_manifest.json history.json
+          # Add all changed files, including the note/ folder
+          git add note/
           
           # Check if there are changes to commit
           if ! git diff --quiet && ! git diff --cached --quiet; then
-            git commit -m "Auto-update: New lottery results and metadata"
-            git push origin HEAD:${GITHUB_REF}
+            git commit -m "Auto-update: New lottery results"
+            git push
             echo "Changes pushed successfully"
           else
             echo "No changes to commit"
           fi
-
+  
   manifest:
     needs: update_results
     if: needs.update_results.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
@@ -115,53 +80,23 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - name: Generate result_manifest.json with retry
-        id: generate_manifest
-        continue-on-error: true
+      - name: Generate result_manifest.json
         run: |
-          MAX_RETRIES=3
-          ATTEMPT=0
-          
-          while [ $ATTEMPT -lt $MAX_RETRIES ]; do
-            echo "Attempt $((ATTEMPT + 1)) of $MAX_RETRIES"
-            
-            # Generate the manifest
-            node generate-manifest.js
-            
-            # Check if any new JSON files were added to the note directory
-            if git diff --name-only --exit-code note/; then
-              echo "No new JSON files found in attempt $((ATTEMPT + 1))"
-              if [ $ATTEMPT -lt $((MAX_RETRIES-1)) ]; then
-                echo "Waiting 5 minutes before next attempt..."
-                sleep 300  # Wait 5 minutes
-              fi
-              ((ATTEMPT++))
-            else
-              echo "New JSON files found!"
-              break
-            fi
-          done
-          
-          if [ $ATTEMPT -eq $MAX_RETRIES ]; then
-            echo "No new JSON files found after $MAX_RETRIES attempts"
-            exit 1
-          fi
-          
-      - name: Commit and push new results and manifest
-        if: steps.generate_manifest.outcome == 'success' || steps.generate_manifest.outcome == 'failure'
+          node generate-manifest.js
+      - name: Commit and push new manifest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          git add note/*.json result_manifest.json
-          git commit -m 'Auto-update results and manifest' || echo "No changes to commit"
-          git push origin HEAD:${GITHUB_REF}
+          git add result_manifest.json
+          git commit -m 'Auto-update manifest' || echo "No changes to commit"
+          git push
 
   history:
     needs: [update_results, manifest]
-    if: (needs.update_results.outputs.has_updates == 'true' && (github.event.schedule || github.event_name == 'workflow_dispatch'))
+    if: needs.update_results.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -173,40 +108,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - name: Generate history.json with retry
-        id: generate_history
-        continue-on-error: true
+      - name: Generate history.json
         run: |
-          MAX_RETRIES=3
-          ATTEMPT=0
-          
-          while [ $ATTEMPT -lt $MAX_RETRIES ]; do
-            echo "Attempt $((ATTEMPT + 1)) of $MAX_RETRIES"
-            
-            # Generate the history
-            node generate-history.js
-            
-            # Check if history.json was modified
-            if git diff --exit-code history.json; then
-              echo "No changes to history.json in attempt $((ATTEMPT + 1))"
-              if [ $ATTEMPT -lt $((MAX_RETRIES-1)) ]; then
-                echo "Waiting 5 minutes before next attempt..."
-                sleep 300  # Wait 5 minutes
-              fi
-              ((ATTEMPT++))
-            else
-              echo "Changes detected in history.json!"
-              break
-            fi
-          done
-          
-          if [ $ATTEMPT -eq $MAX_RETRIES ]; then
-            echo "No changes detected after $MAX_RETRIES attempts"
-            exit 1
-          fi
-          
+          node generate-history.js
       - name: Commit and push history
-        if: steps.generate_history.outcome == 'success' || steps.generate_history.outcome == 'failure'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -214,5 +119,5 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           git add history.json
-          git commit -m 'Auto-update history.json' || echo "No changes to commit"
-          git push origin HEAD:${GITHUB_REF}
+          git commit -m 'Auto-update history' || echo "No changes to commit"
+          git push
