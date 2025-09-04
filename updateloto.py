@@ -1,22 +1,14 @@
 import os
-import os
-import base64
 import json
 import re
 import sys
-import time
 import requests
 from bs4 import BeautifulSoup, Tag
-from datetime import datetime, time as dt_time, timedelta
+from datetime import datetime
 import pytz
 
 # Define the Indian timezone
 IST = pytz.timezone('Asia/Kolkata')
-
-# GitHub Configuration
-REPO_OWNER = "santhkhd"
-REPO_NAME = "kerala_loto"
-FOLDER_PATH = "note"
 
 def get_last_n_result_links(n=50):
     MAIN_URL = "https://www.kllotteryresult.com/"
@@ -25,49 +17,55 @@ def get_last_n_result_links(n=50):
     next_url = MAIN_URL
     today = datetime.now().date()
     while next_url and len(links) < n:
-        res = requests.get(next_url)
-        soup = BeautifulSoup(res.text, "html.parser")
-        for a in soup.find_all("a", href=True):
-            if re.search(r'/kerala-lottery-result-[A-Z]+-\d+', a['href']):
-                url = a['href']
-                if not isinstance(url, str):
-                    continue
-                if not url.startswith("http"):
-                    url = "https://www.kllotteryresult.com" + url
-                if url in seen:
-                    continue
-                try:
-                    page_res = requests.get(url)
-                    page_soup = BeautifulSoup(page_res.text, "html.parser")
-                except Exception:
-                    continue
-                date_str = None
-                for tag in ["h1", "title", "h2", "h3"]:
-                    t = page_soup.find(tag)
-                    if t and t.text:
-                        m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", t.text)
-                        if m:
-                            date_str = f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
-                            break
-                if date_str:
-                    try:
-                        result_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-                        if result_date <= today:
-                            links.append(url)
-                            seen.add(url)
-                            if len(links) >= n:
-                                break
-                    except Exception:
+        try:
+            res = requests.get(next_url)
+            res.raise_for_status()
+            soup = BeautifulSoup(res.text, "html.parser")
+            for a in soup.find_all("a", href=True):
+                if re.search(r'/kerala-lottery-result-[A-Z]+-\d+', a['href']):
+                    url = a['href']
+                    if not isinstance(url, str):
                         continue
-        next_link = soup.find("a", string=re.compile("Older Posts|Next", re.I))
-        next_href = next_link.get('href') if isinstance(next_link, Tag) else None
-        if next_href and isinstance(next_href, str) and len(links) < n:
-            if not next_href.startswith("http"):
-                next_url = "https://www.kllotteryresult.com" + next_href
+                    if not url.startswith("http"):
+                        url = "https://www.kllotteryresult.com" + url
+                    if url in seen:
+                        continue
+                    try:
+                        page_res = requests.get(url)
+                        page_res.raise_for_status()
+                        page_soup = BeautifulSoup(page_res.text, "html.parser")
+                    except requests.exceptions.RequestException:
+                        continue
+
+                    date_str = None
+                    for tag in ["h1", "title", "h2", "h3"]:
+                        t = page_soup.find(tag)
+                        if t and t.text:
+                            m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", t.text)
+                            if m:
+                                date_str = f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
+                                break
+                    if date_str:
+                        try:
+                            result_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+                            if result_date <= today:
+                                links.append(url)
+                                seen.add(url)
+                                if len(links) >= n:
+                                    break
+                        except ValueError:
+                            continue
+            next_link = soup.find("a", string=re.compile("Older Posts|Next", re.I))
+            next_href = next_link.get('href') if isinstance(next_link, Tag) else None
+            if next_href and isinstance(next_href, str) and len(links) < n:
+                if not next_href.startswith("http"):
+                    next_url = "https://www.kllotteryresult.com" + next_href
+                else:
+                    next_url = next_href
             else:
-                next_url = next_href
-            time.sleep(1)
-        else:
+                next_url = None
+        except requests.exceptions.RequestException as e:
+            print(f"Error fetching page {next_url}: {e}")
             next_url = None
     return links
 
@@ -210,15 +208,6 @@ def is_within_time_window():
     return start_time <= now <= end_time
 
 def main():
-    # Get GitHub token from command line arguments or environment variable
-    if len(sys.argv) > 1:
-        github_token = sys.argv[1]
-    else:
-        github_token = os.environ.get('GITHUB_TOKEN')
-        if not github_token:
-            print("Error: GitHub token not provided. Please provide it as a command line argument or set the GITHUB_TOKEN environment variable.")
-            return
-
     # Check if we're within the active time window
     if not is_within_time_window():
         print(f"Current time {datetime.now(IST).strftime('%H:%M:%S')} is outside the 3:10 PM - 4:45 PM IST window. "
@@ -234,6 +223,7 @@ def main():
 
         if not latest_links:
             print("No latest result found.")
+            sys.exit(1)
         else:
             result_url = latest_links[0]
             print(f"Processing latest result: {result_url}")
@@ -244,15 +234,11 @@ def main():
 
             # Process and save the result
             process_result_page(result_soup, result_url)
+            print("New JSON file created successfully.")
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"An error occurred: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("\nScript stopped by user.")
-    except Exception as e:
-        print(f"\nAn error occurred: {e}")
-    print("Script execution completed.")
+    main()
