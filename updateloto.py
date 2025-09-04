@@ -1,5 +1,4 @@
 import os
-import os
 import json
 import re
 import sys
@@ -7,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup, Tag
 from datetime import datetime, time as dt_time
 import pytz
+import time
 
 # Define the Indian timezone
 IST = pytz.timezone('Asia/Kolkata')
@@ -17,12 +17,7 @@ HEADERS = {
     'Referer': 'https://www.kllotteryresult.com/'
 }
 
-# GitHub Configuration
-REPO_OWNER = "santhkhd"
-REPO_NAME = "kerala_loto"
-FOLDER_PATH = "note"
-
-def get_last_n_result_links(n=50):
+def get_last_n_result_links(n=1):
     MAIN_URL = "https://www.kllotteryresult.com/"
     links = []
     seen = set()
@@ -64,6 +59,7 @@ def get_last_n_result_links(n=50):
                 if date_str:
                     try:
                         result_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+                        # Only get results from today or earlier
                         if result_date <= today:
                             links.append(url)
                             seen.add(url)
@@ -78,7 +74,7 @@ def get_last_n_result_links(n=50):
                 next_url = "https://www.kllotteryresult.com" + next_href
             else:
                 next_url = next_href
-            time.sleep(1)
+            time.sleep(1) # Add a small delay to be polite to the server
         else:
             next_url = None
     return links
@@ -236,7 +232,7 @@ def main():
         latest_links = get_last_n_result_links(1)
 
         if not latest_links:
-            print("No latest result found.")
+            print("No latest result found. This might be a normal occurrence if results aren't published yet.")
             # Exit with a non-zero code to indicate no new files were created
             sys.exit(1)
         else:
