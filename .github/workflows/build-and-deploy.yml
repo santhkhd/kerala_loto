@@ -2,7 +2,7 @@ name: Update Lottery Results
 
 on:
   schedule:
-    # Run every 5 minutes between 3 PM and 5 PM IST (9:30-11:30 UTC)
+    # Run every 5 minutes between 3 PM and 5 PM IST (09:30-11:30 UTC)
     - cron: '*/5 9-11 * * *'
   workflow_dispatch:
 
@@ -27,9 +27,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 pytz
 
-      - name: Run updateloto.py
-        run: |
-          python updateloto.py
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
