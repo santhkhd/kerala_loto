@@ -1,5 +1,4 @@
 import os
-import os
 import json
 import re
 import sys
@@ -10,6 +9,11 @@ import pytz
 
 # Define the Indian timezone
 IST = pytz.timezone('Asia/Kolkata')
+
+# Add headers to mimic a web browser
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+}
 
 # GitHub Configuration
 REPO_OWNER = "santhkhd"
@@ -24,7 +28,7 @@ def get_last_n_result_links(n=50):
     today = datetime.now().date()
     while next_url and len(links) < n:
         try:
-            res = requests.get(next_url)
+            res = requests.get(next_url, headers=HEADERS)
             res.raise_for_status()
             soup = BeautifulSoup(res.text, "html.parser")
         except requests.exceptions.RequestException as e:
@@ -41,7 +45,7 @@ def get_last_n_result_links(n=50):
                 if url in seen:
                     continue
                 try:
-                    page_res = requests.get(url)
+                    page_res = requests.get(url, headers=HEADERS)
                     page_res.raise_for_status()
                     page_soup = BeautifulSoup(page_res.text, "html.parser")
                 except requests.exceptions.RequestException:
@@ -237,7 +241,7 @@ def main():
             result_url = latest_links[0]
             print(f"Processing latest result: {result_url}")
 
-            result_res = requests.get(result_url)
+            result_res = requests.get(result_url, headers=HEADERS)
             result_res.raise_for_status()
             result_soup = BeautifulSoup(result_res.text, "html.parser")
 
