@@ -1,14 +1,20 @@
 import os
+import os
 import json
 import re
 import sys
 import requests
 from bs4 import BeautifulSoup, Tag
-from datetime import datetime
+from datetime import datetime, time as dt_time
 import pytz
 
 # Define the Indian timezone
 IST = pytz.timezone('Asia/Kolkata')
+
+# GitHub Configuration
+REPO_OWNER = "santhkhd"
+REPO_NAME = "kerala_loto"
+FOLDER_PATH = "note"
 
 def get_last_n_result_links(n=50):
     MAIN_URL = "https://www.kllotteryresult.com/"
@@ -21,51 +27,53 @@ def get_last_n_result_links(n=50):
             res = requests.get(next_url)
             res.raise_for_status()
             soup = BeautifulSoup(res.text, "html.parser")
-            for a in soup.find_all("a", href=True):
-                if re.search(r'/kerala-lottery-result-[A-Z]+-\d+', a['href']):
-                    url = a['href']
-                    if not isinstance(url, str):
-                        continue
-                    if not url.startswith("http"):
-                        url = "https://www.kllotteryresult.com" + url
-                    if url in seen:
-                        continue
-                    try:
-                        page_res = requests.get(url)
-                        page_res.raise_for_status()
-                        page_soup = BeautifulSoup(page_res.text, "html.parser")
-                    except requests.exceptions.RequestException:
-                        continue
-
-                    date_str = None
-                    for tag in ["h1", "title", "h2", "h3"]:
-                        t = page_soup.find(tag)
-                        if t and t.text:
-                            m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", t.text)
-                            if m:
-                                date_str = f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
-                                break
-                    if date_str:
-                        try:
-                            result_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-                            if result_date <= today:
-                                links.append(url)
-                                seen.add(url)
-                                if len(links) >= n:
-                                    break
-                        except ValueError:
-                            continue
-            next_link = soup.find("a", string=re.compile("Older Posts|Next", re.I))
-            next_href = next_link.get('href') if isinstance(next_link, Tag) else None
-            if next_href and isinstance(next_href, str) and len(links) < n:
-                if not next_href.startswith("http"):
-                    next_url = "https://www.kllotteryresult.com" + next_href
-                else:
-                    next_url = next_href
-            else:
-                next_url = None
         except requests.exceptions.RequestException as e:
-            print(f"Error fetching page {next_url}: {e}")
+            print(f"Error fetching {next_url}: {e}")
+            break
+
+        for a in soup.find_all("a", href=True):
+            if re.search(r'/kerala-lottery-result-[A-Z]+-\d+', a['href']):
+                url = a['href']
+                if not isinstance(url, str):
+                    continue
+                if not url.startswith("http"):
+                    url = "https://www.kllotteryresult.com" + url
+                if url in seen:
+                    continue
+                try:
+                    page_res = requests.get(url)
+                    page_res.raise_for_status()
+                    page_soup = BeautifulSoup(page_res.text, "html.parser")
+                except requests.exceptions.RequestException:
+                    continue
+                
+                date_str = None
+                for tag in ["h1", "title", "h2", "h3"]:
+                    t = page_soup.find(tag)
+                    if t and t.text:
+                        m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", t.text)
+                        if m:
+                            date_str = f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
+                            break
+                if date_str:
+                    try:
+                        result_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+                        if result_date <= today:
+                            links.append(url)
+                            seen.add(url)
+                            if len(links) >= n:
+                                break
+                    except ValueError:
+                        continue
+        next_link = soup.find("a", string=re.compile("Older Posts|Next", re.I))
+        next_href = next_link.get('href') if isinstance(next_link, Tag) else None
+        if next_href and isinstance(next_href, str) and len(links) < n:
+            if not next_href.startswith("http"):
+                next_url = "https://www.kllotteryresult.com" + next_href
+            else:
+                next_url = next_href
+            time.sleep(1)
+        else:
             next_url = None
     return links
 
@@ -223,6 +231,7 @@ def main():
 
         if not latest_links:
             print("No latest result found.")
+            # Exit with a non-zero code to indicate no new files were created
             sys.exit(1)
         else:
             result_url = latest_links[0]
@@ -235,10 +244,13 @@ def main():
             # Process and save the result
             process_result_page(result_soup, result_url)
             print("New JSON file created successfully.")
-
+            
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"\nAn error occurred: {e}")
+        # Exit with a non-zero code on error
         sys.exit(1)
+    
+    print("Script execution completed.")
 
 if __name__ == "__main__":
     main()
