@@ -9,7 +9,7 @@ permissions:
 
 on:
   schedule:
-    # Run every 4 minutes from 3:00 PM to 4:45 PM IST
+    # Run every 4 minutes from 3:00 PM to 4:45 PM IST (9:30-11:15 UTC)
     - cron: '30,34,38,42,46,50,54,58 9 * * *'
     - cron: '*/4 10 * * *'
     - cron: '0,4,8,12 11 * * *'
@@ -19,58 +19,8 @@ on:
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
-  update_results:
-    name: Update Lottery Results
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    outputs:
-      has_updates: ${{ steps.check_updates.outcome == 'success' }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install beautifulsoup4 requests pytz
-
-      - name: Run updater script to fetch new results
-        id: check_updates
-        run: |
-          python updateloto.py
-      
-      - name: Commit and push changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          
-          # Add all changed files, including the note/ folder
-          git add note/
-          
-          # Check if there are changes to commit
-          if ! git diff --quiet && ! git diff --cached --quiet; then
-            git commit -m "Auto-update: New lottery results"
-            git push
-            echo "Changes pushed successfully"
-          else
-            echo "No changes to commit"
-          fi
-  
   manifest:
-    needs: update_results
-    if: needs.update_results.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
+    name: Generate Manifest
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -97,8 +47,7 @@ jobs:
           git push
 
   history:
-    needs: [update_results, manifest]
-    if: needs.update_results.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
+    name: Generate History
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
