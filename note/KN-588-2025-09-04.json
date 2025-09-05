@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "PT 336829(GURUVAYUR)"
+        "PT 336829 (GURUVAYOOR)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "PY 264876(KASARAGOD)"
+        "PY 264876 (KASARAGOD)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "PR 834222"
+        "PR 834222 (CHITTUR)"
       ]
     },
     "4th_prize": {
