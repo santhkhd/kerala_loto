@@ -1,0 +1,108 @@
+{
+  "lottery_name": "KARUNYA",
+  "draw_number": "KR-722",
+  "draw_date": "2025-09-06",
+  "venue": "",
+  "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "KD 264265"
+      ]
+    },
+    "consolation_prize": {
+      "amount": 5000,
+      "label": "Consolation Prize",
+      "winners": [
+        "KA 264265",
+        "KB 264265",
+        "KC 264265",
+        "KE 264265",
+        "KF 264265",
+        "KG 264265",
+        "KH 264265",
+        "KJ 264265",
+        "KK 264265",
+        "KL 264265",
+        "KM 264265"
+      ]
+    },
+    "2nd_prize": {
+      "amount": 3000000,
+      "label": "2nd Prize",
+      "winners": [
+        "KC 901286"
+      ]
+    },
+    "3rd_prize": {
+      "amount": 500000,
+      "label": "3rd Prize",
+      "winners": [
+        "KC 245583"
+      ]
+    },
+    "4th_prize": {
+      "amount": 5000,
+      "label": "4th Prize",
+      "winners": [
+        "0173",
+        "1338",
+        "1947",
+        "1949",
+        "1982",
+        "2651",
+        "2817",
+        "4012",
+        "4253",
+        "5591",
+        "5660",
+        "5807",
+        "6387",
+        "6395",
+        "7102",
+        "7661",
+        "7865",
+        "8920",
+        "9414",
+        "9564"
+      ]
+    },
+    "5th_prize": {
+      "amount": 2000,
+      "label": "5th Prize",
+      "winners": [
+        "..."
+      ]
+    },
+    "6th_prize": {
+      "amount": 1000,
+      "label": "6th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "7th_prize": {
+      "amount": 500,
+      "label": "7th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "8th_prize": {
+      "amount": 200,
+      "label": "8th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "9th_prize": {
+      "amount": 100,
+      "label": "9th Prize",
+      "winners": [
+        "**"
+      ]
+    }
+  },
+  "downloadLink": ""
+}
