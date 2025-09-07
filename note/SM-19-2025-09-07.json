@@ -15,28 +15,44 @@
       "amount": 5000,
       "label": "Consolation Prize",
       "winners": [
-        "**"
+        "MA 339851",
+        "MB 339851",
+        "MC 339851",
+        "MD 339851",
+        "ME 339851",
+        "MF 339851",
+        "MH 339851",
+        "MJ 339851",
+        "MK 339851",
+        "ML 339851",
+        "MM 339851"
       ]
     },
     "2nd_prize": {
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "Updating..."
+        "MB 615985"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "**"
+        "ME 399415"
       ]
     },
     "4th_prize": {
       "amount": 5000,
       "label": "4th Prize",
       "winners": [
-        "**"
+        "3970",
+        "9999",
+        "9744",
+        "2171",
+        "5418",
+        "6932",
+        "..."
       ]
     },
     "5th_prize": {
