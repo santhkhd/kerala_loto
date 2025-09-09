@@ -1,0 +1,131 @@
+{
+  "lottery_name": "STHREE SAKTHI",
+  "draw_number": "SS-484",
+  "draw_date": "2025-09-09",
+  "venue": "",
+  "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "SF 296745"
+      ]
+    },
+    "consolation_prize": {
+      "amount": 5000,
+      "label": "Consolation Prize",
+      "winners": [
+        "SA 296745",
+        "SB 296745",
+        "SC 296745",
+        "SD 296745",
+        "SE 296745",
+        "SG 296745",
+        "SH 296745",
+        "SJ 296745",
+        "SK 296745",
+        "SL 296745",
+        "SM 296745"
+      ]
+    },
+    "2nd_prize": {
+      "amount": 3000000,
+      "label": "2nd Prize",
+      "winners": [
+        "SD 303546"
+      ]
+    },
+    "3rd_prize": {
+      "amount": 500000,
+      "label": "3rd Prize",
+      "winners": [
+        "SC 324866"
+      ]
+    },
+    "4th_prize": {
+      "amount": 5000,
+      "label": "4th Prize",
+      "winners": [
+        "0271",
+        "0954",
+        "1413",
+        "1506",
+        "1810",
+        "2794",
+        "3046",
+        "3291",
+        "3942",
+        "3947",
+        "4060",
+        "4067",
+        "4486",
+        "5855",
+        "6664",
+        "6848",
+        "8781",
+        "9585",
+        "9703",
+        "9812"
+      ]
+    },
+    "5th_prize": {
+      "amount": 2000,
+      "label": "5th Prize",
+      "winners": [
+        "1890",
+        "5679",
+        "5777",
+        "7490",
+        "8563",
+        "9719"
+      ]
+    },
+    "6th_prize": {
+      "amount": 1000,
+      "label": "6th Prize",
+      "winners": [
+        "3074",
+        "7664",
+        "7376",
+        "4806",
+        "8694",
+        "6800",
+        "1425",
+        "7375",
+        "6422",
+        "1829",
+        "5229",
+        "9114",
+        "8194",
+        "3596",
+        "1577",
+        "8047",
+        "7180",
+        "2652",
+        "..."
+      ]
+    },
+    "7th_prize": {
+      "amount": 500,
+      "label": "7th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "8th_prize": {
+      "amount": 200,
+      "label": "8th Prize",
+      "winners": [
+        "**"
+      ]
+    },
+    "9th_prize": {
+      "amount": 100,
+      "label": "9th Prize",
+      "winners": [
+        "**"
+      ]
+    }
+  },
+  "downloadLink": ""
+}
