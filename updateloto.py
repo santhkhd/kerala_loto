@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup, Tag
 from datetime import datetime, time as dt_time
 import pytz
 import time
+from urllib.parse import quote
 
 # Define the Indian timezone
 IST = pytz.timezone('Asia/Kolkata')
@@ -17,67 +18,92 @@ HEADERS = {
     'Referer': 'https://www.kllotteryresult.com/'
 }
 
+# Optional proxy-based scraping fallback (e.g., ScraperAPI or compatible)
+# Provide an API key via env var SCRAPERAPI_KEY in CI to bypass origin blocking.
+SCRAPER_API_KEY = os.environ.get('SCRAPERAPI_KEY', '').strip()
+SCRAPER_API_ENDPOINT = os.environ.get('SCRAPERAPI_ENDPOINT', 'http://api.scraperapi.com')
+
+def build_proxy_url(target_url: str) -> str:
+    if not SCRAPER_API_KEY:
+        return target_url
+    # ScraperAPI format: http(s)://api.scraperapi.com?api_key=KEY&url=ENCODED
+    from urllib.parse import urlencode
+    query = urlencode({'api_key': SCRAPER_API_KEY, 'url': target_url})
+    return f"{SCRAPER_API_ENDPOINT}?{query}"
+
+def robust_get(url: str, headers: dict, timeout: int = 20, max_retries: int = 3) -> requests.Response:
+    """Try direct fetch first; on 403/429/5xx or network error, retry and fall back to proxy if configured."""
+    last_exc = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            res = requests.get(url, headers=headers, timeout=timeout)
+            if res.status_code in (403, 429) or res.status_code >= 500:
+                raise requests.exceptions.RequestException(f"HTTP {res.status_code}")
+            return res
+        except requests.exceptions.RequestException as exc:
+            last_exc = exc
+            # Try proxy fallback if available
+            if SCRAPER_API_KEY:
+                try:
+                    proxy_url = build_proxy_url(url)
+                    res = requests.get(proxy_url, headers=headers, timeout=timeout)
+                    if res.status_code in (403, 429) or res.status_code >= 500:
+                        raise requests.exceptions.RequestException(f"Proxy HTTP {res.status_code}")
+                    return res
+                except requests.exceptions.RequestException as exc2:
+                    last_exc = exc2
+            # Backoff between attempts
+            time.sleep(min(2 * attempt, 6))
+    # Exhausted retries
+    if last_exc:
+        raise last_exc
+    raise RuntimeError("Failed to fetch URL and no exception captured")
+
+def fetch_text_via_jina(url: str) -> str:
+    """Fetch page text via r.jina.ai to bypass Cloudflare challenges without API keys."""
+    proxied = "https://r.jina.ai/http://" + url.replace("https://", "").replace("http://", "")
+    res = requests.get(proxied, headers=HEADERS, timeout=30)
+    res.raise_for_status()
+    return res.text
+
 def get_last_n_result_links(n=1):
     MAIN_URL = "https://www.kllotteryresult.com/"
-    links = []
-    seen = set()
-    next_url = MAIN_URL
     today = datetime.now().date()
-    while next_url and len(links) < n:
-        try:
-            res = requests.get(next_url, headers=HEADERS)
-            res.raise_for_status()
-            soup = BeautifulSoup(res.text, "html.parser")
-        except requests.exceptions.RequestException as e:
-            print(f"Error fetching {next_url}: {e}")
-            break
+    try:
+        page_text = fetch_text_via_jina(MAIN_URL)
+    except Exception as e:
+        print(f"Error fetching homepage via jina: {e}")
+        return []
 
-        for a in soup.find_all("a", href=True):
-            if re.search(r'/kerala-lottery-result-[A-Z]+-\d+', a['href']):
-                url = a['href']
-                if not isinstance(url, str):
-                    continue
-                if not url.startswith("http"):
-                    url = "https://www.kllotteryresult.com" + url
-                if url in seen:
-                    continue
-                try:
-                    page_res = requests.get(url, headers=HEADERS)
-                    page_res.raise_for_status()
-                    page_soup = BeautifulSoup(page_res.text, "html.parser")
-                except requests.exceptions.RequestException:
-                    continue
-                
-                date_str = None
-                for tag in ["h1", "title", "h2", "h3"]:
-                    t = page_soup.find(tag)
-                    if t and t.text:
-                        m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", t.text)
-                        if m:
-                            date_str = f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
-                            break
-                if date_str:
-                    try:
-                        result_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-                        # Only get results from today or earlier
-                        if result_date <= today:
-                            links.append(url)
-                            seen.add(url)
-                            if len(links) >= n:
-                                break
-                    except ValueError:
-                        continue
-        next_link = soup.find("a", string=re.compile("Older Posts|Next", re.I))
-        next_href = next_link.get('href') if isinstance(next_link, Tag) else None
-        if next_href and isinstance(next_href, str) and len(links) < n:
-            if not next_href.startswith("http"):
-                next_url = "https://www.kllotteryresult.com" + next_href
-            else:
-                next_url = next_href
-            time.sleep(1) # Add a small delay to be polite to the server
-        else:
-            next_url = None
-    return links
+    # Prefer absolute links first
+    abs_links = re.findall(r'https?://www\\.kllotteryresult\\.com/kerala-lottery-result-[A-Z]+-\\d+', page_text)
+    rel_links = re.findall(r'/kerala-lottery-result-[A-Z]+-\\d+', page_text) if not abs_links else []
+    candidates = abs_links or [f"https://www.kllotteryresult.com{p}" for p in rel_links]
+
+    results = []
+    seen = set()
+    for url in candidates:
+        if url in seen:
+            continue
+        seen.add(url)
+        # fetch the result page text via jina and validate date <= today
+        try:
+            page_text2 = fetch_text_via_jina(url)
+        except Exception:
+            continue
+        # find date in common formats within headings/title text in the plain text
+        m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", page_text2)
+        if not m:
+            continue
+        try:
+            result_date = datetime.strptime(f"{m.group(3)}-{m.group(2)}-{m.group(1)}", "%Y-%m-%d").date()
+        except ValueError:
+            continue
+        if result_date <= today:
+            results.append(url)
+            if len(results) >= n:
+                break
+    return results
 
 # Mappings
 prize_map = {
@@ -239,9 +265,8 @@ def main():
             result_url = latest_links[0]
             print(f"Processing latest result: {result_url}")
 
-            result_res = requests.get(result_url, headers=HEADERS)
-            result_res.raise_for_status()
-            result_soup = BeautifulSoup(result_res.text, "html.parser")
+            result_text = fetch_text_via_jina(result_url)
+            result_soup = BeautifulSoup(result_text, "html.parser")
 
             # Process and save the result
             process_result_page(result_soup, result_url)
