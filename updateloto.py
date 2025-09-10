@@ -75,13 +75,19 @@ def get_last_n_result_links(n=1):
         print(f"Error fetching homepage via jina: {e}")
         return []
 
-    # Prefer absolute links first
-    abs_links = re.findall(r'https?://www\\.kllotteryresult\\.com/kerala-lottery-result-[A-Z]+-\\d+', page_text)
-    rel_links = re.findall(r'/kerala-lottery-result-[A-Z]+-\\d+', page_text) if not abs_links else []
+    # Prefer absolute links first (be liberal in matching slug formats and case)
+    abs_links = re.findall(r'https?://www\\.kllotteryresult\\.com/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I)
+    rel_links = re.findall(r'/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I) if not abs_links else []
     candidates = abs_links or [f"https://www.kllotteryresult.com{p}" for p in rel_links]
+
+    print(f"Homepage links: abs={len(abs_links)} rel={len(rel_links)} candidates={len(candidates)}")
+    if candidates:
+        for preview_url in candidates[:5]:
+            print(f"Candidate: {preview_url}")
 
     results = []
     seen = set()
+    dated_candidates: list[tuple[datetime.date, str]] = []
     for url in candidates:
         if url in seen:
             continue
@@ -89,20 +95,27 @@ def get_last_n_result_links(n=1):
         # fetch the result page text via jina and validate date <= today
         try:
             page_text2 = fetch_text_via_jina(url)
-        except Exception:
+        except Exception as e:
+            print(f"Skip {url}: fetch error {e}")
             continue
         # find date in common formats within headings/title text in the plain text
         m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", page_text2)
         if not m:
+            print(f"Skip {url}: no date found")
             continue
         try:
             result_date = datetime.strptime(f"{m.group(3)}-{m.group(2)}-{m.group(1)}", "%Y-%m-%d").date()
         except ValueError:
+            print(f"Skip {url}: bad date format")
             continue
         if result_date <= today:
-            results.append(url)
-            if len(results) >= n:
-                break
+            dated_candidates.append((result_date, url))
+        else:
+            print(f"Skip {url}: future date {result_date}")
+    # Sort by date descending and return top n URLs
+    dated_candidates.sort(key=lambda x: x[0], reverse=True)
+    for d, u in dated_candidates[:n]:
+        results.append(u)
     return results
 
 # Mappings
@@ -128,7 +141,7 @@ standard_labels = {
     "8th_prize": "8th Prize", "9th_prize": "9th Prize"
 }
 
-def process_result_page(result_soup, result_url):
+def process_result_page(result_soup, result_url, result_page_text: str):
     title_text = ""
     title_tag = result_soup.find("h1")
     if title_tag and title_tag.text.strip().lower() not in ["lottery results", "kerala lottery results"]:
@@ -149,6 +162,15 @@ def process_result_page(result_soup, result_url):
 
     date_match = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", title_text)
     draw_date = f"{date_match.group(3)}-{date_match.group(2)}-{date_match.group(1)}" if date_match else "Unknown-Date"
+    if draw_date == "Unknown-Date":
+        # Fallback: scan entire page text for a date
+        m2 = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", result_page_text)
+        if m2:
+            draw_date = f"{m2.group(3)}-{m2.group(2)}-{m2.group(1)}"
+        else:
+            # As a last resort during the result window, assume today's date
+            if is_within_time_window():
+                draw_date = datetime.now(IST).strftime("%Y-%m-%d")
 
     draw_number_match = re.search(r"\(([^)]+)\)", title_text)
     draw_number = draw_number_match.group(1) if draw_number_match else "XX"
@@ -158,6 +180,18 @@ def process_result_page(result_soup, result_url):
 
     lottery_code_match = re.search(r'\(([A-Z]{2,3})\)', title_text)
     lottery_code = lottery_code_match.group(1) if lottery_code_match else 'XX'
+    if lottery_code == 'XX' or draw_number == 'XX':
+        # Fallback: derive from URL slug like .../kerala-lottery-result-BT-19
+        url_slug_match = re.search(r'/([a-z0-9-]*kerala-lottery-result[-/])*([A-Z]{2,3})-(\d+)', result_url)
+        if url_slug_match:
+            lottery_code = url_slug_match.group(2)
+            draw_number = url_slug_match.group(3)
+    # Infer lottery code from first winner token if still unknown
+    if lottery_code == 'XX':
+        # Try scanning for codes like 'DD 781756' in the page text
+        mcode = re.search(r'\b([A-Z]{1,3})\s*\d{4,6}\b', result_page_text)
+        if mcode:
+            lottery_code = mcode.group(1)
 
     # Try to extract venue
     venue = ""
@@ -202,6 +236,60 @@ def process_result_page(result_soup, result_url):
             if tds and current_key:
                 numbers = [td.get_text(strip=True) for td in tds if td.get_text(strip=True)]
                 prizes[current_key]["winners"].extend(numbers)
+
+    # Fallback plaintext parsing if no table winners were found
+    def parse_plaintext_prizes(txt: str) -> dict:
+        lines = [re.sub(r"\s+", " ", ln).strip() for ln in txt.splitlines()]
+        header_regex_to_key = [
+            (re.compile(r"^1st Prize", re.I), "1st_prize"),
+            (re.compile(r"^Cons(olation)? Prize", re.I), "consolation_prize"),
+            (re.compile(r"^2nd Prize", re.I), "2nd_prize"),
+            (re.compile(r"^3rd Prize", re.I), "3rd_prize"),
+            (re.compile(r"^4th Prize", re.I), "4th_prize"),
+            (re.compile(r"^5th Prize", re.I), "5th_prize"),
+            (re.compile(r"^6th Prize", re.I), "6th_prize"),
+            (re.compile(r"^7th Prize", re.I), "7th_prize"),
+            (re.compile(r"^8th Prize", re.I), "8th_prize"),
+            (re.compile(r"^9th Prize", re.I), "9th_prize"),
+        ]
+        parsed: dict = {}
+        current_section: str | None = None
+        for ln in lines:
+            if not ln:
+                continue
+            # Section header detection
+            switched = False
+            for rgx, key in header_regex_to_key:
+                if rgx.search(ln):
+                    current_section = key
+                    if current_section not in parsed:
+                        parsed[current_section] = {
+                            "amount": prize_amounts.get(current_section, 0),
+                            "label": standard_labels.get(current_section, current_section.replace('_', ' ').title()),
+                            "winners": []
+                        }
+                    switched = True
+                    break
+            if switched:
+                continue
+            if not current_section:
+                continue
+            # Skip filler
+            if ln.strip() in ("**", "..."):
+                continue
+            # Extract tokens like 'DD 781756' or plain 4-6 digit numbers
+            tokens = re.findall(r"[A-Z]{1,3}\s*\d{4,6}|\b\d{4,6}\b", ln)
+            for t in tokens:
+                parsed[current_section]["winners"].append(t.strip())
+        return parsed
+
+    if not prizes or all(len(section.get("winners", [])) == 0 for section in prizes.values()):
+        # Normalize page text from soup to better capture headings and lines
+        normalized_text = result_soup.get_text("\n", strip=True)
+        parsed_plain = parse_plaintext_prizes(normalized_text)
+        if parsed_plain:
+            prizes = parsed_plain
+            print("Parsed winners using plaintext fallback.")
 
     for key, prize in prizes.items():
         if not prize["winners"]:
@@ -265,11 +353,17 @@ def main():
             result_url = latest_links[0]
             print(f"Processing latest result: {result_url}")
 
-            result_text = fetch_text_via_jina(result_url)
+            # Prefer direct fetch for full HTML; fallback to jina proxy
+            try:
+                res = robust_get(result_url, HEADERS, timeout=20)
+                res.raise_for_status()
+                result_text = res.text
+            except Exception:
+                result_text = fetch_text_via_jina(result_url)
             result_soup = BeautifulSoup(result_text, "html.parser")
 
             # Process and save the result
-            process_result_page(result_soup, result_url)
+            process_result_page(result_soup, result_url, result_text)
             print("New JSON file created successfully.")
             
     except Exception as e:
