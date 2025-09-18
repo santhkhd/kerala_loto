@@ -4,7 +4,8 @@ import re
 import sys
 import requests
 from bs4 import BeautifulSoup, Tag
-from datetime import datetime, time as dt_time
+from datetime import datetime, time as dt_time, date
+from typing import Optional, List, Tuple, Dict, Any
 import pytz
 import time
 from urllib.parse import quote
@@ -66,47 +67,101 @@ def fetch_text_via_jina(url: str) -> str:
     res.raise_for_status()
     return res.text
 
+def fetch_page_text(url: str) -> str:
+    """Fetch page HTML using direct request first, then fallback to Jina proxy."""
+    try:
+        res = robust_get(url, HEADERS, timeout=25)
+        res.raise_for_status()
+        return res.text
+    except Exception:
+        return fetch_text_via_jina(url)
+
+def parse_date_from_text(text: str) -> Optional[date]:
+    """Extract a date from text supporting multiple formats."""
+    # Common numeric formats: 16-09-2025, 16/09/2025, 16.09.2025
+    m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", text)
+    if m:
+        try:
+            return datetime.strptime(f"{m.group(3)}-{m.group(2)}-{m.group(1)}", "%Y-%m-%d").date()
+        except ValueError:
+            pass
+    # Textual month formats: 16 September 2025, 16 Sep 2025, Sep 16, 2025
+    patterns = [
+        "%d %B %Y", "%d %b %Y", "%b %d, %Y", "%B %d, %Y",
+        "%d-%b-%Y", "%d-%B-%Y"
+    ]
+    # Try sliding windows around words that look like dates
+    candidates = []
+    # Gather tokens that include month names
+    month_regex = r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)"
+    for m2 in re.finditer(rf"\b\d{{1,2}}\s+{month_regex}\s+\d{{4}}\b", text, flags=re.I):
+        candidates.append(m2.group(0))
+    for m3 in re.finditer(rf"\b{month_regex}\s+\d{{1,2}},\s*\d{{4}}\b", text, flags=re.I):
+        candidates.append(m3.group(0))
+    for cand in candidates:
+        for fmt in patterns:
+            try:
+                return datetime.strptime(cand, fmt).date()
+            except ValueError:
+                continue
+    return None
+
 def get_last_n_result_links(n=1):
     MAIN_URL = "https://www.kllotteryresult.com/"
     today = datetime.now().date()
     try:
-        page_text = fetch_text_via_jina(MAIN_URL)
+        page_text = fetch_page_text(MAIN_URL)
     except Exception as e:
-        print(f"Error fetching homepage via jina: {e}")
+        print(f"Error fetching homepage: {e}")
         return []
 
-    # Prefer absolute links first (be liberal in matching slug formats and case)
-    abs_links = re.findall(r'https?://www\\.kllotteryresult\\.com/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I)
-    rel_links = re.findall(r'/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I) if not abs_links else []
-    candidates = abs_links or [f"https://www.kllotteryresult.com{p}" for p in rel_links]
+    # Extract links using both HTML parsing and regex as fallback
+    candidates_set = set()
+    try:
+        soup = BeautifulSoup(page_text, "html.parser")
+        for a in soup.find_all("a", href=True):
+            href = a["href"].strip()
+            if "kerala-lottery-result" in href.lower():
+                if href.startswith("http"):
+                    candidates_set.add(href)
+                else:
+                    candidates_set.add(f"https://www.kllotteryresult.com{href}")
+    except Exception:
+        pass
+    # Regex fallback
+    if not candidates_set:
+        abs_links = re.findall(r'https?://www\\.kllotteryresult\\.com/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I)
+        rel_links = re.findall(r'/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I)
+        for p in abs_links:
+            candidates_set.add(p)
+        for p in rel_links:
+            candidates_set.add(f"https://www.kllotteryresult.com{p}")
+    candidates = sorted(candidates_set)
 
-    print(f"Homepage links: abs={len(abs_links)} rel={len(rel_links)} candidates={len(candidates)}")
+    # Logging: counts (abs/rel) — we normalized to absolute URLs, so report abs only
+    abs_count = len([c for c in candidates if c.startswith("http")])
+    print(f"Homepage links: abs={abs_count} candidates={len(candidates)}")
     if candidates:
         for preview_url in candidates[:5]:
             print(f"Candidate: {preview_url}")
 
     results = []
     seen = set()
-    dated_candidates: list[tuple[datetime.date, str]] = []
+    dated_candidates: List[Tuple[date, str]] = []
     for url in candidates:
         if url in seen:
             continue
         seen.add(url)
-        # fetch the result page text via jina and validate date <= today
+        # fetch the result page text (direct first, then fallback) and validate date <= today
         try:
-            page_text2 = fetch_text_via_jina(url)
+            page_text2 = fetch_page_text(url)
         except Exception as e:
             print(f"Skip {url}: fetch error {e}")
             continue
-        # find date in common formats within headings/title text in the plain text
-        m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", page_text2)
-        if not m:
+        # find date using robust parser
+        result_date = parse_date_from_text(page_text2) or None
+        if not result_date:
             print(f"Skip {url}: no date found")
-            continue
-        try:
-            result_date = datetime.strptime(f"{m.group(3)}-{m.group(2)}-{m.group(1)}", "%Y-%m-%d").date()
-        except ValueError:
-            print(f"Skip {url}: bad date format")
             continue
         if result_date <= today:
             dated_candidates.append((result_date, url))
@@ -160,13 +215,14 @@ def process_result_page(result_soup, result_url, result_page_text: str):
         title_text = "Unknown Lottery"
     print(f"TITLE TEXT: '{title_text}'")
 
-    date_match = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", title_text)
-    draw_date = f"{date_match.group(3)}-{date_match.group(2)}-{date_match.group(1)}" if date_match else "Unknown-Date"
+    # Try to parse date from title; fallback to whole page; finally to today's date if within window
+    parsed_date = parse_date_from_text(title_text)
+    draw_date = parsed_date.strftime("%Y-%m-%d") if parsed_date else "Unknown-Date"
     if draw_date == "Unknown-Date":
         # Fallback: scan entire page text for a date
-        m2 = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", result_page_text)
-        if m2:
-            draw_date = f"{m2.group(3)}-{m2.group(2)}-{m2.group(1)}"
+        p2 = parse_date_from_text(result_page_text)
+        if p2:
+            draw_date = p2.strftime("%Y-%m-%d")
         else:
             # As a last resort during the result window, assume today's date
             if is_within_time_window():
@@ -252,8 +308,8 @@ def process_result_page(result_soup, result_url, result_page_text: str):
             (re.compile(r"^8th Prize", re.I), "8th_prize"),
             (re.compile(r"^9th Prize", re.I), "9th_prize"),
         ]
-        parsed: dict = {}
-        current_section: str | None = None
+        parsed: Dict[str, Any] = {}
+        current_section: Optional[str] = None
         for ln in lines:
             if not ln:
                 continue
@@ -325,16 +381,16 @@ def process_result_page(result_soup, result_url, result_page_text: str):
     return local_path, filename
 
 def is_within_time_window():
-    """Check if current time is within 3:10 PM to 4:45 PM IST"""
+    """Check if current time is within the typical publication window (2:45 PM - 5:30 PM IST)."""
     now = datetime.now(IST)
-    start_time = now.replace(hour=15, minute=10, second=0, microsecond=0)  # 3:10 PM
-    end_time = now.replace(hour=16, minute=45, second=0, microsecond=0)    # 4:45 PM
+    start_time = now.replace(hour=14, minute=45, second=0, microsecond=0)  # 2:45 PM
+    end_time = now.replace(hour=17, minute=30, second=0, microsecond=0)    # 5:30 PM
     return start_time <= now <= end_time
 
 def main():
     # Check if we're within the active time window
     if not is_within_time_window():
-        print(f"Current time {datetime.now(IST).strftime('%H:%M:%S')} is outside the 3:10 PM - 4:45 PM IST window. "
+        print(f"Current time {datetime.now(IST).strftime('%H:%M:%S')} is outside the 2:45 PM - 5:30 PM IST window. "
               f"Script will run but may not find new results.")
 
     try:
