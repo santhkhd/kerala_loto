@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "BB 423775(KANNUR)"
+        "BB 423775 (KANNUR)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "BM 894998(KATTAPPANA)"
+        "BM 894998 (KATTAPPANA)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "BD 180901"
+        "BD 180901 (ERNAKULAM)"
       ]
     },
     "4th_prize": {
@@ -424,6 +424,7 @@
         "8295",
         "8297",
         "8306",
+        "8351",
         "8386",
         "8387",
         "8446",
@@ -444,8 +445,7 @@
         "9449",
         "9845",
         "9919",
-        "9999",
-        "..."
+        "9999"
       ]
     }
   },
