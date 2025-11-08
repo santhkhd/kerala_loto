@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "KN 541229(PAYYANUR)"
+        "KN 541229 (PAYYANUR)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "KW 278628\r\n(IRINJALAKKUDA)"
+        "KW 278628 (IRINJALAKUDA)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "KT 320628"
+        "KT 320628 (IRINJALAKUDA)"
       ]
     },
     "4th_prize": {
@@ -118,7 +118,7 @@
     },
     "7th_prize": {
       "amount": 500,
-      "label": "7th Prize",
+      "label": "7th_prize",
       "winners": [
         "0241",
         "0242",

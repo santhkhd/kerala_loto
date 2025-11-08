@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "PU 735716(PUNALUR)"
+        "PU 735716 (PUNALUR)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "PU 961804(KOTTAYAM)"
+        "PU 961804 (KOTTAYAM)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "PU 192891"
+        "PU 192891 (KOTTAYAM)"
       ]
     },
     "4th_prize": {
@@ -118,7 +118,7 @@
     },
     "7th_prize": {
       "amount": 500,
-      "label": "7th Prize",
+      "label": "7th_prize",
       "winners": [
         "0113",
         "0117",
