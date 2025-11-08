@@ -122,12 +122,17 @@
       box-shadow: var(--hover-shadow);
     }
     
-    /* Big number display */
+    /* Big number display - improved readability */
     .big-number-display {
       background: var(--primary-gradient);
       border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
+      color: white;
+      font-weight: 800;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      text-align: center;
+      padding: 2rem;
     }
     .big-number-display:hover {
       transform: scale(1.02);
@@ -158,6 +163,9 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       position: relative;
       overflow: hidden;
+      /* Improved text readability */
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
     .number-badge-modern:hover {
       transform: translateY(-3px) scale(1.05);
@@ -218,6 +226,18 @@
       border-color: rgba(255, 193, 7, 0.3);
     }
     
+    /* Improved text readability */
+    #numberLabel, #numberLabel6 {
+      color: #1e3a8a;
+      font-weight: 700;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
+    
+    #loadingMsg {
+      color: #1e3a8a;
+      font-weight: 600;
+    }
+    
     @media (max-width: 480px) {
       .number-badge {
         font-size: 1.2rem !important;
@@ -232,6 +252,11 @@
       .prediction-btn {
         padding: 0.75rem 1rem;
         font-size: 0.9rem;
+      }
+      /* Improved big number display on mobile */
+      .big-number-display {
+        font-size: 2.5rem;
+        padding: 1.5rem;
       }
     }
   </style>
@@ -407,7 +432,7 @@
       aiDesc: {
         en: '<b>How it works:</b> <span class="block mt-2">🌟 Uses astrology, 📊 past results, 🎯 randomization, and 🔥 hot/cold analysis to suggest lucky numbers. For fun only!</span>',
         ml: '<b>എങ്ങനെ പ്രവർത്തിക്കുന്നു:</b> <span class="block mt-2">🌟 ജ്യോതിഷം, 📊 പഴയ ഫലങ്ങൾ, 🎯 യാദൃശ്ചികം, 🔥 ഹോട്ട്/കോൾഡ് വിശകലനം എന്നിവ ഉപയോഗിക്കുന്നു. വിനോദത്തിനായി മാത്രം!</span>',
-        ta: '<b>எப்படி வேலை செய்கிறது:</b> <span class="block mt-2">🌟 ஜோதிடம், 📊 கடந்த முடிவுகள், 🎯 சீரற்ற உருவாக்கம், 🔥 சூடு/குளிர் பகுப்பாய்வு ஆகியவற்றை பயன்படுத்துகிறது. பொழுதுபோக்கிற்காக மட்டும்!</span>'
+        ta: '<b>எப்படி வேலை செய்கிறது:</b> <span class="block mt-2">🌟 ஜோதிடம், 📊 கடந்த முடிவுகள், 🎯 சீரற்ற உருவாக்கம், 🔥 சூடு/குளிர் பகுப்பாய்வு ஆகியவற்றை பயன்படுத்துகிறது. பொழுதுபோக்கிற்காக மட்டுமே!</span>'
       },
       disclaimer: {
         en: '<b>Disclaimer:</b> This is for entertainment only. No guarantee of winning. Play responsibly.',
