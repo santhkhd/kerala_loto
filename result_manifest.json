@@ -1,5 +1,17 @@
 [
   {
+    "code": "KR",
+    "draw_number": "730",
+    "date": "2025-11-08",
+    "filename": "KR-730-2025-11-08.json"
+  },
+  {
+    "code": "SK",
+    "draw_number": "26",
+    "date": "2025-11-07",
+    "filename": "SK-26-2025-11-07.json"
+  },
+  {
     "code": "KN",
     "draw_number": "596",
     "date": "2025-11-06",
@@ -34,6 +46,12 @@
     "draw_number": "729",
     "date": "2025-11-01",
     "filename": "KR-729-2025-11-01.json"
+  },
+  {
+    "code": "SK",
+    "draw_number": "25",
+    "date": "2025-10-31",
+    "filename": "SK-25-2025-10-31.json"
   },
   {
     "code": "KN",
@@ -114,6 +132,12 @@
     "filename": "KR-727-2025-10-18.json"
   },
   {
+    "code": "SK",
+    "draw_number": "23",
+    "date": "2025-10-17",
+    "filename": "SK-23-2025-10-17.json"
+  },
+  {
     "code": "KN",
     "draw_number": "593",
     "date": "2025-10-16",
@@ -148,6 +172,12 @@
     "draw_number": "726",
     "date": "2025-10-11",
     "filename": "KR-726-2025-10-11.json"
+  },
+  {
+    "code": "SK",
+    "draw_number": "22",
+    "date": "2025-10-10",
+    "filename": "SK-22-2025-10-10.json"
   },
   {
     "code": "KN",
@@ -190,6 +220,18 @@
     "draw_number": "725",
     "date": "2025-10-04",
     "filename": "KR-725-2025-10-04.json"
+  },
+  {
+    "code": "SK",
+    "draw_number": "21",
+    "date": "2025-10-03",
+    "filename": "SK-21-2025-10-03.json"
+  },
+  {
+    "code": "DL",
+    "draw_number": "20",
+    "date": "2025-10-01",
+    "filename": "DL-20-2025-10-01.json"
   },
   {
     "code": "SS",

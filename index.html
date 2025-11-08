@@ -299,7 +299,6 @@
 
     // Days with no draws (holidays)
     const noDrawDays = [
-      '2025-08-15', // Today (e.g., Independence Day)
      
     ];
 
@@ -451,16 +450,13 @@
         if (bumperLotteries.some(b => b.shortName === item.code && b.date === item.date)) return;
         const isNew = (item.date === todayStr);
         if (isNew) hasTodayResult = true;
-        // Find translated name
+        // Find translated name - simplified logic
         let translatedName = item.code;
+        // Try to find a matching translation
         for (const [cat, val] of Object.entries(lotteryNameTranslations)) {
-          if (val && val.en && val.en.replace(/\s/g, '').toUpperCase() === cat.replace(/_/g, '').toUpperCase()) {
-            if (val.en.toUpperCase().replace(/\s/g, '') === cat.replace(/_/g, '').toUpperCase() && item.code === catMap[cat]) {
-              translatedName = val[lang] || val.en;
-              break;
-            }
-          } else if (catMap[cat] === item.code) {
-            translatedName = val[lang] || val.en;
+          const catCode = catMap[cat];
+          if (catCode && catCode === item.code) {
+            translatedName = val[lang] || val.en || item.code;
             break;
           }
         }
@@ -492,6 +488,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       setLang(currentLang);
       updateHeaderTitle();
+      renderLotteryCards(currentLang);
     });
 
     // Tab bar filtering logic

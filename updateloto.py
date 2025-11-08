@@ -347,9 +347,20 @@ def process_result_page(result_soup, result_url, result_page_text: str):
             prizes = parsed_plain
             print("Parsed winners using plaintext fallback.")
 
-    for key, prize in prizes.items():
-        if not prize["winners"]:
-            prize["winners"].append("Please wait, results will be published at 3 PM.")
+    # If prizes is empty, initialize with default structure
+    if not prizes:
+        # Initialize with all prize categories
+        for key, label in standard_labels.items():
+            prizes[key] = {
+                "amount": prize_amounts.get(key, 0),
+                "label": label,
+                "winners": ["Please wait, results will be published at 3 PM."]
+            }
+    else:
+        # Add "Please wait" message to any prize category that has no winners
+        for key, prize in prizes.items():
+            if not prize["winners"]:
+                prize["winners"].append("Please wait, results will be published at 3 PM.")
 
     data = {
         "lottery_name": lottery_name,
