@@ -7,6 +7,17 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="output.css" rel="stylesheet">
   <style>
+    /* Enhanced modern styling */
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --hot-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --cold-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --random-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      --repeat-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    
     /* Custom animation for number pop/fadeUp */
     @keyframes fadeUp {
       0% { opacity: 0; transform: translateY(20px) scale(0.95); }
@@ -77,6 +88,136 @@
       transform: scale(1.07) translateY(-2px);
       z-index: 3;
     }
+    
+    /* Enhanced button styles */
+    .prediction-btn {
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .prediction-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+    .prediction-btn:active {
+      transform: translateY(0);
+    }
+    .prediction-btn:disabled {
+      opacity: 0.6;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    /* Enhanced card styles */
+    .enhanced-card {
+      transition: all 0.3s ease;
+      border-radius: 16px;
+      overflow: hidden;
+      border: none;
+    }
+    .enhanced-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--hover-shadow);
+    }
+    
+    /* Big number display */
+    .big-number-display {
+      background: var(--primary-gradient);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    .big-number-display:hover {
+      transform: scale(1.02);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Number grid enhancements */
+    .number-grid-container {
+      display: grid;
+      gap: 15px;
+    }
+    @media (min-width: 640px) {
+      .number-grid-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (min-width: 768px) {
+      .number-grid-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    .number-badge-modern {
+      border-radius: 16px;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .number-badge-modern:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+    .number-badge-modern:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+    
+    /* Hot button */
+    #hotBtn {
+      background: var(--hot-gradient);
+      box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+    }
+    
+    /* Cold button */
+    #coldBtn {
+      background: var(--cold-gradient);
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+    }
+    
+    /* Random button */
+    #randomBtn {
+      background: var(--random-gradient);
+      box-shadow: 0 4px 15px rgba(56, 249, 215, 0.3);
+    }
+    
+    /* Repeat button */
+    #repeatBtn {
+      background: var(--repeat-gradient);
+      box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
+    }
+    
+    /* Recent draws enhancement */
+    .recent-draw-card {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-left: 4px solid #667eea;
+    }
+    
+    /* AI features card */
+    .ai-features-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .ai-features-card .text-gray-700 {
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .ai-features-card .bg-gray-50 {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .ai-features-card .text-yellow-800 {
+      color: #fff3cd;
+    }
+    .ai-features-card .bg-yellow-100 {
+      background: rgba(255, 193, 7, 0.2);
+    }
+    .ai-features-card .border-yellow-300 {
+      border-color: rgba(255, 193, 7, 0.3);
+    }
+    
     @media (max-width: 480px) {
       .number-badge {
         font-size: 1.2rem !important;
@@ -88,84 +229,110 @@
         font-size: 0.65em;
         padding: 2px 6px;
       }
+      .prediction-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-  <div class="bg-gradient-to-r from-blue-900 to-blue-500 text-white py-5 px-4 flex items-center justify-between shadow-md">
-    <button class="text-2xl" onclick="goBack()" title="Back">←</button>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex flex-col">
+  <div class="bg-gradient-to-r from-blue-900 to-indigo-800 text-white py-5 px-4 flex items-center justify-between shadow-lg">
+    <button class="text-2xl hover:bg-white/20 rounded-full p-2 transition" onclick="goBack()" title="Back">←</button>
     <span id="header-title" class="text-lg font-bold flex-1 text-center">Lucky Number Prediction</span>
-    <button class="text-2xl" id="langIconBtn" title="Change language">🌐</button>
-    <div class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-lg p-6 min-w-[180px]" id="langPopup">
-      <div class="font-bold text-blue-700 mb-2">Select Language</div>
-      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="en">English</button>
-      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ml">മലയാളം</button>
-      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
+    <button class="text-2xl hover:bg-white/20 rounded-full p-2 transition" id="langIconBtn" title="Change language">🌐</button>
+    <div class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-2xl p-6 min-w-[180px]" id="langPopup">
+      <div class="font-bold text-indigo-700 mb-2">Select Language</div>
+      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="en">English</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ml">മലയാളം</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
     </div>
   </div>
-  <main class="flex-1 flex flex-col items-center justify-center px-2 py-8">
-    <div class="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center mb-8">
-      <h2 id="luckyTitle" class="text-2xl font-bold text-blue-700 mb-4">Generate Your Lucky Number</h2>
-      <div class="flex flex-wrap gap-3 justify-center mb-4">
-        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition flex items-center gap-2" id="hotBtn" disabled>🔥 <span class="lang-hot">Hot</span></button>
-        <button class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition flex items-center gap-2" id="coldBtn" disabled>❄️ <span class="lang-cold">Cold</span></button>
-        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition flex items-center gap-2" id="randomBtn" disabled>🎲 <span class="lang-random">Random</span></button>
-        <button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-3 px-6 rounded-lg transition flex items-center gap-2" id="repeatBtn" disabled>🔁 <span class="lang-repeat">Repeated</span></button>
+  <main class="flex-1 flex flex-col items-center justify-center px-4 py-8">
+    <div class="w-full max-w-4xl mx-auto enhanced-card bg-white shadow-xl p-6 mb-8">
+      <h2 id="luckyTitle" class="text-3xl font-bold text-center text-indigo-700 mb-6">Generate Your Lucky Number</h2>
+      <div class="flex flex-wrap gap-4 justify-center mb-6">
+        <button class="prediction-btn bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="hotBtn" disabled>
+          <span class="text-2xl">🔥</span> <span class="lang-hot">Hot</span>
+        </button>
+        <button class="prediction-btn bg-gradient-to-r from-blue-400 to-cyan-500 hover:from-blue-500 hover:to-cyan-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="coldBtn" disabled>
+          <span class="text-2xl">❄️</span> <span class="lang-cold">Cold</span>
+        </button>
+        <button class="prediction-btn bg-gradient-to-r from-green-400 to-teal-500 hover:from-green-500 hover:to-teal-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="randomBtn" disabled>
+          <span class="text-2xl">🎲</span> <span class="lang-random">Random</span>
+        </button>
+        <button class="prediction-btn bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="repeatBtn" disabled>
+          <span class="text-2xl">🔁</span> <span class="lang-repeat">Repeated</span>
+        </button>
       </div>
-      <div id="loadingMsg" class="text-blue-500 font-semibold mb-2">Loading history data...</div>
-      <div id="numberLabel" class="text-blue-600 font-semibold mb-2">Tap a button to see predictions</div>
+      <div id="loadingMsg" class="text-center text-indigo-500 font-semibold mb-4 text-lg">Loading history data...</div>
+      <div id="numberLabel" class="text-center text-indigo-600 font-semibold mb-4 text-xl">Tap a button to see predictions</div>
       <div id="spinner" class="spinner" style="display:none;"></div>
-      <div id="bigNumber" class="text-4xl font-extrabold text-center text-white bg-gradient-to-r from-blue-400 to-blue-700 rounded-xl py-6 px-2 mb-4 shadow-lg w-full" style="display:none;"></div>
-      <div id="numberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-5 w-full max-w-3xl mx-auto"></div>
-      <div id="numberLabel6" class="text-blue-600 font-semibold mt-6 mb-2" style="display:none;"></div>
-      <div id="numberGrid6" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-5 w-full max-w-3xl mx-auto" style="display:none;"></div>
+      <div id="bigNumber" class="text-5xl font-extrabold text-center text-white big-number-display py-8 px-4 mb-8 shadow-lg w-full" style="display:none;"></div>
+      <div id="numberGrid" class="number-grid-container gap-4 w-full"></div>
+      <div id="numberLabel6" class="text-center text-indigo-600 font-semibold mt-8 mb-4 text-xl" style="display:none;"></div>
+      <div id="numberGrid6" class="number-grid-container gap-4 w-full" style="display:none;"></div>
     </div>
-    <div class="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center mb-8" id="recentCard">
-      <h2 class="mb-2 text-lg font-semibold flex items-center gap-2">
-        <span class="text-xl">🕑</span> <span class="lang-recent">Recent Draws</span>
-        <button id="toggleRecentBtn" class="ml-auto bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-1 px-4 rounded-lg transition text-sm"><span class="lang-show">Show</span></button>
+    <div class="w-full max-w-4xl mx-auto enhanced-card bg-white shadow-xl p-6 mb-8" id="recentCard">
+      <h2 class="mb-4 text-xl font-bold flex items-center gap-3 text-indigo-700">
+        <span class="text-2xl">🕑</span> <span class="lang-recent">Recent Draws</span>
+        <button id="toggleRecentBtn" class="ml-auto bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-bold py-2 px-6 rounded-lg transition text-sm">
+          <span class="lang-show">Show</span>
+        </button>
       </h2>
       <div id="recentDraws" class="w-full" style="display:none;"></div>
     </div>
-    <div class="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center mb-8 ai-features-card">
-      <h2 class="mb-2 text-lg font-semibold flex items-center gap-2">
-        <span class="text-xl">🤖</span> <span class="lang-ai-title">AI-powered Lucky Number Methods</span>
+    <div class="w-full max-w-4xl mx-auto enhanced-card ai-features-card shadow-xl p-6 mb-8">
+      <h2 class="mb-4 text-xl font-bold flex items-center gap-3">
+        <span class="text-2xl">🤖</span> <span class="lang-ai-title">AI-powered Lucky Number Methods</span>
       </h2>
-      <div class="w-full flex flex-wrap gap-3 justify-between mb-2">
-        <div class="flex items-center gap-2 text-base min-w-[140px]"><span class="text-xl">🌟</span> <b class="lang-astro">Astrological Analysis</b></div>
-        <div class="flex items-center gap-2 text-base min-w-[140px]"><span class="text-xl">📊</span> <b class="lang-hist">Historical Patterns</b></div>
-        <div class="flex items-center gap-2 text-base min-w-[140px]"><span class="text-xl">🎯</span> <b class="lang-rand">Random Generation</b></div>
-        <div class="flex items-center gap-2 text-base min-w-[140px]"><span class="text-xl">🔥</span> <b class="lang-hotcold">Hot/Cold Numbers</b></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <div class="flex items-center gap-3 p-4 bg-white/20 rounded-xl backdrop-blur-sm">
+          <span class="text-2xl">🌟</span> 
+          <b class="lang-astro">Astrological Analysis</b>
+        </div>
+        <div class="flex items-center gap-3 p-4 bg-white/20 rounded-xl backdrop-blur-sm">
+          <span class="text-2xl">📊</span> 
+          <b class="lang-hist">Historical Patterns</b>
+        </div>
+        <div class="flex items-center gap-3 p-4 bg-white/20 rounded-xl backdrop-blur-sm">
+          <span class="text-2xl">🎯</span> 
+          <b class="lang-rand">Random Generation</b>
+        </div>
+        <div class="flex items-center gap-3 p-4 bg-white/20 rounded-xl backdrop-blur-sm">
+          <span class="text-2xl">🔥</span> 
+          <b class="lang-hotcold">Hot/Cold Numbers</b>
+        </div>
       </div>
-      <div class="text-sm text-gray-700 bg-gray-50 rounded-lg p-3 mb-2 w-full lang-ai-desc">
-        <b>How it works:</b> <span class="block mt-1">🌟 Uses astrology, 📊 past results, 🎯 randomization, and 🔥 hot/cold analysis to suggest lucky numbers. For fun only!</span>
+      <div class="text-base text-gray-700 bg-gray-50 rounded-xl p-4 mb-4 w-full lang-ai-desc">
+        <b>How it works:</b> <span class="block mt-2">🌟 Uses astrology, 📊 past results, 🎯 randomization, and 🔥 hot/cold analysis to suggest lucky numbers. For fun only!</span>
       </div>
-      <div class="flex items-center gap-2 text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-lg p-3 w-full text-sm font-semibold lang-disclaimer">
-        <span class="text-xl">⚠️</span>
+      <div class="flex items-center gap-3 text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-xl p-4 w-full text-base font-semibold lang-disclaimer">
+        <span class="text-2xl">⚠️</span>
         <span><b>Disclaimer:</b> This is for entertainment only. No guarantee of winning. Play responsibly.</span>
       </div>
     </div>
   </main>
-  <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-2 shadow-lg z-40">
-    <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="index.html">
-      <span class="material-icons">home</span>
-      <span class="text-xs">Home</span>
+  <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-3 shadow-2xl z-40">
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="index.html">
+      <span class="material-icons text-xl">home</span>
+      <span class="text-xs mt-1">Home</span>
     </a>
-    <a class="flex flex-col items-center text-blue-300 hover:text-white transition font-bold" href="prediction.html">
-      <span class="material-icons">star</span>
-      <span class="text-xs">Lucky</span>
+    <a class="flex flex-col items-center text-white font-bold transition p-2" href="prediction.html">
+      <span class="material-icons text-xl">star</span>
+      <span class="text-xs mt-1">Lucky</span>
     </a>
-    <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="search.html">
-      <span class="material-icons">search</span>
-      <span class="text-xs">Search</span>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="search.html">
+      <span class="material-icons text-xl">search</span>
+      <span class="text-xs mt-1">Search</span>
     </a>
-    <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="scanner.html">
-      <span class="material-icons">qr_code_scanner</span>
-      <span class="text-xs">Scanner</span>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="scanner.html">
+      <span class="material-icons text-xl">qr_code_scanner</span>
+      <span class="text-xs mt-1">Scanner</span>
     </a>
-    <a class="flex flex-col items-center text-blue-300 hover:text-white transition" href="live.html">
-      <span class="material-icons">live_tv</span>
-      <span class="text-xs">Live</span>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="live.html">
+      <span class="material-icons text-xl">live_tv</span>
+      <span class="text-xs mt-1">Live</span>
     </a>
   </nav>
   <script>
@@ -234,13 +401,13 @@
       hide: { en: 'Hide', ml: 'മറയ്ക്കുക', ta: 'மறை' },
       aiTitle: { en: 'AI-powered Lucky Number Methods', ml: 'എഐ ഭാഗ്യസംഖ്യ മാർഗങ്ങൾ', ta: 'ஏஐ அதிர்ஷ்ட எண் முறைகள்' },
       astro: { en: 'Astrological Analysis', ml: 'ജ്യോതിഷം', ta: 'ஜோதிடம்' },
-      hist: { en: 'Historical Patterns', ml: 'ചരിത്ര പാറ്റേണുകൾ', ta: 'வரலாற்று வடிவங்கள்' },
+      hist: { en: 'Historical Patterns', ml: 'ചരിത്ര പാറ്റേൺ', ta: 'வரலாற்று வடிவங்கள்' },
       rand: { en: 'Random Generation', ml: 'യാദൃശ്ചിക സൃഷ്ടി', ta: 'சீரற்ற உருவாக்கம்' },
       hotcold: { en: 'Hot/Cold Numbers', ml: 'ഹോട്ട്/കോൾഡ് സംഖ്യകൾ', ta: 'சூடு/குளிர் எண்கள்' },
       aiDesc: {
-        en: '<b>How it works:</b> <span class="block mt-1">🌟 Uses astrology, 📊 past results, 🎯 randomization, and 🔥 hot/cold analysis to suggest lucky numbers. For fun only!</span>',
-        ml: '<b>എങ്ങനെ പ്രവർത്തിക്കുന്നു:</b> <span class="block mt-1">🌟 ജ്യോതിഷം, 📊 പഴയ ഫലങ്ങൾ, 🎯 യാദൃശ്ചികം, 🔥 ഹോട്ട്/കോൾഡ് വിശകലനം എന്നിവ ഉപയോഗിക്കുന്നു. വിനോദത്തിനായി മാത്രം!</span>',
-        ta: '<b>எப்படி வேலை செய்கிறது:</b> <span class="block mt-1">🌟 ஜோதிடம், 📊 கடந்த முடிவுகள், 🎯 சீரற்ற உருவாக்கம், 🔥 சூடு/குளிர் பகுப்பாய்வு ஆகியவற்றை பயன்படுத்துகிறது. பொழுதுபோக்கிற்கு மட்டும்!</span>'
+        en: '<b>How it works:</b> <span class="block mt-2">🌟 Uses astrology, 📊 past results, 🎯 randomization, and 🔥 hot/cold analysis to suggest lucky numbers. For fun only!</span>',
+        ml: '<b>എങ്ങനെ പ്രവർത്തിക്കുന്നു:</b> <span class="block mt-2">🌟 ജ്യോതിഷം, 📊 പഴയ ഫലങ്ങൾ, 🎯 യാദൃശ്ചികം, 🔥 ഹോട്ട്/കോൾഡ് വിശകലനം എന്നിവ ഉപയോഗിക്കുന്നു. വിനോദത്തിനായി മാത്രം!</span>',
+        ta: '<b>எப்படி வேலை செய்கிறது:</b> <span class="block mt-2">🌟 ஜோதிடம், 📊 கடந்த முடிவுகள், 🎯 சீரற்ற உருவாக்கம், 🔥 சூடு/குளிர் பகுப்பாய்வு ஆகியவற்றை பயன்படுத்துகிறது. பொழுதுபோக்கிற்காக மட்டும்!</span>'
       },
       disclaimer: {
         en: '<b>Disclaimer:</b> This is for entertainment only. No guarantee of winning. Play responsibly.',
@@ -386,13 +553,13 @@
             // Choose gradient and text color based on type
             let badgeTypeClass = '';
             if (badgeClass === 'hot') {
-              badgeTypeClass = 'bg-gradient-to-br from-yellow-400 to-red-500 text-white';
+              badgeTypeClass = 'bg-gradient-to-br from-red-400 to-pink-500 text-white number-badge-modern';
             } else if (badgeClass === 'cold') {
-              badgeTypeClass = 'bg-gradient-to-br from-blue-200 to-blue-500 text-blue-900';
+              badgeTypeClass = 'bg-gradient-to-br from-blue-400 to-cyan-500 text-white number-badge-modern';
             } else if (badgeClass === 'repeated') {
-              badgeTypeClass = 'bg-gradient-to-br from-amber-200 to-yellow-400 text-yellow-900 border-2 border-yellow-400';
+              badgeTypeClass = 'bg-gradient-to-br from-amber-300 to-yellow-400 text-yellow-900 border-2 border-yellow-400 number-badge-modern';
             } else {
-              badgeTypeClass = 'bg-gradient-to-br from-green-200 to-teal-400 text-teal-900';
+              badgeTypeClass = 'bg-gradient-to-br from-green-400 to-teal-500 text-white number-badge-modern';
             }
             div.className = `number-badge ${badgeClass} flex items-center justify-center rounded-2xl shadow-lg font-extrabold text-2xl sm:text-3xl md:text-4xl px-2 py-6 m-1 transition-transform duration-200 cursor-pointer hover:scale-105 hover:ring-2 hover:ring-offset-2 hover:ring-blue-400 relative select-all ${badgeTypeClass}`;
             if (isRepeated) {
@@ -442,13 +609,13 @@
             // Choose gradient and text color based on type
             let badgeTypeClass = '';
             if (badgeClass6 === 'hot') {
-              badgeTypeClass = 'bg-gradient-to-br from-yellow-400 to-red-500 text-white';
+              badgeTypeClass = 'bg-gradient-to-br from-red-400 to-pink-500 text-white number-badge-modern';
             } else if (badgeClass6 === 'cold') {
-              badgeTypeClass = 'bg-gradient-to-br from-blue-200 to-blue-500 text-blue-900';
+              badgeTypeClass = 'bg-gradient-to-br from-blue-400 to-cyan-500 text-white number-badge-modern';
             } else if (badgeClass6 === 'repeated') {
-              badgeTypeClass = 'bg-gradient-to-br from-amber-200 to-yellow-400 text-yellow-900 border-2 border-yellow-400';
+              badgeTypeClass = 'bg-gradient-to-br from-amber-300 to-yellow-400 text-yellow-900 border-2 border-yellow-400 number-badge-modern';
             } else {
-              badgeTypeClass = 'bg-gradient-to-br from-green-200 to-teal-400 text-teal-900';
+              badgeTypeClass = 'bg-gradient-to-br from-green-400 to-teal-500 text-white number-badge-modern';
             }
             div.className = `number-badge ${badgeClass6} flex items-center justify-center rounded-2xl shadow-lg font-extrabold text-2xl sm:text-3xl md:text-4xl px-2 py-6 m-1 transition-transform duration-200 cursor-pointer hover:scale-105 hover:ring-2 hover:ring-offset-2 hover:ring-blue-400 relative select-all ${badgeTypeClass}`;
             if (isRepeated) {
@@ -489,18 +656,18 @@
         const numbers4 = Array.isArray(draw.numbers4) ? draw.numbers4 : [];
         const numbers6 = Array.isArray(draw.numbers6) ? draw.numbers6 : [];
         const div = document.createElement('div');
-        div.className = `transition transform hover:scale-[1.025] hover:shadow-2xl bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl shadow-lg p-5 mb-4 flex flex-col gap-2 border border-blue-200`;
+        div.className = `transition transform hover:scale-[1.025] recent-draw-card rounded-2xl shadow-lg p-5 mb-4 flex flex-col gap-3 border-l-4 border-indigo-500`;
         div.innerHTML = `
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-blue-700 font-bold text-lg md:text-xl">🗓️ ${draw.date}</span>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-indigo-700 font-bold text-lg md:text-xl">🗓️ ${draw.date}</span>
           </div>
           <div class="flex flex-wrap gap-3 items-center">
-            <span class="text-blue-500 font-semibold text-base md:text-lg">4d:</span>
-            <span class="flex flex-wrap gap-2">${numbers4.slice(0,6).map(n => `<span class='inline-block bg-blue-200 text-blue-900 font-bold rounded-lg px-3 py-1 text-base md:text-lg shadow-sm'>${n}</span>`).join('')}</span>
+            <span class="text-indigo-500 font-semibold text-base md:text-lg">4-digit:</span>
+            <span class="flex flex-wrap gap-2">${numbers4.slice(0,6).map(n => `<span class='inline-block bg-indigo-100 text-indigo-800 font-bold rounded-lg px-3 py-1 text-base md:text-lg shadow-sm'>${n}</span>`).join('')}</span>
           </div>
           <div class="flex flex-wrap gap-3 items-center">
-            <span class="text-blue-500 font-semibold text-base md:text-lg">6d:</span>
-            <span class="flex flex-wrap gap-2">${numbers6.slice(0,3).map(n => `<span class='inline-block bg-yellow-100 text-yellow-900 font-bold rounded-lg px-3 py-1 text-base md:text-lg shadow-sm'>${n}</span>`).join('')}</span>
+            <span class="text-indigo-500 font-semibold text-base md:text-lg">6-digit:</span>
+            <span class="flex flex-wrap gap-2">${numbers6.slice(0,3).map(n => `<span class='inline-block bg-yellow-100 text-yellow-800 font-bold rounded-lg px-3 py-1 text-base md:text-lg shadow-sm'>${n}</span>`).join('')}</span>
           </div>
         `;
         recentDraws.appendChild(div);
@@ -557,4 +724,4 @@
     }
   </script>
 </body>
-</html> 
+</html>
