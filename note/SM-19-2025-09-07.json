@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "MG 339851\r\n(IRINJALAKKUDA)"
+        "MG 339851 (IRINJALAKUDA)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "MB 615985(KOTTAYAM)"
+        "MB 615985 (KOTTAYAM)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "ME 399415"
+        "ME 399415 (KASARAGOD)"
       ]
     },
     "4th_prize": {
@@ -118,7 +118,7 @@
     },
     "7th_prize": {
       "amount": 500,
-      "label": "7th Prize",
+      "label": "7th_prize",
       "winners": [
         "0067",
         "0220",

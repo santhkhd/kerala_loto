@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "MV 122462(PATTAMBI)"
+        "MV 122462 (PATTAMBI)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "MY 416977(ALAPPUZHA)"
+        "MY 416977 (ALAPPUZHA)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "MN 778725"
+        "MN 778725 (WAYANADU)"
       ]
     },
     "4th_prize": {
@@ -118,7 +118,7 @@
     },
     "7th_prize": {
       "amount": 500,
-      "label": "7th Prize",
+      "label": "7th_prize",
       "winners": [
         "0068",
         "0189",
