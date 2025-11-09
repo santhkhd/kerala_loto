@@ -1,4 +1,3 @@
-
 import schedule
 import time
 import subprocess
@@ -23,31 +22,31 @@ def run_lottery_scraper():
     except Exception as e:
         print(f"Exception occurred: {e}")
 
-def is_within_time_range():
-    """Check if current time is between 3:00 PM and 4:30 PM IST"""
+def is_within_optimal_time_range():
+    """Check if current time is between 2:45 PM and 5:30 PM IST"""
     now = datetime.now(IST)
-    start_time = dt_time(15, 0)  # 3:00 PM
-    end_time = dt_time(16, 30)   # 4:30 PM
+    start_time = dt_time(14, 45)  # 2:45 PM
+    end_time = dt_time(17, 30)   # 5:30 PM
     current_time = now.time()
     
     return start_time <= current_time <= end_time
 
 def scheduled_task():
     """Task that runs every 15 minutes but only executes during specified hours"""
-    if is_within_time_range():
-        print("Within scheduled time range - running lottery scraper")
+    if is_within_optimal_time_range():
+        print("Within optimal time range - running lottery scraper")
         run_lottery_scraper()
     else:
         current_time = datetime.now(IST).strftime('%H:%M:%S')
-        print(f"Current time {current_time} IST is outside scheduled range (15:00-16:30)")
+        print(f"Current time {current_time} IST is outside optimal range (14:45-17:30)")
 
 def run_scheduler():
     """Run the scheduler in a separate thread"""
-    # Schedule the task to run every 15 minutes
+    # Schedule the task to run every 15 minutes during the optimal window
     schedule.every(15).minutes.do(scheduled_task)
     
     print("Scheduler started - will check every 15 minutes")
-    print("Active time: 3:00 PM to 4:30 PM IST daily")
+    print("Active time: 2:45 PM to 5:30 PM IST daily")
     print("Press Ctrl+C to stop the scheduler")
     
     while True:
