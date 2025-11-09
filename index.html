@@ -7,12 +7,31 @@
   <link href="output.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       background: #e9edf5;
       margin: 0;
       color: #222;
     }
+    
+    /* Enhanced modern styling */
+    .enhanced-card {
+      transition: all 0.3s ease;
+      border-radius: 16px;
+      overflow: hidden;
+      border: none;
+    }
+    .enhanced-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--hover-shadow);
+    }
+    
     .lottery-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -132,6 +151,53 @@
       max-width: 900px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
+    
+    /* Tab bar enhancements */
+    .tab-container {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 50px;
+      padding: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      color: #374151;
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      white-space: nowrap;
+      margin: 0 0.25rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .tab-btn.active {
+      background: var(--primary-gradient);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+    }
+    .tab-btn:hover:not(.active) {
+      background: rgba(37,99,235,0.1);
+      color: #1e3a8a;
+    }
+    
+    /* Live button enhancements */
+    .live-btn {
+      background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+      transition: all 0.3s ease;
+      border-radius: 12px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(255,0,0,0.3);
+    }
+    .live-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255,0,0,0.4);
+    }
+    
     @media (max-width: 900px) {
       .lottery-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -176,26 +242,18 @@
         padding: 10px 0 8px 0;
         letter-spacing: 1px;
       }
+      
+      /* Mobile tab bar */
+      .tab-container {
+        padding: 4px;
+      }
+      .tab-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        margin: 0 0.1rem;
+      }
     }
     body { padding-bottom: 60px !important; }
-    .tab-btn {
-      padding: 0.5rem 1.2rem;
-      border-radius: 9999px;
-      font-weight: 600;
-      color: #374151;
-      background: #f3f4f6;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      white-space: nowrap;
-      margin-right: 0.5rem;
-      transition: background 0.2s, color 0.2s;
-    }
-    .tab-btn.active {
-      background: #2563eb;
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(37,99,235,0.10);
-    }
     .scrollbar-hide::-webkit-scrollbar {
       display: none;
     }
@@ -216,8 +274,8 @@
   <div class="w-full bg-gradient-to-r from-blue-900 to-blue-500 text-white py-5 px-4 flex items-center justify-between shadow-md relative">
     <span id="header-title" class="text-lg font-bold flex-1 text-center">Kerala Lottery Results</span>
     <div class="flex items-center gap-3">
-      <a href="live.html" class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 animate-pulse" title="Watch Live Draw">
-        <span class="text-sm font-bold">LIVE </span>
+      <a href="live.html" class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 live-btn" title="Watch Live Draw">
+        <span class="text-sm font-bold animate-pulse">LIVE </span>
       </a>
       <button class="text-2xl bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition" id="langIconBtn" title="Change language">🌐</button>
     </div>
@@ -231,15 +289,17 @@
 
   <!-- Scrolling Tab Bar for Lottery Categories -->
   <div class="w-full overflow-x-auto bg-white shadow-sm border-b border-gray-200 scrollbar-hide">
-    <div class="flex space-x-4 px-4 py-2 min-w-max scrollbar-hide" id="lotteryTabs" tabindex="0" role="tablist">
-      <button class="tab-btn active" data-category="ALL">All</button>
-      <button class="tab-btn" data-category="KARUNYA">Karunya</button>
-      <button class="tab-btn" data-category="KARUNYA_PLUS">Karunya Plus</button>
-      <button class="tab-btn" data-category="SUVARNA_KERALAM">Suvarna Keralam</button>
-      <button class="tab-btn" data-category="STHREE_SAKTHI">Sthree Sakthi</button>
-      <button class="tab-btn" data-category="DHANALEKSHMI">Dhanalekshmi</button>
-      <button class="tab-btn" data-category="SAMRUDHI">Samrudhi</button>
-      <button class="tab-btn" data-category="BHAGYATHARA">Bhagyathara</button>
+    <div class="max-w-4xl mx-auto py-4 px-4">
+      <div class="tab-container inline-flex">
+        <button class="tab-btn active" data-category="ALL">All</button>
+        <button class="tab-btn" data-category="KARUNYA">Karunya</button>
+        <button class="tab-btn" data-category="KARUNYA_PLUS">Karunya Plus</button>
+        <button class="tab-btn" data-category="SUVARNA_KERALAM">Suvarna Keralam</button>
+        <button class="tab-btn" data-category="STHREE_SAKTHI">Sthree Sakthi</button>
+        <button class="tab-btn" data-category="DHANALEKSHMI">Dhanalekshmi</button>
+        <button class="tab-btn" data-category="SAMRUDHI">Samrudhi</button>
+        <button class="tab-btn" data-category="BHAGYATHARA">Bhagyathara</button>
+      </div>
     </div>
   </div>
 
@@ -421,7 +481,7 @@
             cardData.push({
               date: bumper.date,
               html: `
-                <a class="lottery-card" href="result.html?file=${m.filename}">
+                <a class="lottery-card enhanced-card" href="result.html?file=${m.filename}">
                   <div class="card-top">
                     ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
                     <span class="badge">${bumper.shortName}-${bumper.drawNumber}</span>
@@ -473,7 +533,7 @@
         cardData.push({
           date: item.date,
           html: `
-            <a class="lottery-card" href="result.html?file=${item.filename}">
+            <a class="lottery-card enhanced-card" href="result.html?file=${item.filename}">
               <div class="card-top">
                 ${isNew ? `<span class="new-ribbon">NEW</span>` : ''}
                 <span class="badge">${item.code}-${item.draw_number}</span>
