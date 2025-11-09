@@ -414,8 +414,8 @@ def main():
 
         if not latest_links:
             print("No latest result found. This might be a normal occurrence if results aren't published yet.")
-            # Exit with a non-zero code to indicate no new files were created
-            sys.exit(1)
+            # Don't exit with error code - still generate manifest/history even if no new results
+            return
         else:
             result_url = latest_links[0]
             print(f"Processing latest result: {result_url}")
