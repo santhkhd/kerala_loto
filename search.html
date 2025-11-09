@@ -185,9 +185,12 @@
             <form class="w-full flex flex-col gap-4" onsubmit="event.preventDefault();searchNumber();">
                 <div class="flex flex-col sm:flex-row gap-4 w-full relative">
                     <input type="text" id="numberSearchInput" placeholder="🔢 Enter your ticket number..." maxlength="20" class="flex-1 px-5 py-4 rounded-xl border-0 focus:ring-2 focus:ring-indigo-500 text-lg transition search-input bg-gray-50" />
-                    <div class="relative flex-1">
-                        <input type="date" id="dateSearchInput" class="flex-1 px-5 py-4 rounded-xl border-0 focus:ring-2 focus:ring-indigo-500 text-lg transition search-input bg-gray-50 w-full" />
-                        <button type="button" id="clearDateBtn" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 text-xl" style="display:none;">×</button>
+                    <div class="flex-1">
+                        <label for="dateSearchInput" class="block text-sm font-semibold text-gray-700 mb-2">Select Date</label>
+                        <div class="relative">
+                            <input type="date" id="dateSearchInput" class="flex-1 px-5 py-4 rounded-xl border-0 focus:ring-2 focus:ring-indigo-500 text-lg transition search-input bg-gray-50 w-full" />
+                            <button type="button" id="clearDateBtn" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 text-xl" style="display:none;">×</button>
+                        </div>
                     </div>
                 </div>
                 <div class="flex gap-4 w-full search-btn-container">
@@ -247,7 +250,7 @@
         date: 'Date:'
       },
       ml: {
-        header: 'ലോട്ടറി നമ്പർ തിരയുക',
+        header: 'ലോട്ററി നമ്പർ തിരയുക',
         searchTitle: '🔍 നിങ്ങളുടെ നമ്പർ പരിശോധിക്കുക',
         searchDesc: 'നിങ്ങളുടെ ലോട്ററി നമ്പറും തീയതിയും നൽകുക, വിജയിച്ചിട്ടുണ്ടോ എന്ന് പരിശോധിക്കുക',
         numberPlaceholder: '🔢 നിങ്ങളുടെ ടിക്കറ്റ് നമ്പർ നൽകുക...',
