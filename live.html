@@ -7,6 +7,115 @@
     <link href="output.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --youtube-gradient: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            --kaumudy-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffa502 100%);
+            --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Enhanced modern styling */
+        .enhanced-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            overflow: hidden;
+            border: none;
+        }
+        .enhanced-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        /* YouTube section enhancements */
+        .youtube-card {
+            background: var(--youtube-gradient);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .youtube-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 0, 0, 0.4);
+        }
+        
+        /* Kaumudy section enhancements */
+        .kaumudy-card {
+            background: var(--kaumudy-gradient);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+        }
+        .kaumudy-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
+        }
+        
+        /* Subscribe button enhancements */
+        .subscribe-btn {
+            transition: all 0.3s ease;
+            border-radius: 50px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
+        }
+        .subscribe-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(255, 0, 0, 0.4);
+        }
+        .subscribe-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Live stream container enhancements */
+        .stream-container {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .stream-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Improved text readability */
+        .text-white {
+            color: #ffffff;
+        }
+        
+        .text-blue-700 {
+            color: #1e3a8a;
+        }
+        
+        /* Mobile-specific improvements */
+        @media (max-width: 640px) {
+            .youtube-card, .kaumudy-card {
+                border-radius: 16px;
+            }
+            
+            .subscribe-btn {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .stream-container {
+                border-radius: 16px;
+            }
+        }
+        
+        /* Animated elements */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     <!-- Header with language switcher -->
@@ -25,7 +134,7 @@
     <div class="w-full py-8 px-2">
       <div class="max-w-4xl mx-auto">
         <!-- Beautiful YouTube Subscribe Section -->
-        <div class="bg-gradient-to-r from-red-500 via-red-600 to-red-700 rounded-3xl shadow-2xl p-8 mb-8 relative overflow-hidden">
+        <div class="youtube-card enhanced-card p-8 mb-8 relative overflow-hidden">
             <!-- Animated background elements -->
             <div class="absolute top-0 left-0 w-full h-full opacity-10">
                 <div class="absolute top-4 left-4 w-20 h-20 bg-white rounded-full animate-pulse"></div>
@@ -36,7 +145,7 @@
             <div class="relative z-10 text-center">
                 <!-- YouTube Icon with Animation -->
                 <div class="flex justify-center mb-6">
-                    <div class="bg-white rounded-full p-4 shadow-lg animate-bounce">
+                    <div class="bg-white rounded-full p-4 shadow-lg floating">
                         <span class="text-4xl">📺</span>
                     </div>
                 </div>
@@ -48,7 +157,7 @@
                 <!-- Subscribe Button -->
                 <a href="https://www.youtube.com/@datafactory1?sub_confirmation=1" 
                    target="_blank" 
-                   class="inline-flex items-center gap-3 bg-white text-red-600 font-bold py-4 px-8 rounded-full text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 hover:bg-red-50 animate-pulse">
+                   class="inline-flex items-center gap-3 bg-white text-red-600 font-bold py-4 px-8 rounded-full text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 hover:bg-red-50 subscribe-btn">
                     <span class="text-2xl">🔔</span>
                     <span id="subscribe-btn-text">Subscribe Now</span>
                     <span class="text-xl">→</span>
@@ -73,7 +182,7 @@
         </div>
         
         <!-- Kairali News Big YouTube Live Thumbnail Section -->
-        <div class="relative flex flex-col items-center bg-white rounded-2xl shadow-xl p-0 mb-8 overflow-hidden">
+        <div class="enhanced-card stream-container mb-8 overflow-hidden">
           <a href="https://www.youtube.com/channel/UCnEvxaWfVL91XIYuyQRO5QA/live" target="_blank" class="block w-full group">
             <div class="relative w-full">
               <img src="https://img.youtube.com/vi/yiiqRHY1Bl8/hqdefault_live.jpg" alt="Kairali News Live Thumbnail" class="w-full h-auto object-cover aspect-video">
@@ -291,4 +400,4 @@
 
     </script>
 </body>
-</html> 
+</html>
