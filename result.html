@@ -7,10 +7,42 @@
   
   <link href="output.css" rel="stylesheet"> 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { background: #10182a; }
-    .winner-scroll { overflow-x: auto; }
-    .highlight-winner { background: #fbbf24 !important; color: #1e293b !important; font-weight: bold; border: 2px solid #f59e42; }
+    :root {
+      --primary-gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      --secondary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+      --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+      --transition: all 0.3s ease;
+    }
+    
+    body { 
+      background: #0f172a; 
+      font-family: 'Poppins', sans-serif;
+      color: #e2e8f0;
+    }
+    
+    .winner-scroll { 
+      overflow-x: auto; 
+      padding: 8px 0;
+    }
+    
+    .highlight-winner { 
+      background: var(--accent-gradient) !important; 
+      color: #1e293b !important; 
+      font-weight: bold; 
+      border: 2px solid #f59e0b;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    
     @media print {
       body {
         font-size: 11px !important;
@@ -47,36 +79,160 @@
         display: none !important;
       }
     }
+    
     .floating-refresh-btn {
       position: fixed;
-      bottom: 80px; /* Move up to avoid bottom navigation */
+      bottom: 80px;
       right: 20px;
-      z-index: 1001; /* Higher than bottom nav */
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      display: none; /* Hidden by default */
-      min-width: 80px; /* Ensure minimum width on mobile */
-      font-size: 14px; /* Ensure readable text size */
-      padding: 12px 16px; /* Better touch target on mobile */
-      border-radius: 25px; /* More rounded on mobile */
-      background: #10b981 !important; /* Force green background */
-      color: white !important; /* Force white text */
+      z-index: 1001;
+      box-shadow: var(--card-shadow);
+      display: none;
+      min-width: 100px;
+      font-size: 14px;
+      padding: 14px 20px;
+      border-radius: 50px;
+      background: var(--success-gradient) !important;
+      color: white !important;
       font-weight: bold;
       border: none;
       cursor: pointer;
-      /* Ensure it's visible on all devices */
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
+      transition: var(--transition);
+      transform: translateY(0);
     }
+    
+    .floating-refresh-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.3);
+    }
+    
     /* Mobile specific adjustments */
     @media (max-width: 768px) {
       .floating-refresh-btn {
-        bottom: 90px; /* Slightly higher on mobile */
+        bottom: 90px;
         right: 15px;
         min-width: 90px;
         font-size: 16px;
         padding: 15px 20px;
       }
+    }
+    
+    /* Enhanced card styling */
+    .enhanced-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+    }
+    
+    .enhanced-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 15px 10px -6px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Gradient text */
+    .gradient-text {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Prize card styling */
+    .prize-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+    }
+    
+    .prize-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-3px);
+    }
+    
+    .first-prize-card {
+      border: 3px solid #f59e0b;
+      box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.3);
+    }
+    
+    /* Winner number styling */
+    .winner-number {
+      background: rgba(30, 64, 175, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      transition: var(--transition);
+    }
+    
+    .winner-number:hover {
+      background: rgba(30, 64, 175, 0.3);
+      transform: scale(1.05);
+    }
+    
+    /* Search input styling */
+    .search-input {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(5px);
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      transition: var(--transition);
+      color: #e2e8f0;
+    }
+    
+    .search-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      outline: none;
+    }
+    
+    /* Button styling */
+    .primary-btn {
+      background: var(--primary-gradient);
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: var(--transition);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Info card styling */
+    .info-card {
+      border-radius: 16px;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .info-card:hover {
+      transform: translateY(-3px);
+    }
+    
+    /* Table styling */
+    .prize-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .prize-table th {
+      background: rgba(30, 64, 175, 0.3);
+    }
+    
+    .prize-table td, .prize-table th {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .prize-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .prize-table td:last-child, .prize-table th:last-child {
+      border-right: none;
     }
   </style>
 </head>
@@ -132,26 +288,30 @@
 
       let html = '';
       // Lottery title and meta
-      html += `<div class="bg-blue-900 text-white rounded-lg shadow-lg p-4 mb-4">
-        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+      html += `<div class="enhanced-card p-6 mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div class="w-full sm:w-auto text-center sm:text-left">
-            <div class="text-3xl sm:text-4xl font-extrabold tracking-wide mb-1" style="line-height:1.1;">${escapeHtml(data.lottery_name||'')}</div>
+            <div class="text-4xl sm:text-5xl font-extrabold tracking-wide mb-2 gradient-text" style="line-height:1.1;">${escapeHtml(data.lottery_name||'')}</div>
           </div>
-          <div class="flex flex-col sm:items-end w-full sm:w-auto text-center sm:text-right text-blue-200">
-            <span class="text-lg sm:text-xl font-semibold">Draw: <b>${escapeHtml(data.draw_number||'')}</b></span>
-            <span class="text-base sm:text-lg font-semibold">Date: <b>${escapeHtml(data.draw_date||'')}</b></span>
+          <div class="flex flex-col sm:items-end w-full sm:w-auto text-center sm:text-right">
+            <span class="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">Draw: <b>${escapeHtml(data.draw_number||'')}</b></span>
+            <span class="text-lg sm:text-xl font-semibold text-blue-200 mt-1">Date: <b>${escapeHtml(data.draw_date||'')}</b></span>
           </div>
         </div>
       </div>`;
+      
       // Search bar
-      html += `<div class="mb-6 flex flex-col items-center gap-2">
-        <label for="searchInput" id="searchLabel" class="block text-blue-200 font-semibold mb-1">Search Ticket Number</label>
-        <div class="w-full sm:w-2/3 flex flex-col gap-2 items-center">
-          <input id="searchInput" type="text" placeholder="eg: AA 123456 or 1234" class="w-full px-4 py-3 rounded-lg border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg text-gray-900" value="${escapeHtml(searchNumber)}">
-          <button id="searchBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition-colors duration-200 shadow mt-2">Search</button>
+      html += `<div class="enhanced-card p-6 mb-6">
+        <div class="mb-4 flex flex-col items-center gap-3">
+          <label for="searchInput" id="searchLabel" class="block text-blue-200 font-semibold text-lg mb-2">Search Ticket Number</label>
+          <div class="w-full sm:w-3/4 flex flex-col gap-3 items-center">
+            <input id="searchInput" type="text" placeholder="eg: AA 123456 or 1234" class="search-input w-full px-5 py-4 rounded-xl border focus:outline-none text-lg" value="${escapeHtml(searchNumber)}">
+            <button id="searchBtn" class="primary-btn w-full py-4 rounded-xl text-lg font-bold shadow-lg">Search</button>
+          </div>
+          <div id="searchResultMsg" class="mt-3 text-yellow-300 text-sm font-semibold"></div>
         </div>
-        <div id="searchResultMsg" class="mt-2 text-yellow-300 text-sm font-semibold"></div>
       </div>`;
+      
       // Prize cards or Bumper Table
       html += '<div id="prizes">';
       const prizeKeys = Object.keys(data.prizes||{});
@@ -163,6 +323,7 @@
         if(ia===-1) ia=100; if(ib===-1) ib=100;
         return ia-ib;
       });
+      
       // Search logic
       let foundPrize = null, foundPrizeKey = '', foundWinner = '';
       if (searchNumber) {
@@ -182,43 +343,53 @@
           if (foundPrize) break;
         }
       }
+      
       // If found, show summary card
       if (searchNumber && foundPrize) {
-        html += `<div class="bg-yellow-100 border-2 border-yellow-400 rounded-lg shadow p-4 mb-4 animate-pulse">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-            <span class="font-bold text-lg text-yellow-900">Congratulations! <span class="font-bold">Ticket Number</span> <span class="bg-yellow-300 text-yellow-900 px-2 py-1 rounded font-mono">${escapeHtml(foundWinner)}</span> won <span class="font-bold">${escapeHtml(foundPrize.label||foundPrizeKey.replace(/_/g,' '))}</span></span>
-            <span class="font-bold text-green-700 text-xl mt-1 sm:mt-0">₹${foundPrize.amount ? parseInt(foundPrize.amount).toLocaleString() : ''}</span>
+        html += `<div class="enhanced-card p-5 mb-6 border-2 border-yellow-400 bg-gradient-to-r from-yellow-500/10 to-amber-500/10 animate-pulse">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <span class="font-bold text-xl text-yellow-100">🎉 Congratulations! <span class="font-bold">Ticket Number</span> <span class="bg-yellow-300 text-yellow-900 px-3 py-2 rounded-lg font-mono font-bold">${escapeHtml(foundWinner)}</span> won <span class="font-bold">${escapeHtml(foundPrize.label||foundPrizeKey.replace(/_/g,' '))}</span></span>
+            <span class="font-bold text-green-300 text-2xl bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">₹${foundPrize.amount ? parseInt(foundPrize.amount).toLocaleString() : ''}</span>
           </div>
         </div>`;
       } else if (searchNumber) {
-        html += `<div class="bg-red-100 border-2 border-red-400 rounded-lg shadow p-4 mb-4">
-          <div class="text-red-700 font-semibold"><span class="font-bold">Ticket Number</span> <span class="bg-red-200 text-red-900 px-2 py-1 rounded font-mono">${escapeHtml(searchNumber)}</span> did not win any prize in this draw.</div>
+        html += `<div class="enhanced-card p-5 mb-6 border-2 border-red-400 bg-gradient-to-r from-red-500/10 to-rose-500/10">
+          <div class="text-red-200 font-semibold text-lg"><span class="font-bold">Ticket Number</span> <span class="bg-red-200/20 text-red-100 px-3 py-2 rounded-lg font-mono font-bold">${escapeHtml(searchNumber)}</span> did not win any prize in this draw.</div>
         </div>`;
       }
+      
       // Render all prize cards
       prizeKeys.forEach((key, idx) => {
         const prize = data.prizes[key];
         if (!prize) return;
-        const highlight = (key==='1st_prize') ? 'border-4 border-yellow-400 shadow-2xl' : 'border';
-        html += `<div class="bg-white rounded-lg ${highlight} shadow p-4 mb-6">
-          <div class="flex flex-row flex-nowrap items-center justify-between min-w-0 mb-3">
-            <span class="font-bold text-lg text-blue-900 truncate" style="max-width:60%;">${escapeHtml(prize.label||key.replace(/_/g,' '))}</span>
-            <span class="font-bold text-green-700 text-xl ml-2 whitespace-nowrap">₹${prize.amount ? parseInt(prize.amount).toLocaleString() : ''}</span>
+        
+        const isSpecialPrize = key === '1st_prize' || key === 'bumper_prize';
+        const cardClass = isSpecialPrize ? 'first-prize-card' : '';
+        const prizeClass = isSpecialPrize ? 'text-2xl' : 'text-xl';
+        const amountClass = isSpecialPrize ? 'text-3xl' : 'text-2xl';
+        
+        html += `<div class="prize-card ${cardClass} p-5 mb-5">
+          <div class="flex flex-row flex-nowrap items-center justify-between min-w-0 mb-4">
+            <span class="${prizeClass} font-bold text-blue-100 truncate" style="max-width:70%;">${escapeHtml(prize.label||key.replace(/_/g,' '))}</span>
+            <span class="${amountClass} font-extrabold text-green-300 ml-2 whitespace-nowrap bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">₹${prize.amount ? parseInt(prize.amount).toLocaleString() : ''}</span>
           </div>`;
+          
         if (prize.winners && prize.winners.length > 0) {
-          html += '<div class="flex flex-wrap gap-2 winner-scroll">';
+          html += '<div class="flex flex-wrap gap-3 winner-scroll">';
           prize.winners.forEach(w => {
             const winnerNorm = w.toLowerCase().replace(/\s+/g,'');
             const isHighlight = searchNumber && winnerNorm.includes(searchNumber.trim().toLowerCase().replace(/\s+/g,'')) && searchNumber.trim() !== '';
-            html += `<span class="bg-blue-100 text-blue-900 rounded px-3 py-1 font-mono text-base font-extrabold tracking-wide shadow-sm border border-blue-300${isHighlight ? ' highlight-winner' : ''}" style="letter-spacing:0.04em;">${escapeHtml(w)}</span>`;
+            const highlightClass = isHighlight ? ' highlight-winner' : '';
+            html += `<span class="winner-number px-4 py-2 font-mono font-bold tracking-wide rounded-lg shadow-sm${highlightClass}" style="letter-spacing:0.05em;">${escapeHtml(w)}</span>`;
           });
           html += '</div>';
-          } else {
-          html += '<div class="text-gray-400 italic">No winners announced yet.</div>';
+        } else {
+          html += '<div class="text-gray-400 italic text-lg py-3">No winners announced yet.</div>';
         }
         html += '</div>';
       });
       html += '</div>';
+      
       // Info cards
       let totalWinners = 0, totalPrizeMoney = 0, prizeCategories = 0;
       prizeKeys.forEach(key => {
@@ -229,26 +400,29 @@
           totalPrizeMoney += (parseInt(prize.amount)||0) * (prize.winners||[]).length;
         }
       });
-      html += `<div class="grid grid-cols-2 gap-3 mt-6 mb-4 print-hide">
-        <div class="bg-blue-900 text-white rounded-lg p-3 text-center">
-          <div class="text-xs text-blue-200">Total Winners</div>
-          <div class="text-lg font-bold">${totalWinners.toLocaleString()}</div>
+      
+      html += `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 mb-8 print-hide">
+        <div class="info-card bg-gradient-to-br from-blue-800/50 to-blue-900/50 p-5 text-center">
+          <div class="text-xs text-blue-300 mb-1">Total Winners</div>
+          <div class="text-2xl font-bold text-blue-100">${totalWinners.toLocaleString()}</div>
         </div>
-        <div class="bg-green-900 text-white rounded-lg p-3 text-center">
-          <div class="text-xs text-green-200">Total Prize Distributed</div>
-          <div class="text-lg font-bold">₹${totalPrizeMoney.toLocaleString()}</div>
+        <div class="info-card bg-gradient-to-br from-green-800/50 to-green-900/50 p-5 text-center">
+          <div class="text-xs text-green-300 mb-1">Total Prize Distributed</div>
+          <div class="text-2xl font-bold text-green-100">₹${totalPrizeMoney.toLocaleString()}</div>
         </div>
-        <div class="bg-yellow-900 text-white rounded-lg p-3 text-center">
-          <div class="text-xs text-yellow-200">Draw Number</div>
-          <div class="text-lg font-bold">${escapeHtml(data.draw_number||'')}</div>
+        <div class="info-card bg-gradient-to-br from-amber-800/50 to-amber-900/50 p-5 text-center">
+          <div class="text-xs text-amber-300 mb-1">Draw Number</div>
+          <div class="text-2xl font-bold text-amber-100">${escapeHtml(data.draw_number||'')}</div>
         </div>
-        <div class="bg-purple-900 text-white rounded-lg p-3 text-center">
-          <div class="text-xs text-purple-200">Prize Categories</div>
-          <div class="text-lg font-bold">${prizeCategories}</div>
+        <div class="info-card bg-gradient-to-br from-purple-800/50 to-purple-900/50 p-5 text-center">
+          <div class="text-xs text-purple-300 mb-1">Prize Categories</div>
+          <div class="text-2xl font-bold text-purple-100">${prizeCategories}</div>
         </div>
       </div>`;
+      
       // Print-only compact header and table
       html += `<div class='print-header' style='display:none;'>${escapeHtml(data.lottery_name||'')}<br>Draw: ${escapeHtml(data.draw_number||'')}<br>Date: ${escapeHtml(data.draw_date||'')}</div>`;
+      
       // Build a flat list of all winners with their prize
       let allWinners = [];
       prizeKeys.forEach(key => {
@@ -259,45 +433,52 @@
           });
         }
       });
+      
       html += `<table class='print-table' style='display:none;margin:0 auto 8px auto;'>
         <thead><tr><th>Winning Number</th><th>Prize</th></tr></thead><tbody>`;
       allWinners.forEach(row => {
         html += `<tr><td>${escapeHtml(row.winner)}</td><td>${escapeHtml(row.prize)}</td></tr>`;
       });
       html += `</tbody></table>`;
+      
       // Page break for print/PDF
       html += '<div class="page-break"></div>';
+      
       // Print/download button
-      html += `<div class="text-center mt-6 mb-2">
-        <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 shadow-lg">Download/Print PDF</button>
+      html += `<div class="text-center mt-6 mb-8">
+        <button onclick="window.print()" class="primary-btn py-4 px-8 rounded-xl text-xl font-bold shadow-lg">Download/Print PDF</button>
       </div>`;
+      
       // Disclaimer
-      html += `<div class="max-w-xl mx-auto text-center text-xs text-yellow-200 bg-yellow-900 bg-opacity-80 rounded-lg px-4 py-4 my-8 shadow-md border border-yellow-400">
-        <strong>Disclaimer:</strong><br>
-        The file contains the numbers of Winners of the day for all prizes. The Kerala lottery result is also published in the Kerala Government Gazette. The prize winners would have to verify the winning numbers with the result published in the Gazette and surrender the lottery ticket within 30 days of the draw date.
+      html += `<div class="enhanced-card p-6 my-8">
+        <div class="text-center text-yellow-200">
+          <h3 class="text-xl font-bold mb-3 text-yellow-100">⚠️ Disclaimer</h3>
+          <p class="mb-3">The file contains the numbers of Winners of the day for all prizes. The Kerala lottery result is also published in the Kerala Government Gazette.</p>
+          <p class="font-semibold">The prize winners would have to verify the winning numbers with the result published in the Gazette and surrender the lottery ticket within 30 days of the draw date.</p>
+        </div>
       </div>`;
 
       // Prize Structure Table (dynamic for all lotteries)
-        html += `<div class="max-w-4xl mx-auto my-8 p-3 bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg shadow-lg border border-blue-400 text-blue-100">
-          <h2 class="text-xl font-bold mb-3 text-blue-100 text-center tracking-wide">${escapeHtml(data.lottery_name)} - Prize Structure</h2>
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left border-collapse">
-              <thead>
-                <tr class="bg-blue-700/50">
-                  <th class="p-2 border-b border-r border-blue-500">Prize</th>
-                <th class="p-2 border-b border-r border-blue-500">No. of Winners</th>
-                <th class="p-2 border-b border-blue-500">Prize Amount</th>
+      html += `<div class="enhanced-card p-6 my-8">
+        <h2 class="text-2xl font-bold mb-5 text-center tracking-wide gradient-text">${escapeHtml(data.lottery_name)} - Prize Structure</h2>
+        <div class="overflow-x-auto">
+          <table class="prize-table w-full text-base text-left">
+            <thead>
+              <tr>
+                <th class="p-4">Prize</th>
+                <th class="p-4 text-right">No. of Winners</th>
+                <th class="p-4 text-right">Prize Amount</th>
               </tr>
             </thead>
-            <tbody class="text-blue-200">
+            <tbody>
               ${prizeKeys.map(key => {
-        const prize = data.prizes[key];
+                const prize = data.prizes[key];
                 if (!prize) return '';
-                return `<tr>
-                  <td class="p-2 border-b border-r border-blue-500">${escapeHtml(prize.label || key.replace(/_/g,' '))}</td>
-                  <td class="p-2 border-b border-r border-blue-500 text-right">${prize.winners ? prize.winners.length : 0}</td>
-                  <td class="p-2 border-b border-blue-500 text-right">₹${prize.amount ? parseInt(prize.amount).toLocaleString() : ''}</td>
-        </tr>`;
+                return `<tr class="hover:bg-white/5">
+                  <td class="p-4">${escapeHtml(prize.label || key.replace(/_/g,' '))}</td>
+                  <td class="p-4 text-right">${prize.winners ? prize.winners.length : 0}</td>
+                  <td class="p-4 text-right font-bold text-green-300">₹${prize.amount ? parseInt(prize.amount).toLocaleString() : ''}</td>
+                </tr>`;
               }).join('')}
             </tbody>
           </table>
@@ -308,14 +489,14 @@
       html += `<div id="recentResultsContainer"></div>`;
 
       // How to Claim Your Winnings info box
-      html += `<div class="max-w-xl mx-auto my-8 p-4 bg-gradient-to-br from-green-900 to-green-600 rounded-lg shadow-lg border border-green-400 text-green-100">
-        <h2 class="text-lg font-bold mb-3 text-green-200 text-center tracking-wide">How to Claim Your Winnings for ${escapeHtml(data.lottery_name||'')} (${escapeHtml(data.draw_number||'')}) Kerala Lottery:</h2>
-        <ol class="list-decimal list-inside space-y-2 text-green-50">
-          <li><b>Check Your Number:</b><br>Go to the official Kerala Lottery website <a href="https://statelottery.kerala.gov.in/" class="underline text-green-200" target="_blank">statelottery.kerala.gov.in</a> and match your ticket number with the winning number. If it matches, congratulations!</li>
-          <li><b>Claiming the Prize:</b><br>Visit the Kerala Lottery Office in Thiruvananthapuram and submit your winning ticket. Make sure your ticket is in good condition — not torn or damaged.</li>
-          <li><b>Bring an ID for Verification:</b><br>Carry a valid ID proof like Aadhar or Voter ID. You must complete this verification and submit your ticket within 30 days of the result date.</li>
-          <li><b>Prizes Below ₹5000:</b><br>If you won less than ₹5000, you can claim it from any authorized lottery shop in Kerala.</li>
-          <li><b>More Information:</b><br>For full rules and more details, visit the official Kerala Lottery website. Use the link above to go directly.</li>
+      html += `<div class="enhanced-card p-6 my-8 bg-gradient-to-br from-green-900/30 to-emerald-900/30 border border-green-500/30">
+        <h2 class="text-2xl font-bold mb-5 text-green-100 text-center tracking-wide">How to Claim Your Winnings for ${escapeHtml(data.lottery_name||'')} (${escapeHtml(data.draw_number||'')}) Kerala Lottery:</h2>
+        <ol class="list-decimal list-inside space-y-4 text-green-200 ml-4">
+          <li class="pl-2"><b class="text-green-100">Check Your Number:</b><br>Go to the official Kerala Lottery website <a href="https://statelottery.kerala.gov.in/" class="underline text-green-300 hover:text-green-100" target="_blank">statelottery.kerala.gov.in</a> and match your ticket number with the winning number. If it matches, congratulations!</li>
+          <li class="pl-2"><b class="text-green-100">Claiming the Prize:</b><br>Visit the Kerala Lottery Office in Thiruvananthapuram and submit your winning ticket. Make sure your ticket is in good condition — not torn or damaged.</li>
+          <li class="pl-2"><b class="text-green-100">Bring an ID for Verification:</b><br>Carry a valid ID proof like Aadhar or Voter ID. You must complete this verification and submit your ticket within 30 days of the result date.</li>
+          <li class="pl-2"><b class="text-green-100">Prizes Below ₹5000:</b><br>If you won less than ₹5000, you can claim it from any authorized lottery shop in Kerala.</li>
+          <li class="pl-2"><b class="text-green-100">More Information:</b><br>For full rules and more details, visit the official Kerala Lottery website. Use the link above to go directly.</li>
         </ol>
       </div>`;
 
@@ -513,4 +694,4 @@
     </a>
   </nav>
 </body>
-</html> 
+</html>
