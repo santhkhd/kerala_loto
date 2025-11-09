@@ -18,6 +18,18 @@
       --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     }
     
+    /* Enhanced modern styling */
+    .enhanced-card {
+      transition: all 0.3s ease;
+      border-radius: 16px;
+      overflow: hidden;
+      border: none;
+    }
+    .enhanced-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--hover-shadow);
+    }
+    
     /* Custom animation for number pop/fadeUp */
     @keyframes fadeUp {
       0% { opacity: 0; transform: translateY(20px) scale(0.95); }
@@ -110,18 +122,6 @@
       box-shadow: none;
     }
     
-    /* Enhanced card styles */
-    .enhanced-card {
-      transition: all 0.3s ease;
-      border-radius: 16px;
-      overflow: hidden;
-      border: none;
-    }
-    .enhanced-card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--hover-shadow);
-    }
-    
     /* Big number display - improved readability */
     .big-number-display {
       background: var(--primary-gradient);
@@ -207,8 +207,10 @@
     
     /* AI features card */
     .ai-features-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--primary-gradient);
       color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
     }
     .ai-features-card .text-gray-700 {
       color: rgba(255, 255, 255, 0.9);
@@ -226,6 +228,18 @@
       border-color: rgba(255, 193, 7, 0.3);
     }
     
+    /* Feature cards */
+    .feature-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.25);
+    }
+    
     /* Improved text readability */
     #numberLabel, #numberLabel6 {
       color: #1e3a8a;
@@ -236,6 +250,19 @@
     #loadingMsg {
       color: #1e3a8a;
       font-weight: 600;
+    }
+    
+    /* Toggle button enhancements */
+    .toggle-btn {
+      background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+      transition: all 0.3s ease;
+      border-radius: 12px;
+      font-weight: 600;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .toggle-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     }
     
     @media (max-width: 480px) {
@@ -257,6 +284,10 @@
       .big-number-display {
         font-size: 2.5rem;
         padding: 1.5rem;
+      }
+      
+      .feature-card {
+        border-radius: 12px;
       }
     }
   </style>
@@ -298,44 +329,51 @@
       <div id="numberLabel6" class="text-center text-indigo-600 font-semibold mt-8 mb-4 text-xl" style="display:none;"></div>
       <div id="numberGrid6" class="number-grid-container gap-4 w-full" style="display:none;"></div>
     </div>
+    
+    <!-- New Features Section -->
+    <div class="w-full max-w-4xl mx-auto enhanced-card ai-features-card shadow-xl p-6 mb-8">
+      <h2 class="mb-6 text-2xl font-bold flex items-center gap-3">
+        <span class="text-3xl">✨</span> <span class="lang-features-title">Advanced Prediction Features</span>
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="feature-card p-4 flex flex-col items-center text-center">
+          <span class="text-3xl mb-2">🔮</span>
+          <h3 class="font-bold text-lg mb-2 lang-astro">Astrological Analysis</h3>
+          <p class="text-sm lang-astro-desc">Predictions based on planetary positions</p>
+        </div>
+        <div class="feature-card p-4 flex flex-col items-center text-center">
+          <span class="text-3xl mb-2">📊</span>
+          <h3 class="font-bold text-lg mb-2 lang-hist">Historical Patterns</h3>
+          <p class="text-sm lang-hist-desc">Analyze past winning trends</p>
+        </div>
+        <div class="feature-card p-4 flex flex-col items-center text-center">
+          <span class="text-3xl mb-2">🎯</span>
+          <h3 class="font-bold text-lg mb-2 lang-rand">Smart Random</h3>
+          <p class="text-sm lang-rand-desc">Intelligent randomization algorithms</p>
+        </div>
+        <div class="feature-card p-4 flex flex-col items-center text-center">
+          <span class="text-3xl mb-2">🔥</span>
+          <h3 class="font-bold text-lg mb-2 lang-hotcold">Hot/Cold Tracking</h3>
+          <p class="text-sm lang-hotcold-desc">Monitor frequently drawn numbers</p>
+        </div>
+      </div>
+      <div class="text-base text-gray-700 bg-gray-50 rounded-xl p-4 mb-4 w-full lang-ai-desc">
+        <b class="lang-how-it-works">How it works:</b> <span class="block mt-2 lang-ai-desc-text">Uses advanced algorithms combining astrology, historical data, and statistical analysis to generate predictions. For entertainment purposes only!</span>
+      </div>
+      <div class="flex items-center gap-3 text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-xl p-4 w-full text-base font-semibold lang-disclaimer">
+        <span class="text-2xl">⚠️</span>
+        <span class="lang-disclaimer-text"><b>Disclaimer:</b> This is for entertainment only. No guarantee of winning. Play responsibly.</span>
+      </div>
+    </div>
+    
     <div class="w-full max-w-4xl mx-auto enhanced-card bg-white shadow-xl p-6 mb-8" id="recentCard">
       <h2 class="mb-4 text-xl font-bold flex items-center gap-3 text-indigo-700">
         <span class="text-2xl">🕑</span> <span class="lang-recent">Recent Draws</span>
-        <button id="toggleRecentBtn" class="ml-auto bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-bold py-2 px-6 rounded-lg transition text-sm">
+        <button id="toggleRecentBtn" class="ml-auto toggle-btn text-white font-bold py-2 px-6 rounded-lg transition text-sm">
           <span class="lang-show">Show</span>
         </button>
       </h2>
       <div id="recentDraws" class="w-full" style="display:none;"></div>
-    </div>
-    <div class="w-full max-w-4xl mx-auto enhanced-card ai-features-card shadow-xl p-6 mb-8">
-      <h2 class="mb-4 text-xl font-bold flex items-center gap-3">
-        <span class="text-2xl">🤖</span> <span class="lang-ai-title">AI-powered Lucky Number Methods</span>
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <div class="flex items-center gap-3 p-4 bg-white/20 rounded-xl backdrop-blur-sm">
-          <span class="text-2xl">🌟</span> 
-          <b class="lang-astro">Astrological Analysis</b>
-        </div>
-        <div class="flex items-center gap-3 p-4 bg-white/20 rounded-xl backdrop-blur-sm">
-          <span class="text-2xl">📊</span> 
-          <b class="lang-hist">Historical Patterns</b>
-        </div>
-        <div class="flex items-center gap-3 p-4 bg-white/20 rounded-xl backdrop-blur-sm">
-          <span class="text-2xl">🎯</span> 
-          <b class="lang-rand">Random Generation</b>
-        </div>
-        <div class="flex items-center gap-3 p-4 bg-white/20 rounded-xl backdrop-blur-sm">
-          <span class="text-2xl">🔥</span> 
-          <b class="lang-hotcold">Hot/Cold Numbers</b>
-        </div>
-      </div>
-      <div class="text-base text-gray-700 bg-gray-50 rounded-xl p-4 mb-4 w-full lang-ai-desc">
-        <b>How it works:</b> <span class="block mt-2">🌟 Uses astrology, 📊 past results, 🎯 randomization, and 🔥 hot/cold analysis to suggest lucky numbers. For fun only!</span>
-      </div>
-      <div class="flex items-center gap-3 text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-xl p-4 w-full text-base font-semibold lang-disclaimer">
-        <span class="text-2xl">⚠️</span>
-        <span><b>Disclaimer:</b> This is for entertainment only. No guarantee of winning. Play responsibly.</span>
-      </div>
     </div>
   </main>
   <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-3 shadow-2xl z-40">
@@ -424,17 +462,22 @@
       recent: { en: 'Recent Draws', ml: 'സമീപകാല നറുക്കെടുപ്പ്', ta: 'சமீபத்திய டிரா' },
       show: { en: 'Show', ml: 'കാണിക്കുക', ta: 'காட்டு' },
       hide: { en: 'Hide', ml: 'മറയ്ക്കുക', ta: 'மறை' },
-      aiTitle: { en: 'AI-powered Lucky Number Methods', ml: 'എഐ ഭാഗ്യസംഖ്യ മാർഗങ്ങൾ', ta: 'ஏஐ அதிர்ஷ்ட எண் முறைகள்' },
+      featuresTitle: { en: 'Advanced Prediction Features', ml: 'വിപുലമായ പ്രവചന സവിശേഷതകൾ', ta: 'மேம்பட்ட கணிப்பு அம்சங்கள்' },
       astro: { en: 'Astrological Analysis', ml: 'ജ്യോതിഷം', ta: 'ஜோதிடம்' },
       hist: { en: 'Historical Patterns', ml: 'ചരിത്ര പാറ്റേൺ', ta: 'வரலாற்று வடிவங்கள்' },
-      rand: { en: 'Random Generation', ml: 'യാദൃശ്ചിക സൃഷ്ടി', ta: 'சீரற்ற உருவாக்கம்' },
-      hotcold: { en: 'Hot/Cold Numbers', ml: 'ഹോട്ട്/കോൾഡ് സംഖ്യകൾ', ta: 'சூடு/குளிர் எண்கள்' },
-      aiDesc: {
-        en: '<b>How it works:</b> <span class="block mt-2">🌟 Uses astrology, 📊 past results, 🎯 randomization, and 🔥 hot/cold analysis to suggest lucky numbers. For fun only!</span>',
-        ml: '<b>എങ്ങനെ പ്രവർത്തിക്കുന്നു:</b> <span class="block mt-2">🌟 ജ്യോതിഷം, 📊 പഴയ ഫലങ്ങൾ, 🎯 യാദൃശ്ചികം, 🔥 ഹോട്ട്/കോൾഡ് വിശകലനം എന്നിവ ഉപയോഗിക്കുന്നു. വിനോദത്തിനായി മാത്രം!</span>',
-        ta: '<b>எப்படி வேலை செய்கிறது:</b> <span class="block mt-2">🌟 ஜோதிடம், 📊 கடந்த முடிவுகள், 🎯 சீரற்ற உருவாக்கம், 🔥 சூடு/குளிர் பகுப்பாய்வு ஆகியவற்றை பயன்படுத்துகிறது. பொழுதுபோக்கிற்காக மட்டுமே!</span>'
+      rand: { en: 'Smart Random', ml: 'സ്മാർട്ട് റാൻഡം', ta: 'ஸ்மார்ட் சீரற்ற' },
+      hotcold: { en: 'Hot/Cold Tracking', ml: 'ഹോട്ട്/കോൾഡ് ട്രാക്കിംഗ്', ta: 'சூடு/குளிர் கண்காணிப்பு' },
+      astroDesc: { en: 'Predictions based on planetary positions', ml: 'ഗ്രഹങ്ങളുടെ സ്ഥാനങ്ങളെ അടിസ്ഥാനമാക്കിയുള്ള പ്രവചനങ്ങൾ', ta: 'கோளங்களின் நிலைகளை அடிப்படையாகக் கொண்ட கணிப்புகள்' },
+      histDesc: { en: 'Analyze past winning trends', ml: 'കഴിഞ്ഞ വിജയ ട്രെൻഡുകൾ വിശകലനം ചെയ്യുക', ta: 'கடந்த வெற்றி போக்குகளை ஆராய்ந்து காண்க' },
+      randDesc: { en: 'Intelligent randomization algorithms', ml: 'ബുദ്ധിമാനായ റാൻഡമൈസേഷൻ അൽഗോരിതങ്ങൾ', ta: 'அறிவுற்ற சீரற்ற முறைகள்' },
+      hotcoldDesc: { en: 'Monitor frequently drawn numbers', ml: 'പതിവായി വരുന്ന സംഖ്യകൾ നിരീക്ഷിക്കുക', ta: 'அடிக்கடி வரும் எண்களை கண்காணிக்கவும்' },
+      howItWorks: { en: 'How it works:', ml: 'എങ്ങനെ പ്രവർത്തിക്കുന്നു:', ta: 'எப்படி வேலை செய்கிறது:' },
+      aiDescText: {
+        en: 'Uses advanced algorithms combining astrology, historical data, and statistical analysis to generate predictions. For entertainment purposes only!',
+        ml: 'പ്രവചനങ്ങൾ സൃഷ്ടിക്കാൻ ജ്യോതിഷം, ചരിത്രപരമായ ഡാറ്റ, സ്ഥിതിവിവരക്കണക്കുകൾ എന്നിവ സംയോജിപ്പിച്ച നൂതന അൽഗോരിതങ്ങൾ ഉപയോഗിക്കുന്നു. വിനോദത്തിനായി മാത്രം!',
+        ta: 'கணிப்புகளை உருவாக்க ஜோதிடம், வரலாற்று தரவு, நிகழ்தகவு பகுப்பாய்வு ஆகியவற்றை இணைத்த மேம்பட்ட வழிமுறைகளை பயன்படுத்துகிறது. பொழுதுபோக்கிற்காக மட்டுமே!'
       },
-      disclaimer: {
+      disclaimerText: {
         en: '<b>Disclaimer:</b> This is for entertainment only. No guarantee of winning. Play responsibly.',
         ml: '<b>ശ്രദ്ധിക്കുക:</b> ഇത് വിനോദത്തിനായി മാത്രം. വിജയത്തിന് ഉറപ്പ് ഇല്ല. ഉത്തരവാദിത്വത്തോടെ കളിക്കുക.',
         ta: '<b>கவனிக்கவும்:</b> இது பொழுதுபோக்கிற்காக மட்டுமே. வெற்றிக்கு உத்தரவாதம் இல்லை. பொறுப்புடன் விளையாடுங்கள்.'
@@ -725,14 +768,14 @@
       // Section titles
       const recentEl = document.querySelector('.lang-recent');
       if (recentEl) recentEl.textContent = langBtnStrings.recent[currentLang];
-      const aiTitleEl = document.querySelector('.lang-ai-title');
-      if (aiTitleEl) aiTitleEl.textContent = langBtnStrings.aiTitle[currentLang];
+      const featuresTitleEl = document.querySelector('.lang-features-title');
+      if (featuresTitleEl) featuresTitleEl.textContent = langBtnStrings.featuresTitle[currentLang];
       // Show/Hide button
       const showBtn = document.getElementById('toggleRecentBtn');
       if (showBtn && showBtn.querySelector('span')) {
         showBtn.querySelector('span').textContent = recentOpen ? langBtnStrings.hide[currentLang] : langBtnStrings.show[currentLang];
       }
-      // AI features
+      // Feature cards
       const astroEl = document.querySelector('.lang-astro');
       if (astroEl) astroEl.textContent = langBtnStrings.astro[currentLang];
       const histEl = document.querySelector('.lang-hist');
@@ -741,11 +784,21 @@
       if (randEl) randEl.textContent = langBtnStrings.rand[currentLang];
       const hotcoldEl = document.querySelector('.lang-hotcold');
       if (hotcoldEl) hotcoldEl.textContent = langBtnStrings.hotcold[currentLang];
-      const aiDescEl = document.querySelector('.lang-ai-desc');
-      if (aiDescEl) aiDescEl.innerHTML = langBtnStrings.aiDesc[currentLang];
+      const astroDescEl = document.querySelector('.lang-astro-desc');
+      if (astroDescEl) astroDescEl.textContent = langBtnStrings.astroDesc[currentLang];
+      const histDescEl = document.querySelector('.lang-hist-desc');
+      if (histDescEl) histDescEl.textContent = langBtnStrings.histDesc[currentLang];
+      const randDescEl = document.querySelector('.lang-rand-desc');
+      if (randDescEl) randDescEl.textContent = langBtnStrings.randDesc[currentLang];
+      const hotcoldDescEl = document.querySelector('.lang-hotcold-desc');
+      if (hotcoldDescEl) hotcoldDescEl.textContent = langBtnStrings.hotcoldDesc[currentLang];
+      const howItWorksEl = document.querySelector('.lang-how-it-works');
+      if (howItWorksEl) howItWorksEl.textContent = langBtnStrings.howItWorks[currentLang];
+      const aiDescTextEl = document.querySelector('.lang-ai-desc-text');
+      if (aiDescTextEl) aiDescTextEl.textContent = langBtnStrings.aiDescText[currentLang];
       // Disclaimer
-      const disclaimerEl = document.querySelector('.lang-disclaimer');
-      if (disclaimerEl) disclaimerEl.innerHTML = `<span class="text-xl">⚠️</span> <span>${langBtnStrings.disclaimer[currentLang]}</span>`;
+      const disclaimerTextEl = document.querySelector('.lang-disclaimer-text');
+      if (disclaimerTextEl) disclaimerTextEl.innerHTML = langBtnStrings.disclaimerText[currentLang];
     }
   </script>
 </body>
