@@ -1,4 +1,3 @@
-
 import requests
 from bs4 import BeautifulSoup, Tag
 import json
@@ -6,9 +5,20 @@ import re
 import time
 import os
 import subprocess
-from datetime import datetime
+from datetime import datetime, time as dt_time
+import pytz
 
-def get_last_n_result_links(n=50):
+# Set Indian timezone
+IST = pytz.timezone('Asia/Kolkata')
+
+def is_within_optimal_time_window():
+    """Check if current time is within the optimal result fetching window (2:45 PM - 5:30 PM IST)."""
+    now = datetime.now(IST)
+    start_time = now.replace(hour=14, minute=45, second=0, microsecond=0)  # 2:45 PM
+    end_time = now.replace(hour=17, minute=30, second=0, microsecond=0)    # 5:30 PM
+    return start_time <= now <= end_time
+
+def get_last_n_result_links(n=10):
     MAIN_URL = "https://www.kllotteryresult.com/"
     links = []
     seen = set()
@@ -128,6 +138,10 @@ def process_result_page(result_soup, result_url):
 
     lottery_name_match = re.search(r"([A-Za-z\s]+)\s*\(", title_text)
     lottery_name = lottery_name_match.group(1).strip().upper() if lottery_name_match else "Unknown"
+    
+    # Extract lottery code from URL
+    lottery_code_match = re.search(r'/kerala-lottery-result-([A-Z]+)-', result_url)
+    lottery_code = lottery_code_match.group(1) if lottery_code_match else "XX"
 
     # Try to extract venue
     venue = ""
@@ -173,9 +187,19 @@ def process_result_page(result_soup, result_url):
                 numbers = [td.get_text(strip=True) for td in tds if td.get_text(strip=True)]
                 prizes[current_key]["winners"].extend(numbers)
 
-    for key, prize in prizes.items():
-        if not prize["winners"]:
-            prize["winners"].append("Please wait, results will be published at 3 PM.")
+    # If no prizes found, initialize with default structure
+    if not prizes:
+        for key, label in standard_labels.items():
+            prizes[key] = {
+                "amount": prize_amounts.get(key, 0),
+                "label": label,
+                "winners": ["Please wait, results will be published at 3 PM."]
+            }
+    else:
+        # Add "Please wait" message to any prize category that has no winners
+        for key, prize in prizes.items():
+            if not prize["winners"]:
+                prize["winners"].append("Please wait, results will be published at 3 PM.")
 
     data = {
         "lottery_name": lottery_name,
@@ -186,27 +210,33 @@ def process_result_page(result_soup, result_url):
         "downloadLink": download_link
     }
 
-    filename = f"note/{draw_number}-{draw_date}.json"
+    # Create note directory if it doesn't exist
     os.makedirs('note', exist_ok=True)
-    with open(filename, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-    print(f"Saved: {filename}\n")
-    return filename
-
-def auto_git_push(filename):
-    token = os.environ.get('GITHUB_TOKEN')
-    if not token:
-        print("GITHUB_TOKEN not set. Skipping auto push.")
-        return
-    repo_url = "https://{token}@github.com/santhkhd/kerala_loto.git".format(token=token)
-    subprocess.run(["git", "remote", "set-url", "origin", repo_url], check=True)
-    subprocess.run(["git", "add", filename], check=True)
-    subprocess.run(["git", "commit", "-m", f"Auto update: {filename}"], check=True)
-    subprocess.run(["git", "push"], check=True)
-    print(f"Pushed {filename} to GitHub.")
+    
+    # Generate filename in the correct format (e.g., SS-485-2025-09-16.json)
+    # Remove the duplicate lottery code from draw_number if present
+    clean_draw_number = draw_number
+    if draw_number.startswith(lottery_code + "-"):
+        clean_draw_number = draw_number[len(lottery_code) + 1:]
+    
+    filename = f"{lottery_code}-{clean_draw_number}-{draw_date}.json"
+    filepath = f"note/{filename}"
+    
+    try:
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        print(f"Saved: {filepath}\n")
+    except Exception as e:
+        print(f"Error saving {filepath}: {e}")
 
 # --- MAIN EXECUTION ---
 if __name__ == "__main__":
+    # Check if we're within the optimal time window
+    if not is_within_optimal_time_window():
+        current_time = datetime.now(IST).strftime('%H:%M:%S')
+        print(f"Current time {current_time} IST is outside the optimal window (2:45 PM - 5:30 PM).")
+        print("The script will still attempt to fetch results, but they may be incomplete.")
+    
     latest_links = get_last_n_result_links(5)  # Get more results to find today's
     if latest_links:
         print(f"Found {len(latest_links)} recent results")
@@ -215,11 +245,7 @@ if __name__ == "__main__":
             try:
                 result_res = requests.get(result_url)
                 result_soup = BeautifulSoup(result_res.text, "html.parser")
-                filename = process_result_page(result_soup, result_url)
-                if os.environ.get('GITHUB_TOKEN'):
-                    auto_git_push(filename)
-                else:
-                    print("To auto-push, set GITHUB_TOKEN as a Replit Secret.")
+                process_result_page(result_soup, result_url)
             except Exception as e:
                 print(f"Error processing {result_url}: {e}")
                 continue
