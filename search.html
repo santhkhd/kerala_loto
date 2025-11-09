@@ -9,10 +9,13 @@
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --search-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --winner-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --not-found-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
             --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
         
+        /* Enhanced modern styling */
         .enhanced-card {
             transition: all 0.3s ease;
             border-radius: 16px;
@@ -24,6 +27,13 @@
             box-shadow: var(--hover-shadow);
         }
         
+        .search-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
         .search-input {
             transition: all 0.3s ease;
             border-radius: 12px;
@@ -31,10 +41,12 @@
             /* Improved text readability */
             color: #1e3a8a;
             font-weight: 500;
+            border: 2px solid #e2e8f0;
         }
         .search-input:focus {
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
             outline: 2px solid #3b82f6;
+            border-color: #3b82f6;
         }
         .search-input::placeholder {
             color: #64748b;
@@ -55,6 +67,14 @@
             transform: translateY(0);
         }
         
+        .check-btn {
+            background: var(--search-gradient);
+        }
+        
+        .clear-btn {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+        }
+        
         .result-card {
             border-radius: 16px;
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -66,7 +86,7 @@
         }
         
         .winner-card {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            background: var(--winner-gradient);
             border-radius: 16px;
             box-shadow: 0 10px 20px rgba(67, 233, 123, 0.3);
             color: #065f46;
@@ -74,11 +94,30 @@
         }
         
         .not-found-card {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            background: var(--not-found-gradient);
             border-radius: 16px;
             box-shadow: 0 10px 20px rgba(255, 154, 158, 0.3);
             color: #991b1b;
             font-weight: 700;
+        }
+        
+        .action-btn {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .view-result-btn {
+            background: var(--primary-gradient);
+        }
+        
+        .back-home-btn {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
         }
         
         /* Improved text readability */
@@ -102,13 +141,27 @@
         @media (max-width: 640px) {
             .search-container {
                 flex-direction: column;
+                padding: 1.5rem;
+                border-radius: 16px;
             }
+            
+            .search-btn-container {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
             .search-btn {
                 width: 100%;
             }
+            
             /* Improved mobile readability */
             .search-input {
                 font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .action-btn {
+                width: 100%;
+                padding: 1rem;
             }
         }
     </style>
@@ -126,22 +179,22 @@
         <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
     </div>
     <main class="flex-1 flex flex-col items-center justify-center px-4 py-8">
-        <div class="w-full max-w-2xl mx-auto enhanced-card bg-white shadow-xl p-6 flex flex-col items-center">
+        <div class="w-full max-w-2xl mx-auto enhanced-card bg-white shadow-xl p-6 flex flex-col items-center search-container">
             <h2 id="searchTitle" class="text-3xl font-bold text-center text-indigo-700 mb-2">🔍 Search Your Number</h2>
             <p class="text-center text-gray-600 mb-6 text-base">Enter your lottery number and select a date to check if you've won any prize</p>
             <form class="w-full flex flex-col gap-4" onsubmit="event.preventDefault();searchNumber();">
-                <div class="flex flex-col sm:flex-row gap-4 w-full relative search-container">
+                <div class="flex flex-col sm:flex-row gap-4 w-full relative">
                     <input type="text" id="numberSearchInput" placeholder="🔢 Enter your ticket number..." maxlength="20" class="flex-1 px-5 py-4 rounded-xl border-0 focus:ring-2 focus:ring-indigo-500 text-lg transition search-input bg-gray-50" />
                     <div class="relative flex-1">
                         <input type="date" id="dateSearchInput" class="flex-1 px-5 py-4 rounded-xl border-0 focus:ring-2 focus:ring-indigo-500 text-lg transition search-input bg-gray-50 w-full" />
                         <button type="button" id="clearDateBtn" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 text-xl" style="display:none;">×</button>
                     </div>
                 </div>
-                <div class="flex gap-4 w-full">
-                    <button type="button" class="flex-1 search-btn bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2 shadow-lg" id="searchBtn" onclick="searchNumber()" disabled>
+                <div class="flex gap-4 w-full search-btn-container">
+                    <button type="button" class="flex-1 search-btn check-btn text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2 shadow-lg" id="searchBtn" onclick="searchNumber()" disabled>
                         <span class="material-icons">search</span> Check
                     </button>
-                    <button type="button" class="flex-1 search-btn bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2 shadow-lg" onclick="clearNumberSearch()">
+                    <button type="button" class="flex-1 search-btn clear-btn text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2 shadow-lg" onclick="clearNumberSearch()">
                         <span class="material-icons">close</span> Clear
                     </button>
             </div>
@@ -241,7 +294,7 @@
       document.getElementById('numberSearchInput').placeholder = uiStrings[lang].numberPlaceholder;
       // Buttons
       document.getElementById('searchBtn').innerHTML = `<span class="material-icons">search</span> ${uiStrings[lang].check}`;
-      document.querySelector('.bg-gray-400').innerHTML = `<span class="material-icons">close</span> ${uiStrings[lang].clear}`;
+      document.querySelector('.clear-btn').innerHTML = `<span class="material-icons">close</span> ${uiStrings[lang].clear}`;
       // Update results if present
       updateSearchResultsLang();
       // Update language popup active state
@@ -347,9 +400,11 @@
             }
             const result = historyData.find(r => (r.date === formattedDate || r.date === searchDate));
             if (!result) {
-            resultsContainer.innerHTML = `<div class="bg-red-100 text-red-700 rounded-xl p-6 text-center font-bold result-card">
-                <div>${ui.noResult}</div>
-                <a href="index.html" class="inline-block mt-6 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition">${ui.backToHome}</a>
+            resultsContainer.innerHTML = `<div class="not-found-card text-white p-6 text-center font-bold result-card">
+                <div class="text-xl mb-2">${ui.noResult}</div>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+                    <a href="index.html" class="inline-block action-btn back-home-btn text-white font-bold py-3 px-8 rounded-xl transition">${ui.backToHome}</a>
+                </div>
             </div>`;
                 return;
             }
@@ -394,7 +449,7 @@
                         <div class="mb-2"><span class="font-semibold text-gray-700">${ui.number}</span> <span class="text-gray-900 font-mono bg-gray-100 px-3 py-1 rounded-lg">${win.number}</span></div>
                         <div class="mb-2"><span class="font-semibold text-gray-700">${ui.prize}</span> <span class="text-green-700 font-bold text-xl">₹${win.amount.toLocaleString()}</span></div>
                         <div class="mb-4"><span class="font-semibold text-gray-700">${ui.date}</span> <span class="text-gray-700">${result.date}</span></div>
-                        <a href="result.html?file=${resultFile}" target="_blank" class="mt-2 bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-bold py-3 px-8 rounded-xl transition">${ui.viewFullResult}</a>
+                        <a href="result.html?file=${resultFile}" target="_blank" class="mt-2 action-btn view-result-btn text-white font-bold py-3 px-8 rounded-xl transition">${ui.viewFullResult}</a>
                     </div>
                 `).join('')}
                 `;
@@ -409,8 +464,8 @@
                         ${ui.notFound(searchNumber)}
                     </div>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-4">
-                        <a href="result.html?file=${resultFile}" target="_blank" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition">${ui.viewFullResult}</a>
-                        <a href="index.html" class="bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white font-bold py-3 px-8 rounded-xl transition">${ui.backToHome}</a>
+                        <a href="result.html?file=${resultFile}" target="_blank" class="action-btn view-result-btn text-white font-bold py-3 px-8 rounded-xl transition">${ui.viewFullResult}</a>
+                        <a href="index.html" class="action-btn back-home-btn text-white font-bold py-3 px-8 rounded-xl transition">${ui.backToHome}</a>
                     </div>
                 </div>
                 `;
