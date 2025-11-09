@@ -87,8 +87,32 @@ function main() {
       history.push(result);
     }
   }
-  fs.writeFileSync(OUT_FILE, JSON.stringify(history, null, 2), 'utf8');
-  console.log(`Generated ${OUT_FILE} with ${history.length} draws.`);
+  // Sort by date descending
+  history.sort((a, b) => {
+    // Handle "Unknown-Date" entries by putting them at the end
+    if (a.date === "Unknown-Date" && b.date === "Unknown-Date") return 0;
+    if (a.date === "Unknown-Date") return 1;
+    if (b.date === "Unknown-Date") return -1;
+    
+    // For regular dates, sort descending (newest first)
+    return new Date(b.date) - new Date(a.date);
+  });
+  
+  // Remove duplicate entries for the same date, keeping the most recent one
+  const uniqueHistory = [];
+  const seenDates = new Set();
+  
+  for (const entry of history) {
+    if (entry.date !== "Unknown-Date" && seenDates.has(entry.date)) {
+      // Skip duplicate dates
+      continue;
+    }
+    seenDates.add(entry.date);
+    uniqueHistory.push(entry);
+  }
+  
+  fs.writeFileSync(OUT_FILE, JSON.stringify(uniqueHistory, null, 2), 'utf8');
+  console.log(`Generated ${OUT_FILE} with ${uniqueHistory.length} draws.`);
 }
 
 main();
