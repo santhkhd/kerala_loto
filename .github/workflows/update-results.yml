@@ -3,8 +3,9 @@ name: Update Kerala Lottery Results
 on:
   workflow_dispatch:
   schedule:
-    # Run every 15 minutes during 15:00–17:30 UTC (8:30 PM–11:00 PM IST) to cover the full result window
-    - cron: "*/15 15-17 * * *"
+    # Run every 10 minutes during 09:00–12:30 UTC (14:30–18:00 IST) to cover publish window
+    - cron: "*/10 9-12 * * *"
+    - cron: "*/10 12 * * *"
 
 concurrency:
   group: update-results
@@ -31,22 +32,24 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          npm ci
 
       - name: Run updater
+        env:
+          SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
+          SCRAPERAPI_ENDPOINT: ${{ secrets.SCRAPERAPI_ENDPOINT }}
         run: |
           set -e
-          python updateloto.py
-
-      - name: Generate manifest and history
-        run: |
-          node generate-manifest.js
-          node generate-history.js
+          python updateloto.py || true
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+          # Generate manifest and history regardless of scraper success
+          node generate-manifest.js || true
+          node generate-history.js || true
+
           # Stage possible outputs
           git add note/*.json result_manifest.json history.json 2>/dev/null || true
           if git diff --cached --quiet; then
@@ -55,3 +58,5 @@ jobs:
             git commit -m "chore: update results & artifacts $(date -u +'%Y-%m-%d %H:%M:%SZ')"
             git push
           fi
+
+
