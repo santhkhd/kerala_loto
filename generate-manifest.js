@@ -26,7 +26,32 @@ fs.readdir(NOTE_DIR, (err, files) => {
     .map(parseResultFilename)
     .filter(Boolean);
   // Sort by date descending
-  manifest.sort((a, b) => new Date(b.date) - new Date(a.date));
-  fs.writeFileSync(MANIFEST_FILE, JSON.stringify(manifest, null, 2));
-  console.log(`Manifest written to ${MANIFEST_FILE} with ${manifest.length} results.`);
+  manifest.sort((a, b) => {
+    // Handle date comparison properly
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    
+    // Invalid dates go to the end
+    if (isNaN(dateA) && isNaN(dateB)) return 0;
+    if (isNaN(dateA)) return 1;
+    if (isNaN(dateB)) return -1;
+    
+    return dateB - dateA;
+  });
+  
+  // Remove duplicate entries for the same date, keeping the most recent one
+  const uniqueManifest = [];
+  const seenDates = new Set();
+  
+  for (const entry of manifest) {
+    if (seenDates.has(entry.date)) {
+      // Skip duplicate dates
+      continue;
+    }
+    seenDates.add(entry.date);
+    uniqueManifest.push(entry);
+  }
+  
+  fs.writeFileSync(MANIFEST_FILE, JSON.stringify(uniqueManifest, null, 2));
+  console.log(`Manifest written to ${MANIFEST_FILE} with ${uniqueManifest.length} results.`);
 });
