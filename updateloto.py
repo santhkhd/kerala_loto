@@ -225,7 +225,7 @@ def process_result_page(result_soup, result_url, result_page_text: str):
             draw_date = p2.strftime("%Y-%m-%d")
         else:
             # As a last resort during the result window, assume today's date
-            if is_within_time_window():
+            if is_within_optimal_time_window():
                 draw_date = datetime.now(IST).strftime("%Y-%m-%d")
 
     draw_number_match = re.search(r"\(([^)]+)\)", title_text)
@@ -391,16 +391,16 @@ def process_result_page(result_soup, result_url, result_page_text: str):
 
     return local_path, filename
 
-def is_within_time_window():
-    """Check if current time is within the typical publication window (2:45 PM - 5:30 PM IST)."""
+def is_within_optimal_time_window():
+    """Check if current time is within the optimal publication window (2:45 PM - 5:30 PM IST)."""
     now = datetime.now(IST)
     start_time = now.replace(hour=14, minute=45, second=0, microsecond=0)  # 2:45 PM
     end_time = now.replace(hour=17, minute=30, second=0, microsecond=0)    # 5:30 PM
     return start_time <= now <= end_time
 
 def main():
-    # Check if we're within the active time window
-    if not is_within_time_window():
+    # Check if we're within the optimal time window
+    if not is_within_optimal_time_window():
         print(f"Current time {datetime.now(IST).strftime('%H:%M:%S')} is outside the 2:45 PM - 5:30 PM IST window. "
               f"Script will run but may not find new results.")
 
@@ -414,8 +414,8 @@ def main():
 
         if not latest_links:
             print("No latest result found. This might be a normal occurrence if results aren't published yet.")
-            # Exit with a non-zero code to indicate no new files were created
-            sys.exit(1)
+            # Don't exit with error code - still generate manifest/history even if no new results
+            return
         else:
             result_url = latest_links[0]
             print(f"Processing latest result: {result_url}")

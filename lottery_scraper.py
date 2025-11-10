@@ -3,22 +3,10 @@ from bs4 import BeautifulSoup, Tag
 import json
 import re
 import time
+from datetime import datetime
 import os
-import subprocess
-from datetime import datetime, time as dt_time
-import pytz
 
-# Set Indian timezone
-IST = pytz.timezone('Asia/Kolkata')
-
-def is_within_optimal_time_window():
-    """Check if current time is within the optimal result fetching window (2:45 PM - 5:30 PM IST)."""
-    now = datetime.now(IST)
-    start_time = now.replace(hour=14, minute=45, second=0, microsecond=0)  # 2:45 PM
-    end_time = now.replace(hour=17, minute=30, second=0, microsecond=0)    # 5:30 PM
-    return start_time <= now <= end_time
-
-def get_last_n_result_links(n=10):
+def get_last_n_result_links(n=50):
     MAIN_URL = "https://www.kllotteryresult.com/"
     links = []
     seen = set()
@@ -42,40 +30,24 @@ def get_last_n_result_links(n=10):
                 except Exception:
                     continue
                 date_str = None
-                # Check multiple date formats and locations
-                full_text = page_soup.get_text()
-                
-                # Try different date patterns
-                date_patterns = [
-                    r"(\d{2})[./-](\d{2})[./-](\d{4})",  # dd/mm/yyyy
-                    r"(\d{1,2})[./-](\d{1,2})[./-](\d{4})",  # d/m/yyyy
-                    r"(\d{4})[./-](\d{2})[./-](\d{2})",  # yyyy-mm-dd
-                ]
-                
-                for pattern in date_patterns:
-                    m = re.search(pattern, full_text)
-                    if m:
-                        if len(m.group(1)) == 4:  # yyyy-mm-dd format
-                            date_str = f"{m.group(1)}-{m.group(2)}-{m.group(3)}"
-                        else:  # dd/mm/yyyy format
+                for tag in ["h1", "title", "h2", "h3"]:
+                    t = page_soup.find(tag)
+                    if t and t.text:
+                        m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", t.text)
+                        if m:
                             date_str = f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
-                        break
+                            break
                 if date_str:
                     try:
                         result_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-                        # Allow results from today and recent past (within 15 days)
-                        days_diff = (today - result_date).days
-                        if days_diff >= -1 and days_diff <= 15:  # Allow tomorrow's date too
+                        # Exclude today's date
+                        if result_date < today:
                             links.append(url)
                             seen.add(url)
                             if len(links) >= n:
                                 break
                     except Exception:
-                        # If date parsing fails, still include the result
-                        links.append(url)
-                        seen.add(url)
-                        if len(links) >= n:
-                            break
+                        continue
         next_link = soup.find("a", string=re.compile("Older Posts|Next", re.I))
         next_href = next_link.get('href') if isinstance(next_link, Tag) else None
         if next_href and isinstance(next_href, str) and len(links) < n:
@@ -107,11 +79,18 @@ prize_amounts = {
 standard_labels = {
     "1st_prize": "1st Prize", "consolation_prize": "Consolation Prize",
     "2nd_prize": "2nd Prize", "3rd_prize": "3rd Prize", "4th_prize": "4th Prize",
-    "5th_prize": "5th Prize", "6th_prize": "6th Prize", "7th_prize": "7th Prize",
+    "5th_prize": "5th Prize", "6th_prize": "6th Prize", "7th_prize": "7th_prize",
     "8th_prize": "8th Prize", "9th_prize": "9th Prize"
 }
 
-def process_result_page(result_soup, result_url):
+def process_result_page(result_url):
+    try:
+        result_res = requests.get(result_url)
+        result_soup = BeautifulSoup(result_res.text, "html.parser")
+    except Exception as e:
+        print(f"Error fetching or parsing {result_url}: {e}")
+        return
+
     title_text = ""
     title_tag = result_soup.find("h1")
     if title_tag and title_tag.text.strip().lower() not in ["lottery results", "kerala lottery results"]:
@@ -128,7 +107,7 @@ def process_result_page(result_soup, result_url):
                 break
     if not title_text:
         title_text = "Unknown Lottery"
-    print(f"TITLE TEXT: '{title_text}'")
+    print(f"Processing '{title_text}' from {result_url}")
 
     date_match = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", title_text)
     draw_date = f"{date_match.group(3)}-{date_match.group(2)}-{date_match.group(1)}" if date_match else "Unknown-Date"
@@ -229,25 +208,97 @@ def process_result_page(result_soup, result_url):
     except Exception as e:
         print(f"Error saving {filepath}: {e}")
 
+
 # --- MAIN EXECUTION ---
-if __name__ == "__main__":
-    # Check if we're within the optimal time window
-    if not is_within_optimal_time_window():
-        current_time = datetime.now(IST).strftime('%H:%M:%S')
-        print(f"Current time {current_time} IST is outside the optimal window (2:45 PM - 5:30 PM).")
-        print("The script will still attempt to fetch results, but they may be incomplete.")
-    
-    latest_links = get_last_n_result_links(5)  # Get more results to find today's
-    if latest_links:
-        print(f"Found {len(latest_links)} recent results")
-        for i, result_url in enumerate(latest_links):
-            print(f"Processing result {i+1}: {result_url}")
-            try:
-                result_res = requests.get(result_url)
-                result_soup = BeautifulSoup(result_res.text, "html.parser")
-                process_result_page(result_soup, result_url)
-            except Exception as e:
-                print(f"Error processing {result_url}: {e}")
-                continue
-    else:
-        print("No recent results found.")
+# Define the list of URLs to process
+urls_to_process = [
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-730',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-26', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-28', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-28', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-493',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-26',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-597',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-27', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-731', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-29', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-596',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-25',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-492',
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-27', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-27', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-729',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-25', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-595', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-24', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-491', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-26', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-26', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-728',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-24', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-594', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-23', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-490',
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-25', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-25', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-727',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-23',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-593',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-22', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-489',
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-24', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-24', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-726', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-22', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-592',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-21',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-488',
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-23', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-23', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-725',
+    'https://www.kllotteryresult.com/kerala-lottery-result-BR-105',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-21', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-20',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-487', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-22', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-22',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-20', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-591',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-19',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-486', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-21', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-21',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-724', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-19', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-590',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-18',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-485', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-20',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-20', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-723',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-18',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-589',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-17',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-484', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-19', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-19',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-722',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-588', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-16', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-483', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-18', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-18', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-721', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-17', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-587',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-15'
+]
+
+# Process each URL
+print("Starting to download lottery results...")
+for i, url in enumerate(urls_to_process, 1):
+    print(f"Processing {i}/{len(urls_to_process)}: {url}")
+    process_result_page(url)
+    time.sleep(1)  # Be respectful to the server
+
+print("All lottery results have been downloaded to the 'note' folder.")
