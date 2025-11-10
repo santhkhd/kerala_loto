@@ -163,6 +163,7 @@ def get_last_n_result_links(n=1):
         if not result_date:
             print(f"Skip {url}: no date found")
             continue
+        # Prioritize today's date, but also include recent dates
         if result_date <= today:
             dated_candidates.append((result_date, url))
         else:
@@ -227,6 +228,10 @@ def process_result_page(result_soup, result_url, result_page_text: str):
             # As a last resort during the result window, assume today's date
             if is_within_optimal_time_window():
                 draw_date = datetime.now(IST).strftime("%Y-%m-%d")
+
+    # Ensure we have today's date if we're in the optimal window and the date is unknown
+    if draw_date == "Unknown-Date" and is_within_optimal_time_window():
+        draw_date = datetime.now(IST).strftime("%Y-%m-%d")
 
     draw_number_match = re.search(r"\(([^)]+)\)", title_text)
     draw_number = draw_number_match.group(1) if draw_number_match else "XX"
