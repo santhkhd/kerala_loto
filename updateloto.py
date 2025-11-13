@@ -238,7 +238,7 @@ def process_result_page(result_soup, result_url, result_page_text: str):
 
     lottery_name_match = re.search(r"([A-Za-z\s]+)\s*\(", title_text)
     lottery_name = lottery_name_match.group(1).strip().upper() if lottery_name_match else "Unknown"
-
+    
     lottery_code_match = re.search(r'\(([A-Z]{2,3})\)', title_text)
     lottery_code = lottery_code_match.group(1) if lottery_code_match else 'XX'
     if lottery_code == 'XX' or draw_number == 'XX':
@@ -362,10 +362,27 @@ def process_result_page(result_soup, result_url, result_page_text: str):
                 "winners": ["Please wait, results will be published at 3 PM."]
             }
     else:
-        # Add "Please wait" message to any prize category that has no winners
+        # Check if we have actual winning numbers or just placeholders
+        has_actual_winners = False
         for key, prize in prizes.items():
-            if not prize["winners"]:
-                prize["winners"].append("Please wait, results will be published at 3 PM.")
+            winners = prize["winners"]
+            # Check if any winner is not a placeholder
+            for winner in winners:
+                if winner != "Please wait, results will be published at 3 PM." and winner != "***":
+                    has_actual_winners = True
+                    break
+            if has_actual_winners:
+                break
+        
+        # If we don't have actual winners, use placeholder
+        if not has_actual_winners:
+            for key, prize in prizes.items():
+                prize["winners"] = ["Please wait, results will be published at 3 PM."]
+        # Otherwise, add placeholder to any prize category that has no winners
+        else:
+            for key, prize in prizes.items():
+                if not prize["winners"]:
+                    prize["winners"].append("Please wait, results will be published at 3 PM.")
 
     data = {
         "lottery_name": lottery_name,
@@ -397,18 +414,11 @@ def process_result_page(result_soup, result_url, result_page_text: str):
     return local_path, filename
 
 def is_within_optimal_time_window():
-    """Check if current time is within the optimal publication window (2:45 PM - 5:30 PM IST)."""
-    now = datetime.now(IST)
-    start_time = now.replace(hour=14, minute=45, second=0, microsecond=0)  # 2:45 PM
-    end_time = now.replace(hour=17, minute=30, second=0, microsecond=0)    # 5:30 PM
-    return start_time <= now <= end_time
+    """Always return True to allow scraping at any time"""
+    return True
 
 def main():
-    # Check if we're within the optimal time window
-    if not is_within_optimal_time_window():
-        print(f"Current time {datetime.now(IST).strftime('%H:%M:%S')} is outside the 2:45 PM - 5:30 PM IST window. "
-              f"Script will run but may not find new results.")
-
+    # Remove time window restriction to allow scraping at any time
     try:
         current_time = datetime.now(IST)
         print(f"\n{'='*50}")
@@ -440,8 +450,8 @@ def main():
             
     except Exception as e:
         print(f"\nAn error occurred: {e}")
-        # Exit with a non-zero code on error
-        sys.exit(1)
+        # Don't exit with error code to prevent scheduler from stopping
+        return
     
     print("Script execution completed.")
 
