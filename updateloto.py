@@ -362,10 +362,27 @@ def process_result_page(result_soup, result_url, result_page_text: str):
                 "winners": ["Please wait, results will be published at 3 PM."]
             }
     else:
-        # Add "Please wait" message to any prize category that has no winners
+        # Check if we have actual winning numbers or just placeholders
+        has_actual_winners = False
         for key, prize in prizes.items():
-            if not prize["winners"]:
-                prize["winners"].append("Please wait, results will be published at 3 PM.")
+            winners = prize["winners"]
+            # Check if any winner is not a placeholder
+            for winner in winners:
+                if winner != "Please wait, results will be published at 3 PM." and winner != "***":
+                    has_actual_winners = True
+                    break
+            if has_actual_winners:
+                break
+        
+        # If we don't have actual winners, use placeholder
+        if not has_actual_winners:
+            for key, prize in prizes.items():
+                prize["winners"] = ["Please wait, results will be published at 3 PM."]
+        # Otherwise, add placeholder to any prize category that has no winners
+        else:
+            for key, prize in prizes.items():
+                if not prize["winners"]:
+                    prize["winners"].append("Please wait, results will be published at 3 PM.")
 
     data = {
         "lottery_name": lottery_name,

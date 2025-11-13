@@ -8,6 +8,7 @@ import os
 import logging
 import sys
 import requests
+import json
 
 # Set up logging
 logging.basicConfig(
@@ -39,15 +40,19 @@ def run_lottery_scraper():
                 if hist_result.stdout:
                     logging.info(f"History output: {hist_result.stdout}")
                     
-                # If GitHub token is set, commit and push changes
-                github_token = os.environ.get('GITHUB_TOKEN')
-                if github_token:
-                    try:
-                        commit_and_push_changes()
-                    except Exception as e:
-                        logging.error(f"Error during git operations: {e}")
+                # Check if there are actual changes worth committing
+                if has_actual_results():
+                    # If GitHub token is set, commit and push changes
+                    github_token = os.environ.get('GITHUB_TOKEN')
+                    if github_token:
+                        try:
+                            commit_and_push_changes()
+                        except Exception as e:
+                            logging.error(f"Error during git operations: {e}")
+                    else:
+                        logging.info("GITHUB_TOKEN not set. Skipping automatic git push.")
                 else:
-                    logging.info("GITHUB_TOKEN not set. Skipping automatic git push.")
+                    logging.info("No actual results found. Skipping git operations.")
             else:
                 logging.warning(f"History generation had issues: {hist_result.stderr}")
         else:
@@ -56,6 +61,24 @@ def run_lottery_scraper():
         logging.error("Lottery scraper timed out after 5 minutes")
     except Exception as e:
         logging.error(f"Exception occurred while running scraper: {e}")
+
+def has_actual_results():
+    """Check if the latest results contain actual winning numbers"""
+    try:
+        with open('note/latest.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # Check if any prize category has actual winners (not placeholders)
+        prizes = data.get('prizes', {})
+        for prize_key, prize_data in prizes.items():
+            winners = prize_data.get('winners', [])
+            for winner in winners:
+                if winner != "Please wait, results will be published at 3 PM." and winner != "***":
+                    return True
+        return False
+    except Exception as e:
+        logging.error(f"Error checking for actual results: {e}")
+        return False
 
 def commit_and_push_changes():
     """Commit and push changes to GitHub"""
