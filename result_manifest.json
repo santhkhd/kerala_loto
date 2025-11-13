@@ -1,5 +1,23 @@
 [
   {
+    "code": "SM",
+    "draw_number": "29",
+    "date": "2025-11-16",
+    "filename": "SM-29-2025-11-16.json"
+  },
+  {
+    "code": "KR",
+    "draw_number": "731",
+    "date": "2025-11-15",
+    "filename": "KR-731-2025-11-15.json"
+  },
+  {
+    "code": "SK",
+    "draw_number": "27",
+    "date": "2025-11-14",
+    "filename": "SK-27-2025-11-14.json"
+  },
+  {
     "code": "KN",
     "draw_number": "597",
     "date": "2025-11-13",
