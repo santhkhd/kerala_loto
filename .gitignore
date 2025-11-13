@@ -15,6 +15,7 @@ dist/
 # macOS system files
 .DS_Store
 
-# Ignore HTML and CSS files
+# Ignore HTML and CSS files except for index.html
 *.html
-*.css 
+*.css
+!index.html
