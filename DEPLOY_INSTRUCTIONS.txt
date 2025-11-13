@@ -1,0 +1,33 @@
+# How to Deploy to GitHub
+
+## Step 1: Create a GitHub Repository
+1. Go to https://github.com/new
+2. Create a new repository (suggested name: kerala-lottery-results)
+3. Don't initialize it with a README
+4. Copy the repository URL (should look like: https://github.com/yourusername/repository-name.git)
+
+## Step 2: Connect Your Local Repository to GitHub
+Run these commands in your terminal:
+
+```bash
+git remote add origin YOUR_REPOSITORY_URL
+git branch -M main
+git push -u origin main
+```
+
+Replace YOUR_REPOSITORY_URL with the URL you copied from GitHub.
+
+## Step 3: Set Up GitHub Token (Optional but Recommended)
+To enable automatic pushes from the scheduler:
+
+1. Go to GitHub Settings > Developer settings > Personal access tokens > Tokens (classic)
+2. Generate a new token with "repo" permissions
+3. Copy the token
+4. Set it as an environment variable:
+   - On Windows: set GITHUB_TOKEN=your_token_here
+   - On macOS/Linux: export GITHUB_TOKEN=your_token_here
+
+## Step 4: Automatic Updates
+Once you've set up the repository, the auto_scheduler.py will automatically:
+1. Fetch new lottery results at 3:15 PM, 3:30 PM, 3:45 PM, 4:15 PM, and 4:30 PM IST
+2. Commit and push updates to GitHub (if GITHUB_TOKEN is set)

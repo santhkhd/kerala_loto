@@ -7,6 +7,7 @@ import threading
 import os
 import logging
 import sys
+import requests
 
 # Set up logging
 logging.basicConfig(
@@ -37,6 +38,16 @@ def run_lottery_scraper():
                 logging.info("History generation completed successfully")
                 if hist_result.stdout:
                     logging.info(f"History output: {hist_result.stdout}")
+                    
+                # If GitHub token is set, commit and push changes
+                github_token = os.environ.get('GITHUB_TOKEN')
+                if github_token:
+                    try:
+                        commit_and_push_changes()
+                    except Exception as e:
+                        logging.error(f"Error during git operations: {e}")
+                else:
+                    logging.info("GITHUB_TOKEN not set. Skipping automatic git push.")
             else:
                 logging.warning(f"History generation had issues: {hist_result.stderr}")
         else:
@@ -45,6 +56,33 @@ def run_lottery_scraper():
         logging.error("Lottery scraper timed out after 5 minutes")
     except Exception as e:
         logging.error(f"Exception occurred while running scraper: {e}")
+
+def commit_and_push_changes():
+    """Commit and push changes to GitHub"""
+    try:
+        logging.info("Checking for git changes...")
+        
+        # Check if there are any changes
+        result = subprocess.run(['git', 'status', '--porcelain'], capture_output=True, text=True)
+        if not result.stdout.strip():
+            logging.info("No changes to commit")
+            return
+            
+        # Add all changes
+        subprocess.run(['git', 'add', '.'], check=True)
+        
+        # Commit changes
+        commit_message = f"Update lottery results - {datetime.now(IST).strftime('%Y-%m-%d %H:%M:%S')} IST"
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True)
+        
+        # Push changes
+        subprocess.run(['git', 'push'], check=True)
+        
+        logging.info("Changes successfully pushed to GitHub")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Git operation failed: {e}")
+    except Exception as e:
+        logging.error(f"Unexpected error during git operations: {e}")
 
 def scheduled_task():
     """Task that runs at specific times during the day"""
@@ -79,6 +117,13 @@ if __name__ == "__main__":
     try:
         logging.info("Starting Kerala lottery result scheduler...")
         logging.info(f"Current time: {datetime.now(IST).strftime('%Y-%m-%d %H:%M:%S')} IST")
+        
+        # Check if GitHub token is set
+        github_token = os.environ.get('GITHUB_TOKEN')
+        if github_token:
+            logging.info("GitHub token detected. Automatic pushing enabled.")
+        else:
+            logging.warning("GITHUB_TOKEN not set. Auto-push to GitHub will not work.")
         
         # Start the scheduler
         run_scheduler()
