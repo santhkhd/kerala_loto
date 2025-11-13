@@ -81,3 +81,197 @@ Script execution completed.
 2025-11-13 14:01:06,534 - INFO - History generation completed successfully
 2025-11-13 14:01:06,534 - INFO - History output: Generated C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\history.json with 194 draws.
 
+2025-11-13 14:37:01,850 - INFO - Starting Kerala lottery result scheduler...
+2025-11-13 14:37:01,851 - INFO - Current time: 2025-11-13 14:37:01 IST
+2025-11-13 14:37:01,851 - WARNING - GITHUB_TOKEN not set. Auto-push to GitHub will not work.
+2025-11-13 14:37:01,852 - INFO - Scheduler started - will run at specific times daily:
+2025-11-13 14:37:01,852 - INFO - Times: 3:15 PM, 3:30 PM, 3:45 PM, 4:15 PM, 4:30 PM IST
+2025-11-13 14:37:01,852 - INFO - Press Ctrl+C to stop the scheduler
+2025-11-13 14:37:01,852 - INFO - Scheduler check at 14:37:01 IST
+2025-11-13 14:37:01,852 - INFO - Running lottery scraper at 2025-11-13 14:37:01 IST
+2025-11-13 14:37:21,433 - INFO - Lottery scraper completed successfully
+2025-11-13 14:37:21,433 - INFO - Output: 
+==================================================
+Checking for new results at 2025-11-13 14:37:02 IST
+==================================================
+Homepage links: abs=23 candidates=23
+Candidate: https://www.facebook.com/people/Kerala-Lottery-Results/100094590109908/
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-27
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-28
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-29
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-DL-25
+Skip https://www.kllotteryresult.com/kerala-lottery-result-BT-29: future date 2025-11-17
+Skip https://www.kllotteryresult.com/kerala-lottery-result-DL-27: future date 2025-11-19
+Skip https://www.kllotteryresult.com/kerala-lottery-result-KN-598: future date 2025-11-20
+Skip https://www.kllotteryresult.com/kerala-lottery-result-KR-731: future date 2025-11-15
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SK-27: future date 2025-11-14
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SK-28: future date 2025-11-21
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SM-29: future date 2025-11-16
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SS-494: future date 2025-11-18
+Processing latest result: https://www.kllotteryresult.com/kerala-lottery-result-KN-597
+TITLE TEXT: 'Live  Kerala Lottery Result Today 13.11.2025 Karunya Plus (KN-597) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\KN-597-2025-11-13.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+New JSON file created successfully.
+Script execution completed.
+
+2025-11-13 14:37:21,621 - INFO - History generation completed successfully
+2025-11-13 14:37:21,621 - INFO - History output: Generated C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\history.json with 194 draws.
+
+2025-11-13 14:37:21,621 - INFO - GITHUB_TOKEN not set. Skipping automatic git push.
+2025-11-13 15:15:21,748 - INFO - Scheduler check at 15:15:21 IST
+2025-11-13 15:15:21,780 - INFO - Running lottery scraper at 2025-11-13 15:15:21 IST
+2025-11-13 15:15:42,201 - INFO - Lottery scraper completed successfully
+2025-11-13 15:15:42,201 - INFO - Output: 
+==================================================
+Checking for new results at 2025-11-13 15:15:22 IST
+==================================================
+Homepage links: abs=23 candidates=23
+Candidate: https://www.facebook.com/people/Kerala-Lottery-Results/100094590109908/
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-27
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-28
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-29
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-DL-25
+Skip https://www.kllotteryresult.com/kerala-lottery-result-BT-29: future date 2025-11-17
+Skip https://www.kllotteryresult.com/kerala-lottery-result-DL-27: future date 2025-11-19
+Skip https://www.kllotteryresult.com/kerala-lottery-result-KN-598: future date 2025-11-20
+Skip https://www.kllotteryresult.com/kerala-lottery-result-KR-731: future date 2025-11-15
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SK-27: future date 2025-11-14
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SK-28: future date 2025-11-21
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SM-29: future date 2025-11-16
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SS-494: future date 2025-11-18
+Processing 10 latest results:
+Processing result 1: https://www.kllotteryresult.com/kerala-lottery-result-KN-597
+TITLE TEXT: 'Live  Kerala Lottery Result Today 13.11.2025 Karunya Plus (KN-597) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\KN-597-2025-11-13.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 1 processed successfully.
+Processing result 2: https://www.kllotteryresult.com/kerala-lottery-result-today
+TITLE TEXT: 'Live | Kerala Lottery Result Today  13.11.2025 for Karunya Plus KN-597 - Full Winners List'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\PM-XX-2025-11-13.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 2 processed successfully.
+Processing result 3: https://www.kllotteryresult.com/kerala-lottery-result-today-predictions
+TITLE TEXT: 'Kerala Lottery Today Suvarna Keralam(SK-27) Prediction  and Guessing Numbers | kerala lottery Last 4 number guessing'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\XX-SK-27-2025-11-13.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 3 processed successfully.
+Processing result 4: https://www.kllotteryresult.com/kerala-lottery-result-DL-26
+TITLE TEXT: 'Kerala Lottery Result Today 12.11.2025 Dhanalakshmi (DL-26) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\DL-26-2025-11-12.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 4 processed successfully.
+Processing result 5: https://www.kllotteryresult.com/kerala-lottery-result-SS-493
+TITLE TEXT: 'Kerala Lottery Result Today 11.11.2025 Sthree Sakthi (SS-493) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\SS-493-2025-11-11.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 5 processed successfully.
+Processing result 6: https://www.kllotteryresult.com/kerala-lottery-result-BT-28
+TITLE TEXT: 'Kerala Lottery Result Today 10.11.2025 Bhagyathara (BT-28) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\BT-28-2025-11-10.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 6 processed successfully.
+Processing result 7: https://www.kllotteryresult.com/kerala-lottery-result-SM-28
+TITLE TEXT: 'Kerala Lottery Result Today 09.11.2025 Samrudhi (SM-28) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\SM-28-2025-11-09.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 7 processed successfully.
+Processing result 8: https://www.kllotteryresult.com/kerala-lottery-result-KR-730
+TITLE TEXT: 'Kerala Lottery Result Today 08.11.2025 Karunya (KR-730) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\KR-730-2025-11-08.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 8 processed successfully.
+Processing result 9: https://www.kllotteryresult.com/kerala-lottery-result-SK-26
+TITLE TEXT: 'Kerala Lottery Result Today 07.11.2025 Suvarna Keralam (SK-26) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\SK-26-2025-11-07.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 9 processed successfully.
+Processing result 10: https://www.kllotteryresult.com/kerala-lottery-result-KN-596
+TITLE TEXT: 'Kerala Lottery Result Today 06.11.2025 Karunya Plus (KN-596) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\KN-596-2025-11-06.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 10 processed successfully.
+Script execution completed.
+
+2025-11-13 15:15:42,430 - INFO - History generation completed successfully
+2025-11-13 15:15:42,430 - INFO - History output: Generated C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\history.json with 196 draws.
+
+2025-11-13 15:15:42,430 - INFO - GITHUB_TOKEN not set. Skipping automatic git push.
+2025-11-13 15:30:42,467 - INFO - Scheduler check at 15:30:42 IST
+2025-11-13 15:30:42,481 - INFO - Running lottery scraper at 2025-11-13 15:30:42 IST
+2025-11-13 15:31:08,652 - INFO - Lottery scraper completed successfully
+2025-11-13 15:31:08,660 - INFO - Output: 
+==================================================
+Checking for new results at 2025-11-13 15:30:43 IST
+==================================================
+Homepage links: abs=23 candidates=23
+Candidate: https://www.facebook.com/people/Kerala-Lottery-Results/100094590109908/
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-27
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-28
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-29
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-DL-25
+Skip https://www.kllotteryresult.com/kerala-lottery-result-BT-29: future date 2025-11-17
+Skip https://www.kllotteryresult.com/kerala-lottery-result-DL-27: future date 2025-11-19
+Skip https://www.kllotteryresult.com/kerala-lottery-result-KN-598: future date 2025-11-20
+Skip https://www.kllotteryresult.com/kerala-lottery-result-KR-731: future date 2025-11-15
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SK-27: future date 2025-11-14
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SK-28: future date 2025-11-21
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SM-29: future date 2025-11-16
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SS-494: future date 2025-11-18
+Processing 10 latest results:
+Processing result 1: https://www.kllotteryresult.com/kerala-lottery-result-KN-597
+TITLE TEXT: 'Live  Kerala Lottery Result Today 13.11.2025 Karunya Plus (KN-597) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\KN-597-2025-11-13.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 1 processed successfully.
+Processing result 2: https://www.kllotteryresult.com/kerala-lottery-result-today
+TITLE TEXT: 'Live | Kerala Lottery Result Today  13.11.2025 for Karunya Plus KN-597 - Full Winners List'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\PM-XX-2025-11-13.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 2 processed successfully.
+Processing result 3: https://www.kllotteryresult.com/kerala-lottery-result-today-predictions
+TITLE TEXT: 'Kerala Lottery Today Suvarna Keralam(SK-27) Prediction  and Guessing Numbers | kerala lottery Last 4 number guessing'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\XX-SK-27-2025-11-13.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 3 processed successfully.
+Processing result 4: https://www.kllotteryresult.com/kerala-lottery-result-DL-26
+TITLE TEXT: 'Kerala Lottery Result Today 12.11.2025 Dhanalakshmi (DL-26) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\DL-26-2025-11-12.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 4 processed successfully.
+Processing result 5: https://www.kllotteryresult.com/kerala-lottery-result-SS-493
+TITLE TEXT: 'Kerala Lottery Result Today 11.11.2025 Sthree Sakthi (SS-493) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\SS-493-2025-11-11.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 5 processed successfully.
+Processing result 6: https://www.kllotteryresult.com/kerala-lottery-result-BT-28
+TITLE TEXT: 'Kerala Lottery Result Today 10.11.2025 Bhagyathara (BT-28) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\BT-28-2025-11-10.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 6 processed successfully.
+Processing result 7: https://www.kllotteryresult.com/kerala-lottery-result-SM-28
+TITLE TEXT: 'Kerala Lottery Result Today 09.11.2025 Samrudhi (SM-28) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\SM-28-2025-11-09.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 7 processed successfully.
+Processing result 8: https://www.kllotteryresult.com/kerala-lottery-result-KR-730
+TITLE TEXT: 'Kerala Lottery Result Today 08.11.2025 Karunya (KR-730) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\KR-730-2025-11-08.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 8 processed successfully.
+Processing result 9: https://www.kllotteryresult.com/kerala-lottery-result-SK-26
+TITLE TEXT: 'Kerala Lottery Result Today 07.11.2025 Suvarna Keralam (SK-26) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\SK-26-2025-11-07.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 9 processed successfully.
+Processing result 10: https://www.kllotteryresult.com/kerala-lottery-result-KN-596
+TITLE TEXT: 'Kerala Lottery Result Today 06.11.2025 Karunya Plus (KN-596) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\KN-596-2025-11-06.json
+Latest result saved to: C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\note\latest.json
+Result 10 processed successfully.
+Script execution completed.
+
+2025-11-13 15:31:09,244 - INFO - History generation completed successfully
+2025-11-13 15:31:09,251 - INFO - History output: Generated C:\Users\santh\Downloads\lotteryyy\kerala_loto-main\history.json with 196 draws.
+
+2025-11-13 15:31:09,254 - INFO - GITHUB_TOKEN not set. Skipping automatic git push.

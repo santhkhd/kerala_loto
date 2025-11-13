@@ -1,6 +1,6 @@
 {
   "lottery_name": "SUVARNA KERALAM",
-  "draw_number": "SK-26",
+  "draw_number": "26",
   "draw_date": "2025-11-07",
   "venue": "",
   "prizes": {
@@ -112,7 +112,7 @@
     },
     "7th_prize": {
       "amount": 500,
-      "label": "7th_prize",
+      "label": "7th Prize",
       "winners": [
         "0157",
         "0282",
