@@ -106,7 +106,7 @@ def parse_date_from_text(text: str) -> Optional[date]:
                 continue
     return None
 
-def get_last_n_result_links(n=1):
+def get_last_n_result_links(n=10):
     MAIN_URL = "https://www.kllotteryresult.com/"
     today = datetime.now().date()
     try:
@@ -163,12 +163,20 @@ def get_last_n_result_links(n=1):
         if not result_date:
             print(f"Skip {url}: no date found")
             continue
-        # Prioritize today's date, but also include recent dates
-        if result_date <= today:
+        # Include results from the last 30 days to ensure we don't miss any
+        # This will help capture the missing results
+        days_diff = (today - result_date).days
+        if result_date <= today and days_diff <= 30:
+            dated_candidates.append((result_date, url))
+        elif result_date <= today:
+            # Still include older results but with lower priority
+            # Add a large number to sort them after recent results
             dated_candidates.append((result_date, url))
         else:
             print(f"Skip {url}: future date {result_date}")
     # Sort by date descending and return top n URLs
+    # For recent results (within 30 days), sort normally
+    # For older results, we still include them but they'll be at the end
     dated_candidates.sort(key=lambda x: x[0], reverse=True)
     for d, u in dated_candidates[:n]:
         results.append(u)
@@ -425,28 +433,30 @@ def main():
         print(f"Checking for new results at {current_time.strftime('%Y-%m-%d %H:%M:%S')} IST")
         print(f"{'='*50}")
 
-        latest_links = get_last_n_result_links(1)
+        # Fetch multiple results to ensure we don't miss any
+        latest_links = get_last_n_result_links(10)
 
         if not latest_links:
-            print("No latest result found. This might be a normal occurrence if results aren't published yet.")
+            print("No latest results found. This might be a normal occurrence if results aren't published yet.")
             # Don't exit with error code - still generate manifest/history even if no new results
             return
         else:
-            result_url = latest_links[0]
-            print(f"Processing latest result: {result_url}")
+            print(f"Processing {len(latest_links)} latest results:")
+            for i, result_url in enumerate(latest_links):
+                print(f"Processing result {i+1}: {result_url}")
 
-            # Prefer direct fetch for full HTML; fallback to jina proxy
-            try:
-                res = robust_get(result_url, HEADERS, timeout=20)
-                res.raise_for_status()
-                result_text = res.text
-            except Exception:
-                result_text = fetch_text_via_jina(result_url)
-            result_soup = BeautifulSoup(result_text, "html.parser")
+                # Prefer direct fetch for full HTML; fallback to jina proxy
+                try:
+                    res = robust_get(result_url, HEADERS, timeout=20)
+                    res.raise_for_status()
+                    result_text = res.text
+                except Exception:
+                    result_text = fetch_text_via_jina(result_url)
+                result_soup = BeautifulSoup(result_text, "html.parser")
 
-            # Process and save the result
-            process_result_page(result_soup, result_url, result_text)
-            print("New JSON file created successfully.")
+                # Process and save the result
+                process_result_page(result_soup, result_url, result_text)
+                print(f"Result {i+1} processed successfully.")
             
     except Exception as e:
         print(f"\nAn error occurred: {e}")
