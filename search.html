@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -362,7 +363,7 @@
         let historyData = [];
         fetch('https://raw.githubusercontent.com/santhkhd/kerala_loto/main/history.json')
           .then(res => res.json())
-          .then(data => { historyData = data.draws || data; })
+          .then(data => { historyData = data; })
           .catch(() => { historyData = []; });
         // Enable search button only if both fields are filled
         const numberInput = document.getElementById('numberSearchInput');
@@ -415,12 +416,7 @@
         const winPrizes = [];
         (result.prizes || []).forEach(prize => {
             (prize.winners || []).forEach(num => {
-                // More flexible number matching
-                const numClean = num.replace(/\s+/g, '').toLowerCase();
-                // Check for exact match or partial match
-                if (numClean === searchLower || 
-                    numClean.includes(searchLower) || 
-                    searchLower.includes(numClean)) {
+                if (num.replace(/\s+/g, '').toLowerCase() === searchLower) {
                     winPrizes.push({
                         prize: prize.label,
                         amount: prize.amount,
@@ -429,15 +425,15 @@
                 }
             });
         });
-        let resultFile = result.filename || result.id;
-        if (!resultFile && result.lottery && result.drawNumber && result.date) {
+        let resultFile = result.filename;
+        if (!resultFile && result.lottery && result.draw && result.date) {
             let dd, mm, yyyy;
             if (result.date.includes('/')) {
                 [dd, mm, yyyy] = result.date.split('/');
             } else if (result.date.includes('-')) {
                 [yyyy, mm, dd] = result.date.split('-');
             }
-            const drawStr = String(result.drawNumber).padStart(2, '0');
+            const drawStr = String(result.draw).padStart(2, '0');
             if (result.lottery && drawStr && yyyy && mm && dd) {
                 resultFile = `${result.lottery}-${drawStr}-${yyyy}-${mm}-${dd}.json`;
             } else {
