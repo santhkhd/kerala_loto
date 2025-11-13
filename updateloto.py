@@ -8,14 +8,24 @@ from datetime import datetime, time as dt_time, date
 from typing import Optional, List, Tuple, Dict, Any
 import pytz
 import time
+import random
 from urllib.parse import quote
 
 # Define the Indian timezone
 IST = pytz.timezone('Asia/Kolkata')
 
-# Add headers to mimic a web browser
+# Enhanced headers to look more like a real browser
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'none',
+    'Cache-Control': 'max-age=0',
     'Referer': 'https://www.kllotteryresult.com/'
 }
 
@@ -37,24 +47,40 @@ def robust_get(url: str, headers: dict, timeout: int = 20, max_retries: int = 3)
     last_exc = None
     for attempt in range(1, max_retries + 1):
         try:
-            res = requests.get(url, headers=headers, timeout=timeout)
+            # Add randomization to headers to avoid detection
+            request_headers = headers.copy()
+            request_headers['User-Agent'] = random.choice([
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            ])
+            
+            res = requests.get(url, headers=request_headers, timeout=timeout)
+            print(f"DEBUG: Request to {url} returned status {res.status_code}")
+            
             if res.status_code in (403, 429) or res.status_code >= 500:
                 raise requests.exceptions.RequestException(f"HTTP {res.status_code}")
             return res
         except requests.exceptions.RequestException as exc:
             last_exc = exc
+            print(f"DEBUG: Attempt {attempt} failed with {exc}")
             # Try proxy fallback if available
             if SCRAPER_API_KEY:
                 try:
                     proxy_url = build_proxy_url(url)
+                    print(f"DEBUG: Trying proxy URL: {proxy_url}")
                     res = requests.get(proxy_url, headers=headers, timeout=timeout)
                     if res.status_code in (403, 429) or res.status_code >= 500:
                         raise requests.exceptions.RequestException(f"Proxy HTTP {res.status_code}")
                     return res
                 except requests.exceptions.RequestException as exc2:
                     last_exc = exc2
+                    print(f"DEBUG: Proxy attempt failed with {exc2}")
             # Backoff between attempts
-            time.sleep(min(2 * attempt, 6))
+            if attempt < max_retries:
+                wait_time = min(2 ** attempt, 10)  # Exponential backoff up to 10 seconds
+                print(f"DEBUG: Waiting {wait_time} seconds before retry")
+                time.sleep(wait_time)
     # Exhausted retries
     if last_exc:
         raise last_exc
@@ -70,11 +96,30 @@ def fetch_text_via_jina(url: str) -> str:
 def fetch_page_text(url: str) -> str:
     """Fetch page HTML using direct request first, then fallback to Jina proxy."""
     try:
+        print(f"DEBUG: Trying direct fetch for {url}")
         res = robust_get(url, HEADERS, timeout=25)
         res.raise_for_status()
-        return res.text
-    except Exception:
-        return fetch_text_via_jina(url)
+        content = res.text
+        print(f"DEBUG: Direct fetch successful, status: {res.status_code}")
+        print(f"DEBUG: Content length: {len(content)}")
+        print(f"DEBUG: Content preview: {content[:200]}")
+        
+        # Check if content looks like HTML
+        if "<html" not in content.lower() and "<!doctype" not in content.lower():
+            print("DEBUG: Content doesn't look like HTML, might be blocked")
+        
+        return content
+    except Exception as e:
+        print(f"DEBUG: Direct fetch failed: {e}")
+        print("DEBUG: Trying Jina proxy fallback")
+        try:
+            result = fetch_text_via_jina(url)
+            print(f"DEBUG: Jina proxy result length: {len(result)}")
+            print(f"DEBUG: Jina content preview: {result[:200]}")
+            return result
+        except Exception as jina_e:
+            print(f"DEBUG: Jina proxy also failed: {jina_e}")
+            raise
 
 def parse_date_from_text(text: str) -> Optional[date]:
     """Extract a date from text supporting multiple formats."""
@@ -109,11 +154,13 @@ def parse_date_from_text(text: str) -> Optional[date]:
         print(f"Error in parse_date_from_text: {e}")
     return None
 
-def get_last_n_result_links(n=10):
+def get_last_n_result_links(n=15):
     MAIN_URL = "https://www.kllotteryresult.com/"
     today = datetime.now().date()
     try:
         page_text = fetch_page_text(MAIN_URL)
+        # Add delay to avoid rate limiting
+        time.sleep(1)
     except Exception as e:
         print(f"Error fetching homepage: {e}")
         return []
@@ -129,7 +176,8 @@ def get_last_n_result_links(n=10):
                     candidates_set.add(href)
                 else:
                     candidates_set.add(f"https://www.kllotteryresult.com{href}")
-    except Exception:
+    except Exception as e:
+        print(f"Error parsing homepage HTML: {e}")
         pass
     # Regex fallback
     if not candidates_set:
@@ -158,6 +206,8 @@ def get_last_n_result_links(n=10):
         # fetch the result page text (direct first, then fallback) and validate date <= today
         try:
             page_text2 = fetch_page_text(url)
+            # Add delay between requests to avoid rate limiting
+            time.sleep(1)
         except Exception as e:
             print(f"Skip {url}: fetch error {e}")
             continue
@@ -211,12 +261,18 @@ standard_labels = {
 def process_result_page(result_soup, result_url, result_page_text: str):
     title_text = ""
     print(f"DEBUG: Processing URL: {result_url}")
+    print(f"DEBUG: Page text length: {len(result_page_text)}")
+    print(f"DEBUG: Page text preview: {result_page_text[:200]}")
     
     # Try to find h1 tag first
     title_tag = result_soup.find("h1")
     if title_tag and title_tag.text.strip():
         title_text = title_tag.text.strip()
         print(f"DEBUG: Found h1 title: {title_text}")
+    else:
+        print(f"DEBUG: No h1 tag found or empty h1 text")
+        if title_tag:
+            print(f"DEBUG: h1 tag text: '{title_tag.text}'")
     
     # If h1 is not found or is generic, try title tag
     if not title_text or title_text.strip().lower() in ["lottery results", "kerala lottery results", "kerala lottery"]:
@@ -224,6 +280,10 @@ def process_result_page(result_soup, result_url, result_page_text: str):
         if title_tag and title_tag.text.strip():
             title_text = title_tag.text.strip()
             print(f"DEBUG: Found title tag: {title_text}")
+        else:
+            print(f"DEBUG: No title tag found or empty title text")
+            if title_tag:
+                print(f"DEBUG: title tag text: '{title_tag.text}'")
     
     # If still not found, try h2 or h3 tags
     if not title_text or title_text.strip().lower() in ["lottery results", "kerala lottery results", "kerala lottery"]:
@@ -233,6 +293,8 @@ def process_result_page(result_soup, result_url, result_page_text: str):
                 title_text = t.text.strip()
                 print(f"DEBUG: Found {tag} tag: {title_text}")
                 break
+        else:
+            print("DEBUG: No h2 or h3 tags found with text")
     
     # Final fallback
     if not title_text:
@@ -468,7 +530,7 @@ def main():
         print(f"{'='*50}")
 
         # Fetch multiple results to ensure we don't miss any
-        latest_links = get_last_n_result_links(10)
+        latest_links = get_last_n_result_links(15)  # Increased from 10 to 15
 
         if not latest_links:
             print("No latest results found. This might be a normal occurrence if results aren't published yet.")
@@ -478,6 +540,10 @@ def main():
             print(f"Processing {len(latest_links)} latest results:")
             for i, result_url in enumerate(latest_links):
                 print(f"Processing result {i+1}: {result_url}")
+
+                # Add delay between requests
+                if i > 0:  # Don't delay before the first request
+                    time.sleep(2)  # Wait 2 seconds between requests
 
                 # Prefer direct fetch for full HTML; fallback to jina proxy
                 try:
