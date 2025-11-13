@@ -207,19 +207,26 @@ standard_labels = {
 
 def process_result_page(result_soup, result_url, result_page_text: str):
     title_text = ""
+    # Try to find h1 tag first
     title_tag = result_soup.find("h1")
-    if title_tag and title_tag.text.strip().lower() not in ["lottery results", "kerala lottery results"]:
+    if title_tag and title_tag.text.strip():
         title_text = title_tag.text.strip()
-    if not title_text:
+    
+    # If h1 is not found or is generic, try title tag
+    if not title_text or title_text.strip().lower() in ["lottery results", "kerala lottery results", "kerala lottery"]:
         title_tag = result_soup.find("title")
         if title_tag and title_tag.text.strip():
             title_text = title_tag.text.strip()
-    if not title_text:
+    
+    # If still not found, try h2 or h3 tags
+    if not title_text or title_text.strip().lower() in ["lottery results", "kerala lottery results", "kerala lottery"]:
         for tag in ["h2", "h3"]:
             t = result_soup.find(tag)
             if t and t.text.strip():
                 title_text = t.text.strip()
                 break
+    
+    # Final fallback
     if not title_text:
         title_text = "Unknown Lottery"
     print(f"TITLE TEXT: '{title_text}'")
@@ -241,20 +248,32 @@ def process_result_page(result_soup, result_url, result_page_text: str):
     if draw_date == "Unknown-Date" and is_within_optimal_time_window():
         draw_date = datetime.now(IST).strftime("%Y-%m-%d")
 
-    draw_number_match = re.search(r"\(([^)]+)\)", title_text)
-    draw_number = draw_number_match.group(1) if draw_number_match else "XX"
-
-    lottery_name_match = re.search(r"([A-Za-z\s]+)\s*\(", title_text)
-    lottery_name = lottery_name_match.group(1).strip().upper() if lottery_name_match else "Unknown"
+    # Extract draw number and lottery code from title text like "Kerala Lottery Result Today 13.11.2025 Karunya Plus (KN-597)"
+    # Pattern: (XXX-XXX) or (XX-XXX) at the end of the title
+    lottery_info_match = re.search(r"\((([A-Z]{2,3})-(\d+))\)$", title_text)
+    if lottery_info_match:
+        lottery_code = lottery_info_match.group(2)
+        draw_number = lottery_info_match.group(3)
+    else:
+        draw_number = "XX"
+        lottery_code = "XX"
     
-    lottery_code_match = re.search(r'\(([A-Z]{2,3})\)', title_text)
-    lottery_code = lottery_code_match.group(1) if lottery_code_match else 'XX'
+    # Extract lottery name (text before the parentheses)
+    # The pattern is something like "Kerala Lottery Result Today 13.11.2025 Karunya Plus (KN-597)"
+    lottery_name_match = re.search(r"([A-Za-z\s]+)\s*\([A-Z]{2,3}-\d+\)", title_text)
+    if lottery_name_match:
+        # Extract the lottery name part (e.g., "Karunya Plus")
+        full_match = lottery_name_match.group(1).strip()
+        # Simple approach: just use the full match since it should already be the lottery name
+        lottery_name = full_match
+    else:
+        lottery_name = "Unknown"
     if lottery_code == 'XX' or draw_number == 'XX':
         # Fallback: derive from URL slug like .../kerala-lottery-result-BT-19
-        url_slug_match = re.search(r'/([a-z0-9-]*kerala-lottery-result[-/])*([A-Z]{2,3})-(\d+)', result_url)
+        url_slug_match = re.search(r'/kerala-lottery-result-([A-Z]{2,3})-(\d+)', result_url)
         if url_slug_match:
-            lottery_code = url_slug_match.group(2)
-            draw_number = url_slug_match.group(3)
+            lottery_code = url_slug_match.group(1)
+            draw_number = url_slug_match.group(2)
     # Infer lottery code from first winner token if still unknown
     if lottery_code == 'XX':
         # Try scanning for codes like 'DD 781756' in the page text
