@@ -78,32 +78,35 @@ def fetch_page_text(url: str) -> str:
 
 def parse_date_from_text(text: str) -> Optional[date]:
     """Extract a date from text supporting multiple formats."""
-    # Common numeric formats: 16-09-2025, 16/09/2025, 16.09.2025
-    m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", text)
-    if m:
-        try:
-            return datetime.strptime(f"{m.group(3)}-{m.group(2)}-{m.group(1)}", "%Y-%m-%d").date()
-        except ValueError:
-            pass
-    # Textual month formats: 16 September 2025, 16 Sep 2025, Sep 16, 2025
-    patterns = [
-        "%d %B %Y", "%d %b %Y", "%b %d, %Y", "%B %d, %Y",
-        "%d-%b-%Y", "%d-%B-%Y"
-    ]
-    # Try sliding windows around words that look like dates
-    candidates = []
-    # Gather tokens that include month names
-    month_regex = r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)"
-    for m2 in re.finditer(rf"\b\d{{1,2}}\s+{month_regex}\s+\d{{4}}\b", text, flags=re.I):
-        candidates.append(m2.group(0))
-    for m3 in re.finditer(rf"\b{month_regex}\s+\d{{1,2}},\s*\d{{4}}\b", text, flags=re.I):
-        candidates.append(m3.group(0))
-    for cand in candidates:
-        for fmt in patterns:
+    try:
+        # Common numeric formats: 16-09-2025, 16/09/2025, 16.09.2025
+        m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", text)
+        if m:
             try:
-                return datetime.strptime(cand, fmt).date()
+                return datetime.strptime(f"{m.group(3)}-{m.group(2)}-{m.group(1)}", "%Y-%m-%d").date()
             except ValueError:
-                continue
+                pass
+        # Textual month formats: 16 September 2025, 16 Sep 2025, Sep 16, 2025
+        patterns = [
+            "%d %B %Y", "%d %b %Y", "%b %d, %Y", "%B %d, %Y",
+            "%d-%b-%Y", "%d-%B-%Y"
+        ]
+        # Try sliding windows around words that look like dates
+        candidates = []
+        # Gather tokens that include month names
+        month_regex = r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)"
+        for m2 in re.finditer(rf"\b\d{{1,2}}\s+{month_regex}\s+\d{{4}}\b", text, flags=re.I):
+            candidates.append(m2.group(0))
+        for m3 in re.finditer(rf"\b{month_regex}\s+\d{{1,2}},\s*\d{{4}}\b", text, flags=re.I):
+            candidates.append(m3.group(0))
+        for cand in candidates:
+            for fmt in patterns:
+                try:
+                    return datetime.strptime(cand, fmt).date()
+                except ValueError:
+                    continue
+    except Exception as e:
+        print(f"Error in parse_date_from_text: {e}")
     return None
 
 def get_last_n_result_links(n=10):
@@ -130,7 +133,7 @@ def get_last_n_result_links(n=10):
         pass
     # Regex fallback
     if not candidates_set:
-        abs_links = re.findall(r'https?://www\\.kllotteryresult\\.com/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I)
+        abs_links = re.findall(r'https?://www\.kllotteryresult\.com/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I)
         rel_links = re.findall(r'/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I)
         for p in abs_links:
             candidates_set.add(p)
@@ -207,16 +210,20 @@ standard_labels = {
 
 def process_result_page(result_soup, result_url, result_page_text: str):
     title_text = ""
+    print(f"DEBUG: Processing URL: {result_url}")
+    
     # Try to find h1 tag first
     title_tag = result_soup.find("h1")
     if title_tag and title_tag.text.strip():
         title_text = title_tag.text.strip()
+        print(f"DEBUG: Found h1 title: {title_text}")
     
     # If h1 is not found or is generic, try title tag
     if not title_text or title_text.strip().lower() in ["lottery results", "kerala lottery results", "kerala lottery"]:
         title_tag = result_soup.find("title")
         if title_tag and title_tag.text.strip():
             title_text = title_tag.text.strip()
+            print(f"DEBUG: Found title tag: {title_text}")
     
     # If still not found, try h2 or h3 tags
     if not title_text or title_text.strip().lower() in ["lottery results", "kerala lottery results", "kerala lottery"]:
@@ -224,6 +231,7 @@ def process_result_page(result_soup, result_url, result_page_text: str):
             t = result_soup.find(tag)
             if t and t.text.strip():
                 title_text = t.text.strip()
+                print(f"DEBUG: Found {tag} tag: {title_text}")
                 break
     
     # Final fallback
@@ -250,13 +258,15 @@ def process_result_page(result_soup, result_url, result_page_text: str):
 
     # Extract draw number and lottery code from title text like "Kerala Lottery Result Today 13.11.2025 Karunya Plus (KN-597)"
     # Pattern: (XXX-XXX) or (XX-XXX) at the end of the title
-    lottery_info_match = re.search(r"\((([A-Z]{2,3})-(\d+))\)$", title_text)
+    lottery_info_match = re.search(r"\((([A-Z]{2,3})-(\d+))\)", title_text)
     if lottery_info_match:
         lottery_code = lottery_info_match.group(2)
         draw_number = lottery_info_match.group(3)
+        print(f"DEBUG: Extracted from title - Code: {lottery_code}, Draw: {draw_number}")
     else:
         draw_number = "XX"
         lottery_code = "XX"
+        print("DEBUG: Failed to extract lottery info from title")
     
     # Extract lottery name (text before the parentheses)
     # The pattern is something like "Kerala Lottery Result Today 13.11.2025 Karunya Plus (KN-597)"
@@ -266,20 +276,25 @@ def process_result_page(result_soup, result_url, result_page_text: str):
         full_match = lottery_name_match.group(1).strip()
         # Simple approach: just use the full match since it should already be the lottery name
         lottery_name = full_match
+        print(f"DEBUG: Extracted lottery name: {lottery_name}")
     else:
         lottery_name = "Unknown"
+        print("DEBUG: Failed to extract lottery name")
+        
     if lottery_code == 'XX' or draw_number == 'XX':
         # Fallback: derive from URL slug like .../kerala-lottery-result-BT-19
         url_slug_match = re.search(r'/kerala-lottery-result-([A-Z]{2,3})-(\d+)', result_url)
         if url_slug_match:
             lottery_code = url_slug_match.group(1)
             draw_number = url_slug_match.group(2)
+            print(f"DEBUG: Extracted from URL - Code: {lottery_code}, Draw: {draw_number}")
     # Infer lottery code from first winner token if still unknown
     if lottery_code == 'XX':
         # Try scanning for codes like 'DD 781756' in the page text
         mcode = re.search(r'\b([A-Z]{1,3})\s*\d{4,6}\b', result_page_text)
         if mcode:
             lottery_code = mcode.group(1)
+            print(f"DEBUG: Inferred code from page text: {lottery_code}")
 
     # Try to extract venue
     venue = ""
