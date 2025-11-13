@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -245,10 +244,7 @@
         pleaseEnter: 'Please enter a number and select a date to search',
         noResult: 'No lottery result found for the selected date.',
         notFound: num => `😔 Sorry, your number "${num}" was not found in any winning results for this date.<br>Keep trying with other numbers or check back for new results!`,
-        winner: n => `🎊 YOU ARE A WINNER! Found ${n} winning entr${n > 1 ? 'ies' : 'y'}`,
-        prize: 'Prize Amount:',
-        number: 'Number:',
-        date: 'Date:'
+        winner: n => `🎊 YOU ARE A WINNER! Found ${n} winning entr${n > 1 ? 'ies' : 'y'}`
       },
       ml: {
         header: 'ലോട്ററി നമ്പർ തിരയുക',
@@ -263,10 +259,7 @@
         pleaseEnter: 'നമ്പറും തീയതിയും നൽകുക',
         noResult: 'തിരഞ്ഞെടുത്ത തീയതിയിൽ ഫലം ലഭ്യമല്ല.',
         notFound: num => `😔 നിങ്ങളുടെ നമ്പർ "${num}" ഈ തീയതിയിൽ വിജയിച്ചിട്ടില്ല.<br>മറ്റു നമ്പറുകൾ പരീക്ഷിക്കുക അല്ലെങ്കിൽ പുതിയ ഫലങ്ങൾക്കായി വീണ്ടും പരിശോധിക്കുക!`,
-        winner: n => `🎊 നിങ്ങൾ വിജയിച്ചിരിക്കുന്നു! ${n} വിജയിച്ച എൻട്ര${n > 1 ? 'ികൾ' : ''}`,
-        prize: 'പ്രൈസ് തുക:',
-        number: 'നമ്പർ:',
-        date: 'തീയതി:'
+        winner: n => `🎊 നിങ്ങൾ വിജയിച്ചിരിക്കുന്നു! ${n} വിജയിച്ച എൻട്ര${n > 1 ? 'ികൾ' : ''}`
       },
       ta: {
         header: 'லாட்டரி எண் தேடு',
@@ -281,10 +274,7 @@
         pleaseEnter: 'எண் மற்றும் தேதியை உள்ளிடவும்',
         noResult: 'தேர்ந்தெடுத்த தேதிக்கு முடிவு இல்லை.',
         notFound: num => `😔 உங்கள் எண் "${num}" இந்த தேதியில் வெற்றிபெறவில்லை.<br>வேறு எண்களை முயற்சிக்கவும் அல்லது புதிய முடிவுகளுக்காக மீண்டும் பார்க்கவும்!`,
-        winner: n => `🎊 நீங்கள் வெற்றிபெற்றுள்ளீர்கள்! ${n} வெற்றி உள்ளீ${n > 1 ? 'கள்' : ''}`,
-        prize: 'வெற்றி தொகை:',
-        number: 'எண்:',
-        date: 'தேதி:'
+        winner: n => `🎊 நீங்கள் வெற்றிபெற்றுள்ளீர்கள்! ${n} வெற்றி உள்ளீ${n > 1 ? 'கள்' : ''}`
       }
     };
     let currentLang = localStorage.getItem('lang') || 'en';
@@ -397,11 +387,13 @@
             resultsContainer.innerHTML = `<div class="bg-red-100 text-red-700 rounded-xl p-6 text-center font-bold result-card">${ui.pleaseEnter}</div>`;
                 return;
             }
+            // Handle date format - history.json uses YYYY-MM-DD format
             let formattedDate = searchDate;
             if (searchDate.includes('-')) {
                 const [yyyy, mm, dd] = searchDate.split('-');
-                formattedDate = `${dd}/${mm}/${yyyy}`;
+                formattedDate = `${yyyy}-${mm}-${dd}`;  // Keep as YYYY-MM-DD to match history.json
             }
+            // Search for the result by date
             const result = historyData.find(r => (r.date === formattedDate || r.date === searchDate));
             if (!result) {
             resultsContainer.innerHTML = `<div class="not-found-card text-white p-6 text-center font-bold result-card">
@@ -412,36 +404,64 @@
             </div>`;
                 return;
             }
+            // Normalize the search number for comparison (remove spaces and convert to lowercase)
             const searchLower = searchNumber.replace(/\s+/g, '').toLowerCase();
-        const winPrizes = [];
-        (result.prizes || []).forEach(prize => {
-            (prize.winners || []).forEach(num => {
-                if (num.replace(/\s+/g, '').toLowerCase() === searchLower) {
-                    winPrizes.push({
-                        prize: prize.label,
-                        amount: prize.amount,
-                        number: num
-                    });
-                }
+            const winPrizes = [];
+            // Search through all prizes for the matching number
+            (result.prizes || []).forEach(prize => {
+                (prize.winners || []).forEach(num => {
+                    // Normalize the winner number for comparison (remove spaces and convert to lowercase)
+                    const numClean = num.replace(/\s+/g, '').toLowerCase();
+                    // Check for matches with multiple flexible matching strategies:
+                    // 1. Exact match
+                    // 2. Search term is contained in winner number
+                    // 3. Winner number is contained in search term
+                    // 4. Match last 6 digits (common lottery number format)
+                    let isMatch = false;
+                    
+                    // Exact match or partial matches
+                    if (numClean === searchLower || 
+                        numClean.includes(searchLower) || 
+                        searchLower.includes(numClean)) {
+                        isMatch = true;
+                    }
+                    // Special case for lottery numbers - match last 6 digits
+                    else if (searchLower.length >= 6 && numClean.length >= 6) {
+                        const searchLast6 = searchLower.slice(-6);
+                        const numLast6 = numClean.slice(-6);
+                        if (searchLast6 === numLast6) {
+                            isMatch = true;
+                        }
+                    }
+                    
+                    if (isMatch) {
+                        winPrizes.push({
+                            prize: prize.label,
+                            amount: prize.amount,
+                            number: num
+                        });
+                    }
+                });
             });
-        });
-        let resultFile = result.filename;
-        if (!resultFile && result.lottery && result.draw && result.date) {
-            let dd, mm, yyyy;
-            if (result.date.includes('/')) {
-                [dd, mm, yyyy] = result.date.split('/');
-            } else if (result.date.includes('-')) {
-                [yyyy, mm, dd] = result.date.split('-');
+            // Get the result file for linking to full results
+            let resultFile = result.filename;
+            if (!resultFile && result.lottery && result.draw && result.date) {
+                let dd, mm, yyyy;
+                if (result.date.includes('/')) {
+                    [dd, mm, yyyy] = result.date.split('/');
+                } else if (result.date.includes('-')) {
+                    [yyyy, mm, dd] = result.date.split('-');
+                }
+                const drawStr = String(result.draw).padStart(2, '0');
+                if (result.lottery && drawStr && yyyy && mm && dd) {
+                    resultFile = `${result.lottery}-${drawStr}-${yyyy}-${mm}-${dd}.json`;
+                } else {
+                    resultFile = '';
+                }
             }
-            const drawStr = String(result.draw).padStart(2, '0');
-            if (result.lottery && drawStr && yyyy && mm && dd) {
-                resultFile = `${result.lottery}-${drawStr}-${yyyy}-${mm}-${dd}.json`;
-            } else {
-                resultFile = '';
-            }
-        }
+            // Generate the results HTML
             let resultHtml = '';
-        if (winPrizes.length > 0) {
+            if (winPrizes.length > 0) {
                 resultHtml = `
                 <div class="winner-card text-white p-6 text-center font-bold mb-6">
                     <div class="text-2xl mb-2">${ui.winner(winPrizes.length)}</div>
@@ -475,16 +495,6 @@
                 `;
             }
             resultsContainer.innerHTML = resultHtml;
-        }
-        // Helper to get result page filename from date (expects DD/MM/YYYY)
-        function getResultPageFilename(dateStr) {
-            // Try to find a file in note/ that matches the date
-            // e.g. DL-08-2025-07-03 (1).html or similar
-            // We'll use a fallback: YYYY-MM-DD.html
-            if (!dateStr) return '';
-            const [dd, mm, yyyy] = dateStr.split('/');
-            // Try DL-??-YYYY-MM-DD.html
-            return `${yyyy}-${mm}-${dd}.html`;
         }
         // Update: search on Enter key in either field
         numberInput.addEventListener('keypress', function(e) {
