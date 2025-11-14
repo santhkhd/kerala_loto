@@ -4,43 +4,49 @@ import re
 from datetime import datetime
 from typing import Dict, Any, Optional
 
-def load_existing_manifest() -> Dict[str, Any]:
+def load_existing_manifest():
     """Load existing manifest or create empty one."""
     manifest_path = "result_manifest.json"
     if os.path.exists(manifest_path):
         try:
             with open(manifest_path, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
+                # The manifest is a list, not a dict
+                return data
         except Exception as e:
             print(f"Error loading manifest: {e}")
-            return {"results": []}
-    return {"results": []}
+            return []
+    return []
 
-def load_existing_history() -> Dict[str, Any]:
+def load_existing_history():
     """Load existing history or create empty one."""
     history_path = "history.json"
     if os.path.exists(history_path):
         try:
             with open(history_path, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
+                # The history is a list, not a dict with "draws" key
+                return data
         except Exception as e:
             print(f"Error loading history: {e}")
-            return {"draws": []}
-    return {"draws": []}
+            return []
+    return []
 
-def save_manifest(manifest: Dict[str, Any]):
+def save_manifest(manifest):
     """Save manifest to file."""
     try:
         with open("result_manifest.json", 'w', encoding='utf-8') as f:
+            # Save as a list directly, not as a dict with "results" key
             json.dump(manifest, f, indent=2, ensure_ascii=False)
         print("Manifest written successfully")
     except Exception as e:
         print(f"Error saving manifest: {e}")
 
-def save_history(history: Dict[str, Any]):
+def save_history(history):
     """Save history to file."""
     try:
         with open("history.json", 'w', encoding='utf-8') as f:
+            # Save as a list directly, not as a dict with "draws" key
             json.dump(history, f, indent=2, ensure_ascii=False)
         print("History written successfully")
     except Exception as e:
@@ -71,7 +77,7 @@ def process_manual_uploads():
     history = load_existing_history()
     
     # Get existing filenames in manifest to avoid duplicates
-    existing_files = {result["filename"] for result in manifest["results"]}
+    existing_files = {result["filename"] for result in manifest}
     
     # Process each JSON file in note directory
     note_files = [f for f in os.listdir(note_dir) if f.endswith('.json') and f != 'latest.json']
@@ -101,39 +107,51 @@ def process_manual_uploads():
                 "date": file_info["date"],
                 "title": f"{data.get('lottery_name', 'Unknown')} {file_info['lottery_code']}-{file_info['draw_number']}"
             }
-            manifest["results"].append(manifest_entry)
+            manifest.append(manifest_entry)
             
-            # Create history entry
+            # Create history entry (matching the structure from generate-history.js)
             history_entry = {
-                "id": f"{file_info['lottery_code']}-{file_info['draw_number']}",
                 "date": file_info["date"],
                 "lottery": data.get("lottery_name", "Unknown"),
-                "drawNumber": file_info["draw_number"],
-                "prizes": []
+                "draw": file_info["draw_number"],
+                "filename": filename,
+                "github_url": f"https://raw.githubusercontent.com/santhkhd/kerala_loto/main/note/{filename}",
+                "prizes": [],
+                "numbers4": [],
+                "numbers6": [],
+                "downloadLink": data.get("downloadLink", "")
             }
             
             # Add prize information
             prizes = data.get("prizes", {})
             for prize_key, prize_data in prizes.items():
+                # Debug: Check types
+                if not isinstance(prize_data, dict):
+                    print(f"ERROR: prize_data is not a dict! Type: {type(prize_data)}, Value: {prize_data}")
+                    continue
+                    
                 history_entry["prizes"].append({
-                    "name": prize_data.get("label", prize_key),
+                    "prize_key": prize_key,
+                    "label": prize_data.get("label", prize_key),
                     "amount": prize_data.get("amount", 0),
-                    "winners": len(prize_data.get("winners", []))
+                    "winners": prize_data.get("winners", [])
                 })
             
-            history["draws"].append(history_entry)
+            history.append(history_entry)
             new_entries.append(filename)
             print(f"Processed: {filename}")
             
         except Exception as e:
             print(f"Error processing {filename}: {e}")
+            import traceback
+            traceback.print_exc()
     
     if new_entries:
         # Sort manifest by date (newest first)
-        manifest["results"].sort(key=lambda x: x["date"], reverse=True)
+        manifest.sort(key=lambda x: x["date"], reverse=True)
         
         # Sort history by date (newest first)
-        history["draws"].sort(key=lambda x: x["date"], reverse=True)
+        history.sort(key=lambda x: x["date"], reverse=True)
         
         # Save updated files
         save_manifest(manifest)
