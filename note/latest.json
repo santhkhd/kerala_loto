@@ -5,14 +5,14 @@
   "venue": "",
   "prizes": {
     "1st_prize": {
-      "amount": 10000000,
+      "amount": 120000000,
       "label": "1st Prize",
       "winners": [
         "JD 545542(PALAKKAD)"
       ]
     },
     "consolation_prize": {
-      "amount": 5000,
+      "amount": 10000000,
       "label": "Consolation Prize",
       "winners": [
         "JA 545542",
@@ -22,7 +22,7 @@
       ]
     },
     "2nd_prize": {
-      "amount": 3000000,
+      "amount": 10000000,
       "label": "2nd Prize",
       "winners": [
         "JA 838734",
@@ -49,7 +49,7 @@
       ]
     },
     "4th_prize": {
-      "amount": 5000,
+      "amount": 300000,
       "label": "4th Prize",
       "winners": [
         "JA 170839",
@@ -60,7 +60,7 @@
       ]
     },
     "5th_prize": {
-      "amount": 2000,
+      "amount": 200000,
       "label": "5th Prize",
       "winners": [
         "JA 855675",
@@ -71,7 +71,7 @@
       ]
     },
     "6th_prize": {
-      "amount": 1000,
+      "amount": 5000,
       "label": "6th Prize",
       "winners": [
         "1272",
@@ -95,7 +95,7 @@
       ]
     },
     "7th_prize": {
-      "amount": 500,
+      "amount": 1000,
       "label": "7th Prize",
       "winners": [
         "0207",
@@ -245,7 +245,7 @@
       ]
     },
     "8th_prize": {
-      "amount": 200,
+      "amount": 500,
       "label": "8th Prize",
       "winners": [
         "0003",
@@ -521,7 +521,7 @@
       ]
     },
     "9th_prize": {
-      "amount": 100,
+      "amount": 300,
       "label": "9th Prize",
       "winners": [
         "0006",
