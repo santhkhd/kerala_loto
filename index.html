@@ -364,7 +364,8 @@
       DHANALEKSHMI: { en: 'DHANALEKSHMI', ml: 'ധനലക്ഷ്മി', ta: 'தனலட்சுமி' },
       KARUNYA_PLUS: { en: 'KARUNYA PLUS', ml: 'കരുണ്യ പ്ലസ്', ta: 'கருண்யா பிளஸ்' },
       SUVARNA_KERALAM: { en: 'SUVARNA KERALAM', ml: 'സുവർണ കേരളം', ta: 'சுவர்ண கேரளம்' },
-      KARUNYA: { en: 'KARUNYA', ml: 'കരുണ്യ', ta: 'கருண்யா' }
+      KARUNYA: { en: 'KARUNYA', ml: 'കരുണ്യ', ta: 'கருண்யா' },
+      POOJA_BUMPER: { en: 'POOJA BUMPER', ml: 'പൂജാ ബമ്പർ', ta: 'பூஜா பம்பர்' }
     };
 
     // Days with no draws (holidays)
@@ -441,6 +442,13 @@
           drawNumber: '104',
           date: '2025-07-23',
           translations: { en: 'MONSOON BUMPER 2025', ml: 'മൺസൂൺ ബമ്പർ 2025', ta: 'மான்சூன் பம்பர் 2025' }
+        },
+        {
+          name: 'POOJA BUMPER 2025',
+          shortName: 'BR',
+          drawNumber: '106',
+          date: '2025-11-22',
+          translations: { en: 'POOJA BUMPER 2025', ml: 'പൂജാ ബമ്പർ 2025', ta: 'பூஜா பம்பர் 2025' }
         }
       ];
       const catMap = {
@@ -450,7 +458,8 @@
         'DHANALEKSHMI': 'DL',
         'KARUNYA_PLUS': 'KN',
         'SUVARNA_KERALAM': 'SK',
-        'KARUNYA': 'KR'
+        'KARUNYA': 'KR',
+        'POOJA_BUMPER': 'BR'
       };
       const now = new Date();
       const istTime = new Date(now.getTime() + (330 * 60 * 1000));
@@ -506,7 +515,8 @@
           'DHANALEKSHMI': 'DL',
           'KARUNYA_PLUS': 'KN',
           'SUVARNA_KERALAM': 'SK',
-          'KARUNYA': 'KR'
+          'KARUNYA': 'KR',
+          'POOJA_BUMPER': 'BR'
         };
         return item.code === catMap[filterCategory];
       });
