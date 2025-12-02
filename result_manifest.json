@@ -6,6 +6,13 @@
     "filename": "SS-496-2025-12-02.json"
   },
   {
+    "filename": "BT-31-2025-12-01.json",
+    "lottery_code": "BT",
+    "draw_number": "31",
+    "date": "2025-12-01",
+    "title": "BHAGYATHARA BT-31"
+  },
+  {
     "code": "SM",
     "draw_number": "31",
     "date": "2025-11-30",
