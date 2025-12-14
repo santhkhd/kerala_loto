@@ -506,7 +506,7 @@
       // Fetch manifest
       let manifest = [];
       try {
-        const res = await fetch('result_manifest.json');
+        const res = await fetch('result_manifest.json?v=' + new Date().getTime());
         manifest = await res.json();
       } catch (e) {
         noResultsMessage.textContent = 'Could not load results manifest.';
