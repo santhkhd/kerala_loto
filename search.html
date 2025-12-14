@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Lottery Numbers - Kerala Lottery</title>
+    <link href="output.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --search-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --winner-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --not-found-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Enhanced modern styling */
+        .enhanced-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            overflow: hidden;
+            border: none;
+        }
+        .enhanced-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .search-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-input {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Improved text readability */
+            color: #1e3a8a;
+            font-weight: 500;
+            border: 2px solid #e2e8f0;
+        }
+        .search-input:focus {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            outline: 2px solid #3b82f6;
+            border-color: #3b82f6;
+        }
+        .search-input::placeholder {
+            color: #64748b;
+        }
+        
+        .search-btn {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        .search-btn:active {
+            transform: translateY(0);
+        }
+        
+        .check-btn {
+            background: var(--search-gradient);
+        }
+        
+        .clear-btn {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+        }
+        
+        .result-card {
+            border-radius: 16px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .winner-card {
+            background: var(--winner-gradient);
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(67, 233, 123, 0.3);
+            color: #065f46;
+            font-weight: 700;
+        }
+        
+        .not-found-card {
+            background: var(--not-found-gradient);
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(255, 154, 158, 0.3);
+            color: #991b1b;
+            font-weight: 700;
+        }
+        
+        .action-btn {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .view-result-btn {
+            background: var(--primary-gradient);
+        }
+        
+        .back-home-btn {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+        }
+        
+        /* Improved text readability */
+        .text-gray-600 {
+            color: #4b5563;
+        }
+        
+        .text-gray-700 {
+            color: #374151;
+        }
+        
+        .text-gray-900 {
+            color: #111827;
+        }
+        
+        #numberSearchResults {
+            color: #1e3a8a;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 640px) {
+            .search-container {
+                flex-direction: column;
+                padding: 1.5rem;
+                border-radius: 16px;
+            }
+            
+            .search-btn-container {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .search-btn {
+                width: 100%;
+            }
+            
+            /* Improved mobile readability */
+            .search-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .action-btn {
+                width: 100%;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex flex-col">
+    <div class="bg-gradient-to-r from-blue-900 to-indigo-800 text-white py-5 px-4 flex items-center justify-between shadow-lg">
+        <button class="text-2xl hover:bg-white/20 rounded-full p-2 transition" onclick="goBack()" title="Back">←</button>
+        <span id="header-title" class="text-lg font-bold flex-1 text-center">Search Lottery Numbers</span>
+        <button class="text-2xl hover:bg-white/20 rounded-full p-2 transition" id="langIconBtn" title="Change language">🌐</button>
+        </div>
+    <div id="langPopup" class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-2xl p-6 min-w-[180px]">
+        <div class="font-bold text-indigo-700 mb-2">Select Language</div>
+        <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="en">English</button>
+        <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ml">മലയാളം</button>
+        <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
+    </div>
+    <main class="flex-1 flex flex-col items-center justify-center px-4 py-8">
+        <div class="w-full max-w-2xl mx-auto enhanced-card bg-white shadow-xl p-6 flex flex-col items-center search-container">
+            <h2 id="searchTitle" class="text-3xl font-bold text-center text-indigo-700 mb-2">🔍 Search Your Number</h2>
+            <p class="text-center text-gray-600 mb-6 text-base">Enter your lottery number and select a date to check if you've won any prize</p>
+            <form class="w-full flex flex-col gap-4" onsubmit="event.preventDefault();searchNumber();">
+                <div class="flex flex-col sm:flex-row gap-4 w-full relative">
+                    <input type="text" id="numberSearchInput" placeholder="🔢 Enter your ticket number..." maxlength="20" class="flex-1 px-5 py-4 rounded-xl border-0 focus:ring-2 focus:ring-indigo-500 text-lg transition search-input bg-gray-50" />
+                    <div class="flex-1">
+                        <label for="dateSearchInput" class="block text-sm font-semibold text-gray-700 mb-2">Select Date</label>
+                        <div class="relative">
+                            <input type="date" id="dateSearchInput" class="flex-1 px-5 py-4 rounded-xl border-0 focus:ring-2 focus:ring-indigo-500 text-lg transition search-input bg-gray-50 w-full" />
+                            <button type="button" id="clearDateBtn" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 text-xl" style="display:none;">×</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-4 w-full search-btn-container">
+                    <button type="button" class="flex-1 search-btn check-btn text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2 shadow-lg" id="searchBtn" onclick="searchNumber()" disabled>
+                        <span class="material-icons">search</span> Check
+                    </button>
+                    <button type="button" class="flex-1 search-btn clear-btn text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2 shadow-lg" onclick="clearNumberSearch()">
+                        <span class="material-icons">close</span> Clear
+                    </button>
+            </div>
+            </form>
+            <div id="numberSearchResults" class="w-full mt-8"></div>
+        </div>
+    </main>
+    <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-3 shadow-2xl z-40">
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="index.html">
+            <span class="material-icons text-xl">home</span>
+            <span class="text-xs mt-1">Home</span>
+        </a>
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="prediction.html">
+            <span class="material-icons text-xl">star</span>
+            <span class="text-xs mt-1">Lucky</span>
+        </a>
+        <a class="flex flex-col items-center text-white font-bold transition p-2" href="search.html">
+            <span class="material-icons text-xl">search</span>
+            <span class="text-xs mt-1">Search</span>
+        </a>
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="scanner.html">
+            <span class="material-icons text-xl">qr_code_scanner</span>
+            <span class="text-xs mt-1">Scanner</span>
+        </a>
+        <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="live.html">
+            <span class="material-icons text-xl">live_tv</span>
+            <span class="text-xs mt-1">Live</span>
+        </a>
+    </nav>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script>
+    // Language strings for all UI elements
+    const uiStrings = {
+      en: {
+        header: 'Search Lottery Numbers',
+        searchTitle: '🔍 Search Your Number',
+        searchDesc: "Enter your lottery number and select a date to check if you've won any prize",
+        numberPlaceholder: '🔢 Enter your ticket number...',
+        datePlaceholder: '',
+        check: 'Check',
+        clear: 'Clear',
+        backToHome: 'Back to Home',
+        viewFullResult: 'View Full Result Page',
+        pleaseEnter: 'Please enter a number and select a date to search',
+        noResult: 'No lottery result found for the selected date.',
+        notFound: num => `😔 Sorry, your number "${num}" was not found in any winning results for this date.<br>Keep trying with other numbers or check back for new results!`,
+        winner: n => `🎊 YOU ARE A WINNER! Found ${n} winning entr${n > 1 ? 'ies' : 'y'}`,
+        number: 'Number:',
+        prize: 'Prize Amount:',
+        date: 'Date:'
+      },
+      ml: {
+        header: 'ലോട്ററി നമ്പർ തിരയുക',
+        searchTitle: '🔍 നിങ്ങളുടെ നമ്പർ പരിശോധിക്കുക',
+        searchDesc: 'നിങ്ങളുടെ ലോട്ററി നമ്പറും തീയതിയും നൽകുക, വിജയിച്ചിട്ടുണ്ടോ എന്ന് പരിശോധിക്കുക',
+        numberPlaceholder: '🔢 നിങ്ങളുടെ ടിക്കറ്റ് നമ്പർ നൽകുക...',
+        datePlaceholder: '',
+        check: 'പരിശോധിക്കുക',
+        clear: 'ക്ലിയർ',
+        backToHome: 'ഹോം പേജിലേക്ക്',
+        viewFullResult: 'പൂർണ്ണ ഫലം കാണുക',
+        pleaseEnter: 'നമ്പറും തീയതിയും നൽകുക',
+        noResult: 'തിരഞ്ഞെടുത്ത തീയതിയിൽ ഫലം ലഭ്യമല്ല.',
+        notFound: num => `😔 നിങ്ങളുടെ നമ്പർ "${num}" ഈ തീയതിയിൽ വിജയിച്ചിട്ടില്ല.<br>മറ്റു നമ്പറുകൾ പരീക്ഷിക്കുക അല്ലെങ്കിൽ പുതിയ ഫലങ്ങൾക്കായി വീണ്ടും പരിശോധിക്കുക!`,
+        winner: n => `🎊 നിങ്ങൾ വിജയിച്ചിരിക്കുന്നു! ${n} വിജയിച്ച എൻട്ര${n > 1 ? 'ികൾ' : ''}`,
+        number: 'നമ്പർ:',
+        prize: 'പ്രൈസ് തുക:',
+        date: 'തീയതി:'
+      },
+      ta: {
+        header: 'லாட்டரி எண் தேடு',
+        searchTitle: '🔍 உங்கள் எண்ணை தேடு',
+        searchDesc: 'உங்கள் லாட்டரி எண்ணையும் தேதியையும் உள்ளிடவும், வென்றுள்ளீர்களா என்பதை சரிபார்க்கவும்',
+        numberPlaceholder: '🔢 உங்கள் டிக்கெட் எண்ணை உள்ளிடவும்...',
+        datePlaceholder: '',
+        check: 'சரிபார்',
+        clear: 'நீக்கு',
+        backToHome: 'முகப்புக்கு',
+        viewFullResult: 'முழு முடிவைப் பார்க்க',
+        pleaseEnter: 'எண் மற்றும் தேதியை உள்ளிடவும்',
+        noResult: 'தேர்ந்தெடுத்த தேதிக்கு முடிவு இல்லை.',
+        notFound: num => `😔 உங்கள் எண் "${num}" இந்த தேதியில் வெற்றிபெறவில்லை.<br>வேறு எண்களை முயற்சிக்கவும் அல்லது புதிய முடிவுகளுக்காக மீண்டும் பார்க்கவும்!`,
+        winner: n => `🎊 நீங்கள் வெற்றிபெற்றுள்ளீர்கள்! ${n} வெற்றி உள்ளீ${n > 1 ? 'கள்' : ''}`,
+        number: 'எண்:',
+        prize: 'வெற்றி தொகை:',
+        date: 'தேதி:'
+      }
+    };
+    let currentLang = localStorage.getItem('lang') || 'en';
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('lang', lang);
+      // Update all UI text
+      document.getElementById('header-title').textContent = uiStrings[lang].header;
+      document.getElementById('searchTitle').textContent = uiStrings[lang].searchTitle;
+      document.querySelector('p.text-center').textContent = uiStrings[lang].searchDesc;
+      document.getElementById('numberSearchInput').placeholder = uiStrings[lang].numberPlaceholder;
+      // Buttons
+      document.getElementById('searchBtn').innerHTML = `<span class="material-icons">search</span> ${uiStrings[lang].check}`;
+      document.querySelector('.clear-btn').innerHTML = `<span class="material-icons">close</span> ${uiStrings[lang].clear}`;
+      // Update results if present
+      updateSearchResultsLang();
+      // Update language popup active state
+      langPopupBtns.forEach(btn => btn.classList.toggle('font-bold', btn.getAttribute('data-lang') === lang));
+    }
+    function updateSearchResultsLang() {
+      // If there are results, re-render them in the current language
+      const resultsContainer = document.getElementById('numberSearchResults');
+      if (!resultsContainer || !resultsContainer.innerHTML.trim()) return;
+      // Re-run search to update messages in the new language
+      if (numberInput.value && dateInput.value) searchNumber();
+    }
+        // Language logic (same as index.html/prediction.html)
+        const langIconBtn = document.getElementById('langIconBtn');
+        const langPopup = document.getElementById('langPopup');
+    const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
+        // Language strings
+        const langStrings = {
+            en: 'Search Lottery Numbers',
+            ml: 'ലോട്ററി നമ്പർ തിരയുക',
+            ta: 'லாட்டரி எண் தேடு'
+        };
+        // Short language strings for mobile
+        const langStringsShort = {
+            en: 'Search Lottery',
+            ml: 'ലോട്ററി തിരയുക',
+            ta: 'லாட்டரி தேடு'
+        };
+        function updateHeaderTitle() {
+            const w = window.innerWidth;
+            if (w < 400) {
+                document.getElementById('header-title').textContent = langStringsShort[currentLang] || langStringsShort['en'];
+            } else {
+                document.getElementById('header-title').textContent = langStrings[currentLang] || langStrings['en'];
+            }
+        }
+        window.addEventListener('resize', updateHeaderTitle);
+    // Language popup logic
+        langIconBtn.addEventListener('click', function() {
+      langPopup.classList.toggle('hidden');
+        });
+        document.body.addEventListener('click', function(e) {
+            if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
+        langPopup.classList.add('hidden');
+            }
+        });
+        langPopupBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                setLang(this.getAttribute('data-lang'));
+        langPopup.classList.add('hidden');
+            });
+        });
+    // On load
+        document.addEventListener('DOMContentLoaded', function() {
+            setLang(currentLang);
+            updateHeaderTitle();
+        });
+        function goBack() {
+            window.history.length > 1 ? window.history.back() : window.location.href = 'index.html';
+        }
+        // --- Real search using history.json ---
+        let historyData = [];
+        fetch('https://raw.githubusercontent.com/santhkhd/kerala_loto/main/history.json')
+          .then(res => res.json())
+          .then(data => { historyData = data; })
+          .catch(() => { historyData = []; });
+        // Enable search button only if both fields are filled
+        const numberInput = document.getElementById('numberSearchInput');
+        const dateInput = document.getElementById('dateSearchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const clearDateBtn = document.getElementById('clearDateBtn');
+
+        // Show clear button if date is selected
+        dateInput.addEventListener('input', function() {
+            clearDateBtn.style.display = dateInput.value ? 'block' : 'none';
+            updateSearchBtnState();
+        });
+        // Clear date when button is clicked
+        clearDateBtn.addEventListener('click', function() {
+            dateInput.value = '';
+            clearDateBtn.style.display = 'none';
+            updateSearchBtnState();
+        });
+        function updateSearchBtnState() {
+            searchBtn.disabled = !(numberInput.value.trim() && dateInput.value);
+        }
+        numberInput.addEventListener('input', updateSearchBtnState);
+        dateInput.addEventListener('input', updateSearchBtnState);
+        // Search for a specific number on a specific date
+        function searchNumber() {
+            const searchNumber = numberInput.value.trim();
+            const searchDate = dateInput.value;
+            const resultsContainer = document.getElementById('numberSearchResults');
+        const ui = uiStrings[currentLang];
+            if (!searchNumber || !searchDate) {
+            resultsContainer.innerHTML = `<div class="bg-red-100 text-red-700 rounded-xl p-6 text-center font-bold result-card">${ui.pleaseEnter}</div>`;
+                return;
+            }
+            // Handle date format - history.json uses YYYY-MM-DD format
+            let formattedDate = searchDate;
+            if (searchDate.includes('-')) {
+                const [yyyy, mm, dd] = searchDate.split('-');
+                formattedDate = `${yyyy}-${mm}-${dd}`;  // Keep as YYYY-MM-DD to match history.json
+            }
+            // Search for the result by date
+            const result = historyData.find(r => (r.date === formattedDate || r.date === searchDate));
+            if (!result) {
+            resultsContainer.innerHTML = `<div class="not-found-card text-white p-6 text-center font-bold result-card">
+                <div class="text-xl mb-2">${ui.noResult}</div>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+                    <a href="index.html" class="inline-block action-btn back-home-btn text-white font-bold py-3 px-8 rounded-xl transition">${ui.backToHome}</a>
+                </div>
+            </div>`;
+                return;
+            }
+            // Normalize the search number for comparison (remove spaces and convert to lowercase)
+            const searchLower = searchNumber.replace(/\s+/g, '').toLowerCase();
+            const winPrizes = [];
+            // Search through all prizes for the matching number
+            (result.prizes || []).forEach(prize => {
+                (prize.winners || []).forEach(num => {
+                    // Normalize the winner number for comparison (remove spaces and convert to lowercase)
+                    const numClean = num.replace(/\s+/g, '').toLowerCase();
+                    // Check for matches with more precise matching strategies:
+                    let isMatch = false;
+                    
+                    // Exact match - most precise
+                    if (numClean === searchLower) {
+                        isMatch = true;
+                    }
+                    // For lottery ticket numbers like "PM 162584", match the series+number part
+                    else if (/^[A-Z]{2}\d{6}$/.test(searchLower) && numClean.startsWith(searchLower)) {
+                        isMatch = true;
+                    }
+                    // For partial matches with series numbers, be more specific:
+                    // Match if search term is at the beginning of a longer number (e.g., "PM162584" matches "PM162584(KOTTAYAM)")
+                    else if (numClean.startsWith(searchLower) && numClean.length > searchLower.length) {
+                        // Only match if the extra characters are location info in parentheses
+                        const remaining = numClean.substring(searchLower.length);
+                        if (remaining.startsWith('(') && remaining.endsWith(')')) {
+                            isMatch = true;
+                        }
+                    }
+                    // Special case for 6-digit numbers - match last 6 digits exactly
+                    else if (searchLower.length === 6 && /^\d{6}$/.test(searchLower) && numClean.length >= 6) {
+                        const numLast6 = numClean.slice(-6);
+                        if (searchLower === numLast6) {
+                            isMatch = true;
+                        }
+                    }
+                    // Special handling for series + 6-digit numbers like "PM 162584"
+                    else if (/^[A-Z]{2}\s*\d{6}$/.test(searchNumber)) {
+                        // Extract just the series and digits part
+                        const seriesPart = searchNumber.replace(/\s+/g, '').toLowerCase();
+                        if (numClean.startsWith(seriesPart)) {
+                            // Check if the remaining part is location info
+                            const remaining = numClean.substring(seriesPart.length);
+                            if (remaining === '' || (remaining.startsWith('(') && remaining.endsWith(')'))) {
+                                isMatch = true;
+                            }
+                        }
+                    }
+                    
+                    if (isMatch) {
+                        winPrizes.push({
+                            prize: prize.label,
+                            amount: prize.amount,
+                            number: num
+                        });
+                    }
+                });
+            });
+            // Get the result file for linking to full results
+            let resultFile = result.filename;
+            if (!resultFile && result.lottery && result.draw && result.date) {
+                let dd, mm, yyyy;
+                if (result.date.includes('/')) {
+                    [dd, mm, yyyy] = result.date.split('/');
+                } else if (result.date.includes('-')) {
+                    [yyyy, mm, dd] = result.date.split('-');
+                }
+                const drawStr = String(result.draw).padStart(2, '0');
+                if (result.lottery && drawStr && yyyy && mm && dd) {
+                    resultFile = `${result.lottery}-${drawStr}-${yyyy}-${mm}-${dd}.json`;
+                } else {
+                    resultFile = '';
+                }
+            }
+            // Generate the results HTML
+            let resultHtml = '';
+            if (winPrizes.length > 0) {
+                resultHtml = `
+                <div class="winner-card text-white p-6 text-center font-bold mb-6">
+                    <div class="text-2xl mb-2">${ui.winner(winPrizes.length)}</div>
+                    <div class="text-lg">Congratulations on your win!</div>
+                </div>
+                ${winPrizes.map(win => `
+                    <div class="bg-white rounded-xl shadow-lg p-6 mb-6 w-full flex flex-col items-center border-2 border-green-200 result-card">
+                        <div class="text-xl font-bold text-green-700 mb-3">${win.prize}</div>
+                        <div class="mb-2"><span class="font-semibold text-gray-700">${ui.number || 'Number:'}</span> <span class="text-gray-900 font-mono bg-gray-100 px-3 py-1 rounded-lg">${win.number}</span></div>
+                        <div class="mb-2"><span class="font-semibold text-gray-700">${ui.prize || 'Prize Amount:'}</span> <span class="text-green-700 font-bold text-xl">₹${win.amount.toLocaleString()}</span></div>
+                        <div class="mb-4"><span class="font-semibold text-gray-700">${ui.date || 'Date:'}</span> <span class="text-gray-700">${result.date}</span></div>
+                        <a href="result.html?file=${resultFile}" target="_blank" class="mt-2 action-btn view-result-btn text-white font-bold py-3 px-8 rounded-xl transition">${ui.viewFullResult || 'View Full Result Page'}</a>
+                    </div>
+                `).join('')}
+                `;
+            } else {
+                resultHtml = `
+                <div class="not-found-card text-white p-6 text-center font-bold mb-6">
+                    <div class="text-xl mb-2">No Winning Numbers Found</div>
+                    <div class="text-lg">Better luck next time!</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center result-card">
+                    <div class="text-red-700 font-semibold mb-4">
+                        ${ui.notFound(searchNumber)}
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-4">
+                        <a href="result.html?file=${resultFile}" target="_blank" class="action-btn view-result-btn text-white font-bold py-3 px-8 rounded-xl transition">${ui.viewFullResult || 'View Full Result Page'}</a>
+                        <a href="index.html" class="action-btn back-home-btn text-white font-bold py-3 px-8 rounded-xl transition">${ui.backToHome || 'Back to Home'}</a>
+                    </div>
+                </div>
+                `;
+            }
+            resultsContainer.innerHTML = resultHtml;
+        }
+        // Update: search on Enter key in either field
+        numberInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchNumber();
+        });
+        dateInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchNumber();
+        });
+        // Clear number and date search
+        function clearNumberSearch() {
+            numberInput.value = '';
+            dateInput.value = '';
+            clearDateBtn.style.display = 'none';
+            document.getElementById('numberSearchResults').innerHTML = '';
+            updateSearchBtnState();
+        }
+        // Search example number
+        function searchExample(number) {
+            document.getElementById('numberSearchInput').value = number;
+            searchNumber();
+        }
+    </script>
+</body>
+</html>

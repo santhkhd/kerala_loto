@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottery Scanner - Kerala Lottery</title>
+    <link href="output.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --scanner-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --winner-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --not-found-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Enhanced modern styling */
+        .enhanced-card {
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .enhanced-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .winner-card {
+            background: var(--winner-gradient);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .scanner-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .scanner-input {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .scanner-result {
+            min-height: 200px;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            background: white;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .result-card {
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 25px;
+            padding: 10px 20px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .lang-btn {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 25px;
+            padding: 10px 20px;
+            box-shadow: var(--card-shadow);
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        @media (max-width: 768px) {
+            .scanner-container {
+                padding: 10px;
+            }
+            
+            .language-selector {
+                position: static;
+                margin-bottom: 20px;
+                justify-content: center;
+            }
+            
+            .back-button {
+                position: static;
+                display: inline-block;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
+    <!-- Back Button -->
+    <a href="index.html" class="back-button" id="backButton">← Back to Home</a>
+    
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
+        <button class="lang-btn" onclick="switchLanguage('ml')">ML</button>
+        <button class="lang-btn" onclick="switchLanguage('ta')">TA</button>
+    </div>
+
+    <div class="scanner-container">
+        <h1 class="text-4xl font-bold text-center mb-8 text-gray-800" id="pageTitle">Lottery Scanner</h1>
+        
+        <!-- Scanner Input Section -->
+        <div class="scanner-input">
+            <h2 class="text-2xl font-bold mb-6 text-gray-700" id="inputTitle">Scan Your Ticket</h2>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-lg font-medium mb-2 text-gray-700" id="numberLabel">Ticket Number</label>
+                    <input type="text" id="ticketNumber" placeholder="Enter ticket number (e.g., PM 162584)" 
+                           class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none transition-colors">
+                </div>
+                
+                <div>
+                    <label class="block text-lg font-medium mb-2 text-gray-700" id="dateLabel">Draw Date</label>
+                    <input type="date" id="drawDate" 
+                           class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none transition-colors">
+                </div>
+                
+                <button onclick="processManualInput()" 
+                        class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-6 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg">
+                    <span id="scanButton">Scan Ticket</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        <div class="scanner-result" id="scannerResults">
+            <div class="text-gray-500" id="initialMessage">Enter your ticket details to check for winnings</div>
+        </div>
+    </div>
+
+    <script>
+        // UI Strings for different languages
+        const langStrings = {
+            en: {
+                pageTitle: "Lottery Scanner",
+                inputTitle: "Scan Your Ticket",
+                numberLabel: "Ticket Number",
+                dateLabel: "Draw Date",
+                scanButton: "Scan Ticket",
+                initialMessage: "Enter your ticket details to check for winnings",
+                pleaseFill: "Please fill in all fields",
+                winner: (count) => `🎉 YOU ARE A WINNER! Found ${count} winning entr${count === 1 ? 'y' : 'ies'}`,
+                noWin: "😔 No Winning Numbers Found",
+                betterLuck: "Better luck next time!",
+                sorry: (number, date) => `Sorry, your number "${number}" was not found in any winning results for ${date}.`,
+                keepTrying: "Keep trying with other numbers or check back for new results!",
+                prizeAmount: "Prize Amount:",
+                number: "Number:",
+                date: "Date:",
+                viewFullResult: "View Full Result Page",
+                backToHome: "Back to Home",
+                congratulations: "Congratulations on your win!"
+            },
+            ml: {
+                pageTitle: "ലോട്ടറി സ്കാനർ",
+                inputTitle: "നിങ്ങളുടെ ടിക്കറ്റ് പരിശോധിക്കുക",
+                numberLabel: "ടിക്കറ്റ് നമ്പർ",
+                dateLabel: "ഡ്രോ തീയതി",
+                scanButton: "സ്കാൻ ടിക്കറ്റ്",
+                initialMessage: "വിജയം നേടിയിട്ടുണ്ടോ എന്ന് പരിശോധിക്കാൻ നിങ്ങളുടെ ടിക്കറ്റ് വിവരങ്ങൾ നൽകുക",
+                pleaseFill: "എല്ലാ ഫീൽഡുകളും പൂരിപ്പിക്കുക",
+                winner: (count) => `🎉 നിങ്ങൾ ഒരു വിജയിയാണ്! ${count} വിജയിച്ച എൻട്രികൾ കണ്ടെത്തി`,
+                noWin: "😔 വിജയിച്ച നമ്പറുകൾ ഒന്നും കണ്ടെത്തിയില്ല",
+                betterLuck: "അടുത്ത തവണ കൂടുതൽ ഭാഗ്യം ഉണ്ടാകട്ടെ!",
+                sorry: (number, date) => `"${number}" എന്ന നമ്പർ ${date}-ന് വിജയിച്ച ഫലങ്ങളിൽ കണ്ടെത്തിയില്ല.`,
+                keepTrying: "മറ്റ് നമ്പറുകൾക്കായി ശ്രമിക്കുക അല്ലെങ്കിൽ പുതിയ ഫലങ്ങൾക്കായി പരിശോധിക്കുക!",
+                prizeAmount: "സമ്മാന തുക:",
+                number: "നമ്പർ:",
+                date: "തീയതി:",
+                viewFullResult: "പൂർണ്ണ ഫലം കാണുക",
+                backToHome: "ഹോം പേജിലേക്ക്",
+                congratulations: "നിങ്ങളുടെ വിജയത്തിന് അഭിനന്ദനങ്ങൾ!"
+            },
+            ta: {
+                pageTitle: "லாட்டரி ஸ்கேனர்",
+                inputTitle: "உங்கள் டிக்கெட்டை சரிபார்க்கவும்",
+                numberLabel: "டிக்கெட் எண்",
+                dateLabel: "கோல் தேதி",
+                scanButton: "ஸ்கேன் டிக்கெட்",
+                initialMessage: "வெற்றி பெற்றிருக்கிறதா என்பதைச் சரிபார்க்க உங்கள் டிக்கெட் விவரங்களை உள்ளிடவும்",
+                pleaseFill: "அனைத்து புலங்களையும் நிரப்பவும்",
+                winner: (count) => `🎉 நீங்கள் வென்றுள்ளீர்கள்! ${count} வெற்றிகள் கண்டறியப்பட்டுள்ளது`,
+                noWin: "😔 வென்ற எண்கள் எதுவும் கண்டறியப்படவில்லை",
+                betterLuck: "அடுத்த முறை அதிக அதிர்ஷ்டம்!",
+                sorry: (number, date) => `மன்னிக்கவும், "${number}" என்ற எண் ${date} அன்று வென்ற முடிவுகளில் காணப்படவில்லை.`,
+                keepTrying: "பிற எண்களுக்கு முயற்சிக்கவும் அல்லது புதிய முடிவுகளுக்காக சரிபார்க்கவும்!",
+                prizeAmount: "பரிசு தொகை:",
+                number: "எண்:",
+                date: "தேதி:",
+                viewFullResult: "முழு முடிவைக் காண்க",
+                backToHome: "முகப்பிற்கு செல்லவும்",
+                congratulations: "உங்கள் வெற்றிக்கு வாழ்த்துகள்!"
+            }
+        };
+
+        // Global variables
+        let currentLang = 'en';
+        let historyData = [];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date as default
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            document.getElementById('drawDate').value = formattedDate;
+            
+            // Load history data
+            loadHistoryData();
+            
+            // Set initial language
+            updateUILanguage();
+        });
+
+        // Switch language
+        function switchLanguage(lang) {
+            currentLang = lang;
+            updateUILanguage();
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Update UI language
+        function updateUILanguage() {
+            const t = langStrings[currentLang];
+            
+            document.getElementById('pageTitle').textContent = t.pageTitle;
+            document.getElementById('inputTitle').textContent = t.inputTitle;
+            document.getElementById('numberLabel').textContent = t.numberLabel;
+            document.getElementById('dateLabel').textContent = t.dateLabel;
+            document.getElementById('scanButton').textContent = t.scanButton;
+            document.getElementById('initialMessage').textContent = t.initialMessage;
+            document.getElementById('backButton').innerHTML = (currentLang === 'en' ? '← ' : '') + t.backToHome;
+        }
+
+        // Load history data
+        async function loadHistoryData() {
+            try {
+                const response = await fetch('history.json');
+                historyData = await response.json();
+            } catch (error) {
+                console.error('Error loading history data:', error);
+            }
+        }
+
+        // Process manual input
+        function processManualInput() {
+            const t = langStrings[currentLang];
+            const number = document.getElementById('ticketNumber').value.trim();
+            const date = document.getElementById('drawDate').value;
+            
+            if (!number || !date) {
+                alert(t.pleaseFill);
+                return;
+            }
+            
+            // Search in history.json
+            const formattedDate = date.includes('-') ? date : date;
+            const result = historyData.find(r => r.date === formattedDate || r.date === date);
+            
+            let found = null;
+            let prizeInfo = null;
+            let fileParam = '';
+            
+            if (result) {
+                // Always set fileParam if result found
+                if (result.lottery && result.draw && result.date) {
+                    let dd, mm, yyyy;
+                    if (result.date.includes('/')) {
+                        [dd, mm, yyyy] = result.date.split('/');
+                    } else if (result.date.includes('-')) {
+                        [yyyy, mm, dd] = result.date.split('-');
+                    }
+                    let drawStr = String(result.draw).padStart(2, '0');
+                    if (drawStr.startsWith(result.lottery + '-')) {
+                        drawStr = drawStr.replace(result.lottery + '-', '');
+                    }
+                    if (result.lottery && drawStr && yyyy && mm && dd) {
+                        fileParam = `${result.lottery}-${drawStr}-${yyyy}-${mm}-${dd}.json`;
+                    } else {
+                        fileParam = '';
+                    }
+                }
+                
+                // Normalize the search number for comparison
+                const searchLower = number.replace(/\s+/g, '').toLowerCase();
+                
+                // Check all prizes using enhanced matching logic
+                if (result.prizes && Array.isArray(result.prizes)) {
+                    for (const prize of result.prizes) {
+                        if (Array.isArray(prize.winners)) {
+                            for (const winner of prize.winners) {
+                                // Normalize the winner number for comparison
+                                const numClean = winner.replace(/\s+/g, '').toLowerCase();
+                                
+                                // Enhanced matching logic to prevent overly broad matches
+                                let isMatch = false;
+                                
+                                // Exact match - most precise
+                                if (numClean === searchLower) {
+                                    isMatch = true;
+                                }
+                                // Series number matching (e.g., "PM 162584" matching "PM 162584 (KOTTAYAM)")
+                                else if (searchLower.length > 4 && numClean.startsWith(searchLower) && 
+                                         numClean.length > searchLower.length) {
+                                    // Check if the remaining part is location info in parentheses
+                                    const remainder = numClean.substring(searchLower.length).trim();
+                                    if (remainder.startsWith('(') && remainder.endsWith(')')) {
+                                        isMatch = true;
+                                    }
+                                }
+                                // For partial matches, be more restrictive:
+                                // Only match if the search term is at the end of the number (common in lottery patterns)
+                                else if (searchLower.length >= 4 && numClean.length > searchLower.length) {
+                                    // Check if search term matches the end of the number (common in lottery patterns)
+                                    if (numClean.endsWith(searchLower)) {
+                                        isMatch = true;
+                                    }
+                                    // Special case for full ticket numbers like "PM 162584"
+                                    else if (searchLower.includes(numClean) && Math.abs(searchLower.length - numClean.length) <= 3) {
+                                        // Only match if the lengths are close (to avoid matching short numbers in long ones)
+                                        isMatch = true;
+                                    }
+                                }
+                                // Special case for lottery numbers - match last 6 digits exactly
+                                else if (searchLower.length === 6 && numClean.length >= 6) {
+                                    const numLast6 = numClean.slice(-6);
+                                    if (searchLower === numLast6) {
+                                        isMatch = true;
+                                    }
+                                }
+                                
+                                if (isMatch) {
+                                    found = { number: number, date: result.date, status: 'winner', code: result.lottery, draw: result.draw, fileParam };
+                                    prizeInfo = { label: prize.label, amount: prize.amount };
+                                    break;
+                                }
+                            }
+                        }
+                        if (found) break;
+                    }
+                }
+            }
+            
+            if (found) {
+                found.prizeInfo = prizeInfo;
+                displayScanResult(found);
+            } else {
+                displayScanResult({ number, date, status: 'no-win', prize: 'No Win', fileParam });
+            }
+        }
+
+        // Display scan result
+        function displayScanResult(result) {
+            const t = langStrings[currentLang];
+            const resultsContainer = document.getElementById('scannerResults');
+            
+            if (result.status === 'winner') {
+                const resultHtml = `
+                <div class="winner-card text-white p-6 text-center font-bold mb-6">
+                    <div class="text-2xl mb-2">${t.winner(1)}</div>
+                    <div class="text-lg">${t.congratulations}</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6 w-full flex flex-col items-center border-2 border-green-200 result-card">
+                    <div class="text-xl font-bold text-green-700 mb-3">${result.prizeInfo.label}</div>
+                    <div class="mb-2"><span class="font-semibold text-gray-700">${t.number || 'Number:'}</span> <span class="text-gray-900 font-mono bg-gray-100 px-2 py-1 rounded">${result.number}</span></div>
+                    <div class="mb-2"><span class="font-semibold text-gray-700">${t.prizeAmount || 'Prize Amount:'}</span> <span class="text-gray-900">${result.prizeInfo.amount}</span></div>
+                    <div class="mb-4"><span class="font-semibold text-gray-700">${t.date || 'Date:'}</span> <span class="text-gray-900">${result.date}</span></div>
+                    ${result.fileParam ? `<a href="result.html?file=${result.fileParam}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-2 px-6 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all">${t.viewFullResult || 'View Full Result Page'}</a>` : ''}
+                </div>
+                `;
+                resultsContainer.innerHTML = resultHtml;
+            } else {
+                const resultHtml = `
+                <div class="bg-gradient-to-r from-red-100 to-pink-100 rounded-xl p-8 text-center">
+                    <div class="text-2xl font-bold text-red-700 mb-4">${t.noWin}</div>
+                    <div class="text-lg text-red-600 mb-4">${t.betterLuck}</div>
+                    <div class="text-gray-700 mb-4">${t.sorry(result.number, result.date)}</div>
+                    <div class="text-gray-600">${t.keepTrying}</div>
+                </div>
+                `;
+                resultsContainer.innerHTML = resultHtml;
+            }
+        }
+    </script>
+</body>
+</html>

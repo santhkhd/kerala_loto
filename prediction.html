@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucky Number Prediction</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="output.css" rel="stylesheet">
+  <style>
+    /* Enhanced modern styling */
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --hot-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --cold-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --random-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      --repeat-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    
+    /* Enhanced modern styling */
+    .enhanced-card {
+      transition: all 0.3s ease;
+      border-radius: 16px;
+      overflow: hidden;
+      border: none;
+    }
+    .enhanced-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--hover-shadow);
+    }
+    
+    /* Custom animation for number pop/fadeUp */
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+      60% { opacity: 1; transform: translateY(-4px) scale(1.05); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .number-badge, .big-number-animate {
+      animation: fadeUp 0.5s cubic-bezier(.23,1.5,.32,1);
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+      animation-fill-mode: forwards;
+    }
+    .big-number-animate {
+      animation-duration: 0.7s;
+    }
+    .spinner {
+      border: 4px solid #e0e7ff;
+      border-top: 4px solid #2563eb;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 18px auto;
+      display: block;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .number-badge.repeated {
+      background: linear-gradient(135deg, #facc15 0%, #f59e42 100%);
+      border: 2px solid #f59e42;
+      color: #7c4700;
+      position: relative;
+      box-shadow: 0 4px 16px #f59e4280, 0 1.5px 0 #fff7cc;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .number-badge.repeated.most-repeated {
+      border: 3px solid #f59e42;
+      box-shadow: 0 6px 24px #f59e4280, 0 2px 0 #fff7cc;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e42 100%);
+      color: #b45309;
+      z-index: 2;
+    }
+    .number-badge .repeat-count {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      background: #fff7cc;
+      color: #b45309;
+      font-size: 0.7em;
+      font-weight: 900;
+      border-radius: 9999px;
+      padding: 3px 8px;
+      box-shadow: 0 2px 8px #f59e4280;
+      z-index: 10;
+      border: 2px solid #facc15;
+      pointer-events: none;
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      min-width: 28px;
+      text-align: center;
+      transform: scale(1.1) rotate(-8deg);
+    }
+    .number-badge:hover, .number-badge:active {
+      box-shadow: 0 8px 32px #f59e4280, 0 2px 0 #fff7cc;
+      transform: scale(1.07) translateY(-2px);
+      z-index: 3;
+    }
+    
+    /* Enhanced button styles */
+    .prediction-btn {
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .prediction-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+    .prediction-btn:active {
+      transform: translateY(0);
+    }
+    .prediction-btn:disabled {
+      opacity: 0.6;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    /* Big number display - improved readability */
+    .big-number-display {
+      background: var(--primary-gradient);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      color: white;
+      font-weight: 800;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      text-align: center;
+      padding: 2rem;
+    }
+    .big-number-display:hover {
+      transform: scale(1.02);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Number grid enhancements */
+    .number-grid-container {
+      display: grid;
+      gap: 15px;
+    }
+    @media (min-width: 640px) {
+      .number-grid-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (min-width: 768px) {
+      .number-grid-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    .number-badge-modern {
+      border-radius: 16px;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      /* Improved text readability */
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .number-badge-modern:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+    .number-badge-modern:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+    
+    /* Hot button */
+    #hotBtn {
+      background: var(--hot-gradient);
+      box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+    }
+    
+    /* Cold button */
+    #coldBtn {
+      background: var(--cold-gradient);
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+    }
+    
+    /* Random button */
+    #randomBtn {
+      background: var(--random-gradient);
+      box-shadow: 0 4px 15px rgba(56, 249, 215, 0.3);
+    }
+    
+    /* Repeat button */
+    #repeatBtn {
+      background: var(--repeat-gradient);
+      box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
+    }
+    
+    /* Recent draws enhancement */
+    .recent-draw-card {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-left: 4px solid #667eea;
+    }
+    
+    /* AI features card */
+    .ai-features-card {
+      background: var(--primary-gradient);
+      color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+    .ai-features-card .text-gray-700 {
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .ai-features-card .bg-gray-50 {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .ai-features-card .text-yellow-800 {
+      color: #fff3cd;
+    }
+    .ai-features-card .bg-yellow-100 {
+      background: rgba(255, 193, 7, 0.2);
+    }
+    .ai-features-card .border-yellow-300 {
+      border-color: rgba(255, 193, 7, 0.3);
+    }
+    
+    /* Feature cards */
+    .feature-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.25);
+    }
+    
+    /* Improved text readability */
+    #numberLabel, #numberLabel6 {
+      color: #1e3a8a;
+      font-weight: 700;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
+    
+    #loadingMsg {
+      color: #1e3a8a;
+      font-weight: 600;
+    }
+    
+    /* Toggle button enhancements */
+    .toggle-btn {
+      background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+      transition: all 0.3s ease;
+      border-radius: 12px;
+      font-weight: 600;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .toggle-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    @media (max-width: 480px) {
+      .number-badge {
+        font-size: 1.2rem !important;
+        padding: 0.7rem 0.5rem !important;
+      }
+      .number-badge .repeat-count {
+        top: -10px;
+        right: -10px;
+        font-size: 0.65em;
+        padding: 2px 6px;
+      }
+      .prediction-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
+      /* Improved big number display on mobile */
+      .big-number-display {
+        font-size: 2.5rem;
+        padding: 1.5rem;
+      }
+      
+      .feature-card {
+        border-radius: 12px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex flex-col">
+  <div class="bg-gradient-to-r from-blue-900 to-indigo-800 text-white py-5 px-4 flex items-center justify-between shadow-lg">
+    <button class="text-2xl hover:bg-white/20 rounded-full p-2 transition" onclick="goBack()" title="Back">←</button>
+    <span id="header-title" class="text-lg font-bold flex-1 text-center">Lucky Number Prediction</span>
+    <button class="text-2xl hover:bg-white/20 rounded-full p-2 transition" id="langIconBtn" title="Change language">🌐</button>
+    <div class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-2xl p-6 min-w-[180px]" id="langPopup">
+      <div class="font-bold text-indigo-700 mb-2">Select Language</div>
+      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="en">English</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ml">മലയാളം</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
+    </div>
+  </div>
+  <main class="flex-1 flex flex-col items-center justify-center px-4 py-8">
+    <div class="w-full max-w-4xl mx-auto enhanced-card bg-white shadow-xl p-6 mb-8">
+      <h2 id="luckyTitle" class="text-3xl font-bold text-center text-indigo-700 mb-6">Generate Your Lucky Number</h2>
+      <div class="flex flex-wrap gap-4 justify-center mb-6">
+        <button class="prediction-btn bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="hotBtn" disabled>
+          <span class="text-2xl">🔥</span> <span class="lang-hot">Hot</span>
+        </button>
+        <button class="prediction-btn bg-gradient-to-r from-blue-400 to-cyan-500 hover:from-blue-500 hover:to-cyan-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="coldBtn" disabled>
+          <span class="text-2xl">❄️</span> <span class="lang-cold">Cold</span>
+        </button>
+        <button class="prediction-btn bg-gradient-to-r from-green-400 to-teal-500 hover:from-green-500 hover:to-teal-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="randomBtn" disabled>
+          <span class="text-2xl">🎲</span> <span class="lang-random">Random</span>
+        </button>
+        <button class="prediction-btn bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="repeatBtn" disabled>
+          <span class="text-2xl">🔁</span> <span class="lang-repeat">Repeated</span>
+        </button>
+      </div>
+      <div id="loadingMsg" class="text-center text-indigo-500 font-semibold mb-4 text-lg">Loading history data...</div>
+      <div id="numberLabel" class="text-center text-indigo-600 font-semibold mb-4 text-xl">Tap a button to see predictions</div>
+      <div id="spinner" class="spinner" style="display:none;"></div>
+      <div id="bigNumber" class="text-5xl font-extrabold text-center text-white big-number-display py-8 px-4 mb-8 shadow-lg w-full" style="display:none;"></div>
+      <div id="numberGrid" class="number-grid-container gap-4 w-full"></div>
+      <div id="numberLabel6" class="text-center text-indigo-600 font-semibold mt-8 mb-4 text-xl" style="display:none;"></div>
+      <div id="numberGrid6" class="number-grid-container gap-4 w-full" style="display:none;"></div>
+    </div>
+    
+    <!-- New Features Section -->
+    <div class="w-full max-w-4xl mx-auto enhanced-card ai-features-card shadow-xl p-6 mb-8">
+      <h2 class="mb-6 text-2xl font-bold flex items-center gap-3">
+        <span class="text-3xl">✨</span> <span class="lang-features-title">Advanced Prediction Features</span>
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="feature-card p-4 flex flex-col items-center text-center">
+          <span class="text-3xl mb-2">🔮</span>
+          <h3 class="font-bold text-lg mb-2 lang-astro">Astrological Analysis</h3>
+          <p class="text-sm lang-astro-desc">Predictions based on planetary positions</p>
+        </div>
+        <div class="feature-card p-4 flex flex-col items-center text-center">
+          <span class="text-3xl mb-2">📊</span>
+          <h3 class="font-bold text-lg mb-2 lang-hist">Historical Patterns</h3>
+          <p class="text-sm lang-hist-desc">Analyze past winning trends</p>
+        </div>
+        <div class="feature-card p-4 flex flex-col items-center text-center">
+          <span class="text-3xl mb-2">🎯</span>
+          <h3 class="font-bold text-lg mb-2 lang-rand">Smart Random</h3>
+          <p class="text-sm lang-rand-desc">Intelligent randomization algorithms</p>
+        </div>
+        <div class="feature-card p-4 flex flex-col items-center text-center">
+          <span class="text-3xl mb-2">🔥</span>
+          <h3 class="font-bold text-lg mb-2 lang-hotcold">Hot/Cold Tracking</h3>
+          <p class="text-sm lang-hotcold-desc">Monitor frequently drawn numbers</p>
+        </div>
+      </div>
+      <div class="text-base text-gray-700 bg-gray-50 rounded-xl p-4 mb-4 w-full lang-ai-desc">
+        <b class="lang-how-it-works">How it works:</b> <span class="block mt-2 lang-ai-desc-text">Uses advanced algorithms combining astrology, historical data, and statistical analysis to generate predictions. For entertainment purposes only!</span>
+      </div>
+      <div class="flex items-center gap-3 text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-xl p-4 w-full text-base font-semibold lang-disclaimer">
+        <span class="text-2xl">⚠️</span>
+        <span class="lang-disclaimer-text"><b>Disclaimer:</b> This is for entertainment only. No guarantee of winning. Play responsibly.</span>
+      </div>
+    </div>
+    
+    <div class="w-full max-w-4xl mx-auto enhanced-card bg-white shadow-xl p-6 mb-8" id="recentCard">
+      <h2 class="mb-4 text-xl font-bold flex items-center gap-3 text-indigo-700">
+        <span class="text-2xl">🕑</span> <span class="lang-recent">Recent Draws</span>
+        <button id="toggleRecentBtn" class="ml-auto toggle-btn text-white font-bold py-2 px-6 rounded-lg transition text-sm">
+          <span class="lang-show">Show</span>
+        </button>
+      </h2>
+      <div id="recentDraws" class="w-full" style="display:none;"></div>
+    </div>
+  </main>
+  <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-3 shadow-2xl z-40">
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="index.html">
+      <span class="material-icons text-xl">home</span>
+      <span class="text-xs mt-1">Home</span>
+    </a>
+    <a class="flex flex-col items-center text-white font-bold transition p-2" href="prediction.html">
+      <span class="material-icons text-xl">star</span>
+      <span class="text-xs mt-1">Lucky</span>
+    </a>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="search.html">
+      <span class="material-icons text-xl">search</span>
+      <span class="text-xs mt-1">Search</span>
+    </a>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="scanner.html">
+      <span class="material-icons text-xl">qr_code_scanner</span>
+      <span class="text-xs mt-1">Scanner</span>
+    </a>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white transition p-2" href="live.html">
+      <span class="material-icons text-xl">live_tv</span>
+      <span class="text-xs mt-1">Live</span>
+    </a>
+  </nav>
+  <script>
+    // Language logic (same as index.html)
+    const langIconBtn = document.getElementById('langIconBtn');
+    const langPopup = document.getElementById('langPopup');
+    const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
+    let currentLang = localStorage.getItem('lang') || 'en';
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('lang', lang);
+      updateHeaderTitle();
+      document.getElementById('luckyTitle').textContent = luckyTitleStrings[lang] || luckyTitleStrings['en'];
+      langPopupBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
+      updateLangUI();
+    }
+    function updateHeaderTitle() {
+      const w = window.innerWidth;
+      if (w < 400) {
+        document.getElementById('header-title').textContent = langStringsShort[currentLang] || langStringsShort['en'];
+      } else {
+        document.getElementById('header-title').textContent = langStrings[currentLang] || langStrings['en'];
+      }
+    }
+    window.addEventListener('resize', updateHeaderTitle);
+    langIconBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      langPopup.classList.toggle('hidden');
+    });
+    document.body.addEventListener('click', function(e) {
+      if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
+        langPopup.classList.add('hidden');
+      }
+    });
+    langPopupBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        setLang(this.getAttribute('data-lang'));
+        langPopup.classList.add('hidden');
+        updateLangUI();
+      });
+    });
+    // Language strings
+    const langStrings = {
+      en: 'Lucky Number Prediction',
+      ml: 'ഭാഗ്യസംഖ്യ പ്രവചനം',
+      ta: 'அதிர்ஷ்ட எண் கணிப்பு'
+    };
+    const langStringsShort = {
+      en: 'Lucky',
+      ml: 'ഭാഗ്യം',
+      ta: 'அதிர்ஷ்டம்'
+    };
+    const luckyTitleStrings = {
+      en: 'Generate Your Lucky Number',
+      ml: 'നിങ്ങളുടെ ഭാഗ്യസംഖ്യ കണ്ടെത്തൂ',
+      ta: 'உங்கள் அதிர்ஷ்ட எண்ணை உருவாக்கவும்'
+    };
+    // Button and section translations
+    const langBtnStrings = {
+      hot: { en: 'Hot', ml: 'ഹോട്ട്', ta: 'சூடு' },
+      cold: { en: 'Cold', ml: 'തണുപ്പ്', ta: 'குளிர்' },
+      random: { en: 'Random', ml: 'യാദൃശ്ചികം', ta: 'சீரற்ற' },
+      repeat: { en: 'Repeated', ml: 'പുനരാവൃതം', ta: 'மீண்டும்' },
+      recent: { en: 'Recent Draws', ml: 'സമീപകാല നറുക്കെടുപ്പ്', ta: 'சமீபத்திய டிரா' },
+      show: { en: 'Show', ml: 'കാണിക്കുക', ta: 'காட்டு' },
+      hide: { en: 'Hide', ml: 'മറയ്ക്കുക', ta: 'மறை' },
+      featuresTitle: { en: 'Advanced Prediction Features', ml: 'വിപുലമായ പ്രവചന സവിശേഷതകൾ', ta: 'மேம்பட்ட கணிப்பு அம்சங்கள்' },
+      astro: { en: 'Astrological Analysis', ml: 'ജ്യോതിഷം', ta: 'ஜோதிடம்' },
+      hist: { en: 'Historical Patterns', ml: 'ചരിത്ര പാറ്റേൺ', ta: 'வரலாற்று வடிவங்கள்' },
+      rand: { en: 'Smart Random', ml: 'സ്മാർട്ട് റാൻഡം', ta: 'ஸ்மார்ட் சீரற்ற' },
+      hotcold: { en: 'Hot/Cold Tracking', ml: 'ഹോട്ട്/കോൾഡ് ട്രാക്കിംഗ്', ta: 'சூடு/குளிர் கண்காணிப்பு' },
+      astroDesc: { en: 'Predictions based on planetary positions', ml: 'ഗ്രഹങ്ങളുടെ സ്ഥാനങ്ങളെ അടിസ്ഥാനമാക്കിയുള്ള പ്രവചനങ്ങൾ', ta: 'கோளங்களின் நிலைகளை அடிப்படையாகக் கொண்ட கணிப்புகள்' },
+      histDesc: { en: 'Analyze past winning trends', ml: 'കഴിഞ്ഞ വിജയ ട്രെൻഡുകൾ വിശകലനം ചെയ്യുക', ta: 'கடந்த வெற்றி போக்குகளை ஆராய்ந்து காண்க' },
+      randDesc: { en: 'Intelligent randomization algorithms', ml: 'ബുദ്ധിമാനായ റാൻഡമൈസേഷൻ അൽഗോരിതങ്ങൾ', ta: 'அறிவுற்ற சீரற்ற முறைகள்' },
+      hotcoldDesc: { en: 'Monitor frequently drawn numbers', ml: 'പതിവായി വരുന്ന സംഖ്യകൾ നിരീക്ഷിക്കുക', ta: 'அடிக்கடி வரும் எண்களை கண்காணிக்கவும்' },
+      howItWorks: { en: 'How it works:', ml: 'എങ്ങനെ പ്രവർത്തിക്കുന്നു:', ta: 'எப்படி வேலை செய்கிறது:' },
+      aiDescText: {
+        en: 'Uses advanced algorithms combining astrology, historical data, and statistical analysis to generate predictions. For entertainment purposes only!',
+        ml: 'പ്രവചനങ്ങൾ സൃഷ്ടിക്കാൻ ജ്യോതിഷം, ചരിത്രപരമായ ഡാറ്റ, സ്ഥിതിവിവരക്കണക്കുകൾ എന്നിവ സംയോജിപ്പിച്ച നൂതന അൽഗോരിതങ്ങൾ ഉപയോഗിക്കുന്നു. വിനോദത്തിനായി മാത്രം!',
+        ta: 'கணிப்புகளை உருவாக்க ஜோதிடம், வரலாற்று தரவு, நிகழ்தகவு பகுப்பாய்வு ஆகியவற்றை இணைத்த மேம்பட்ட வழிமுறைகளை பயன்படுத்துகிறது. பொழுதுபோக்கிற்காக மட்டுமே!'
+      },
+      disclaimerText: {
+        en: '<b>Disclaimer:</b> This is for entertainment only. No guarantee of winning. Play responsibly.',
+        ml: '<b>ശ്രദ്ധിക്കുക:</b> ഇത് വിനോദത്തിനായി മാത്രം. വിജയത്തിന് ഉറപ്പ് ഇല്ല. ഉത്തരവാദിത്വത്തോടെ കളിക്കുക.',
+        ta: '<b>கவனிக்கவும்:</b> இது பொழுதுபோக்கிற்காக மட்டுமே. வெற்றிக்கு உத்தரவாதம் இல்லை. பொறுப்புடன் விளையாடுங்கள்.'
+      }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+      setLang(currentLang);
+      updateHeaderTitle();
+      updateLangUI();
+      // Disable buttons until data is loaded
+      document.getElementById('hotBtn').disabled = true;
+      document.getElementById('coldBtn').disabled = true;
+      document.getElementById('randomBtn').disabled = true;
+      document.getElementById('loadingMsg').style.display = '';
+      repeatBtn.disabled = true;
+    });
+    function goBack() {
+      window.history.length > 1 ? window.history.back() : window.location.href = 'index.html';
+    }
+    // --- Prediction Logic ---
+    let historyData = [];
+    let freq4 = {}, freq6 = {}, all4 = [], all6 = [], lastDraws = [];
+    const bigNumber = document.getElementById('bigNumber');
+    const numberGrid = document.getElementById('numberGrid');
+    const numberLabel = document.getElementById('numberLabel');
+    const numberLabel6 = document.getElementById('numberLabel6');
+    const numberGrid6 = document.getElementById('numberGrid6');
+    const recentDraws = document.getElementById('recentDraws');
+    const recentCard = document.getElementById('recentCard');
+    const toggleRecentBtn = document.getElementById('toggleRecentBtn');
+    const repeatBtn = document.getElementById('repeatBtn');
+    const spinner = document.getElementById('spinner');
+    // Load history.json
+    fetch('history.json')
+      .then(res => {
+        if (!res.ok) throw new Error('Not found');
+        return res.json();
+      })
+      .then(data => {
+        historyData = data;
+        analyzeHistory();
+        renderRecentDraws();
+        // Enable buttons
+        document.getElementById('hotBtn').disabled = false;
+        document.getElementById('coldBtn').disabled = false;
+        document.getElementById('randomBtn').disabled = false;
+        document.getElementById('loadingMsg').style.display = 'none';
+        repeatBtn.disabled = false;
+      })
+      .catch(() => {
+        numberLabel.textContent = 'Failed to load history data.';
+        document.getElementById('loadingMsg').textContent = 'Failed to load history data.';
+        document.getElementById('loadingMsg').classList.add('text-red-600');
+        document.getElementById('hotBtn').disabled = true;
+        document.getElementById('coldBtn').disabled = true;
+        document.getElementById('randomBtn').disabled = true;
+        repeatBtn.disabled = true;
+      });
+    function analyzeHistory() {
+      freq4 = {}; freq6 = {}; all4 = []; all6 = []; lastDraws = [];
+      historyData.forEach(draw => {
+        (draw.numbers4 || []).forEach(n => {
+          freq4[n] = (freq4[n]||0)+1; all4.push(n);
+        });
+        (draw.numbers6 || []).forEach(n => {
+          freq6[n] = (freq6[n]||0)+1; all6.push(n);
+        });
+        lastDraws.push({date: draw.date, numbers4: draw.numbers4, numbers6: draw.numbers6});
+      });
+    }
+    function getHotNumbers(freq, count=24) {
+      return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,count).map(x=>x[0]);
+    }
+    function getColdNumbers(freq, count=24) {
+      return Object.entries(freq).sort((a,b)=>a[1]-b[1]).slice(0,count).map(x=>x[0]);
+    }
+    function getRandomNumbers(arr, count=24) {
+      const shuffled = arr.slice().sort(()=>Math.random()-0.5);
+      return shuffled.slice(0,count);
+    }
+    function getRepeatedNumbersWithCount(freq, minCount=2, max=24) {
+      // Return array of [number, count] for numbers with count >= minCount, sorted by count desc
+      return Object.entries(freq).filter(x=>x[1]>=minCount).sort((a,b)=>b[1]-a[1]).slice(0,max);
+    }
+    function showNumbers(type) {
+      bigNumber.style.display = 'none';
+      bigNumber.classList.remove('big-number-animate');
+      numberGrid.innerHTML = '';
+      numberLabel6.style.display = 'none';
+      numberGrid6.style.display = 'none';
+      spinner.style.display = '';
+      let nums = [];
+      let label = '';
+      let badgeClass = '';
+      let nums6 = [];
+      let label6 = '';
+      let badgeClass6 = '';
+      let isRepeated = false;
+      if (type === 'hot') {
+        nums = getHotNumbers(freq4, 24);
+        label = '🔥 Hot 4-digit numbers';
+        badgeClass = 'hot';
+        nums6 = getHotNumbers(freq6, 12);
+        label6 = '🔥 Hot 6-digit numbers';
+        badgeClass6 = 'hot';
+      } else if (type === 'cold') {
+        nums = getColdNumbers(freq4, 24);
+        label = '❄️ Cold 4-digit numbers';
+        badgeClass = 'cold';
+        nums6 = getColdNumbers(freq6, 12);
+        label6 = '❄️ Cold 6-digit numbers';
+        badgeClass6 = 'cold';
+      } else if (type === 'repeat') {
+        isRepeated = true;
+        const repeated4 = getRepeatedNumbersWithCount(freq4, 2, 24);
+        const repeated6 = getRepeatedNumbersWithCount(freq6, 2, 12);
+        nums = repeated4;
+        label = '🔁 Repeated 4-digit numbers';
+        badgeClass = 'repeated';
+        nums6 = repeated6;
+        label6 = '🔁 Repeated 6-digit numbers';
+        badgeClass6 = 'repeated';
+      } else {
+        nums = getRandomNumbers(all4, 24);
+        label = '🎲 Random 4-digit numbers';
+        badgeClass = '';
+        nums6 = getRandomNumbers(all6, 12);
+        label6 = '🎲 Random 6-digit numbers';
+        badgeClass6 = '';
+      }
+      numberLabel.textContent = label;
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        numberGrid.innerHTML = '';
+        if (isRepeated && nums.length === 0) {
+          numberGrid.innerHTML = '<div class="col-span-6 text-center text-yellow-700 font-semibold py-6">No repeated numbers found yet.<br>Add more results to see repeated numbers!</div>';
+          bigNumber.style.display = 'none';
+        } else {
+      nums.forEach((n, i) => {
+        const div = document.createElement('div');
+            // Choose gradient and text color based on type
+            let badgeTypeClass = '';
+            if (badgeClass === 'hot') {
+              badgeTypeClass = 'bg-gradient-to-br from-red-400 to-pink-500 text-white number-badge-modern';
+            } else if (badgeClass === 'cold') {
+              badgeTypeClass = 'bg-gradient-to-br from-blue-400 to-cyan-500 text-white number-badge-modern';
+            } else if (badgeClass === 'repeated') {
+              badgeTypeClass = 'bg-gradient-to-br from-amber-300 to-yellow-400 text-yellow-900 border-2 border-yellow-400 number-badge-modern';
+            } else {
+              badgeTypeClass = 'bg-gradient-to-br from-green-400 to-teal-500 text-white number-badge-modern';
+            }
+            div.className = `number-badge ${badgeClass} flex items-center justify-center rounded-2xl shadow-lg font-extrabold text-2xl sm:text-3xl md:text-4xl px-2 py-6 m-1 transition-transform duration-200 cursor-pointer hover:scale-105 hover:ring-2 hover:ring-offset-2 hover:ring-blue-400 relative select-all ${badgeTypeClass}`;
+            if (isRepeated) {
+              div.textContent = n[0];
+              const count = n[1];
+              const badge = document.createElement('span');
+              badge.className = 'repeat-count';
+              badge.textContent = `${count}×`;
+              div.appendChild(badge);
+              div.title = `Appeared ${count} times. Tap to copy.`;
+              if (i === 0) div.classList.add('most-repeated');
+            } else {
+        div.textContent = n;
+        div.title = 'Tap to copy';
+            }
+            div.style.animationDelay = (i * 0.03) + 's';
+        div.onclick = function() {
+              navigator.clipboard.writeText(isRepeated ? n[0] : n);
+              div.classList.add('ring-4','ring-green-400');
+              setTimeout(()=>div.classList.remove('ring-4','ring-green-400'), 600);
+        };
+        numberGrid.appendChild(div);
+      });
+      if (nums.length > 0) {
+            bigNumber.textContent = isRepeated ? (nums[0][0] + ' ×' + nums[0][1]) : nums[0];
+        bigNumber.style.display = 'block';
+            bigNumber.classList.add('big-number-animate');
+        bigNumber.onclick = function() {
+              navigator.clipboard.writeText(isRepeated ? nums[0][0] : nums[0]);
+          bigNumber.style.background = 'linear-gradient(135deg,#10b981 0%,#2563eb 100%)';
+          setTimeout(()=>bigNumber.style.background='', 600);
+        };
+      }
+        }
+      }, 350); // Simulate fetch/processing delay for animation
+      // Show 6-digit numbers below
+      if (nums6.length > 0) {
+        numberLabel6.textContent = label6;
+        numberLabel6.style.display = 'block';
+        numberGrid6.innerHTML = '';
+        numberGrid6.style.display = 'grid';
+        if (isRepeated && nums6.length === 0) {
+          numberGrid6.innerHTML = '<div class="col-span-6 text-center text-yellow-700 font-semibold py-6">No repeated numbers found yet.<br>Add more results to see repeated numbers!</div>';
+        } else {
+        nums6.forEach((n, i) => {
+          const div = document.createElement('div');
+            // Choose gradient and text color based on type
+            let badgeTypeClass = '';
+            if (badgeClass6 === 'hot') {
+              badgeTypeClass = 'bg-gradient-to-br from-red-400 to-pink-500 text-white number-badge-modern';
+            } else if (badgeClass6 === 'cold') {
+              badgeTypeClass = 'bg-gradient-to-br from-blue-400 to-cyan-500 text-white number-badge-modern';
+            } else if (badgeClass6 === 'repeated') {
+              badgeTypeClass = 'bg-gradient-to-br from-amber-300 to-yellow-400 text-yellow-900 border-2 border-yellow-400 number-badge-modern';
+            } else {
+              badgeTypeClass = 'bg-gradient-to-br from-green-400 to-teal-500 text-white number-badge-modern';
+            }
+            div.className = `number-badge ${badgeClass6} flex items-center justify-center rounded-2xl shadow-lg font-extrabold text-2xl sm:text-3xl md:text-4xl px-2 py-6 m-1 transition-transform duration-200 cursor-pointer hover:scale-105 hover:ring-2 hover:ring-offset-2 hover:ring-blue-400 relative select-all ${badgeTypeClass}`;
+            if (isRepeated) {
+              div.textContent = n[0];
+              const count = n[1];
+              const badge = document.createElement('span');
+              badge.className = 'repeat-count';
+              badge.textContent = `${count}×`;
+              div.appendChild(badge);
+              div.title = `Appeared ${count} times. Tap to copy.`;
+              if (i === 0) div.classList.add('most-repeated');
+            } else {
+          div.textContent = n;
+          div.title = 'Tap to copy';
+            }
+            div.style.animationDelay = (i * 0.04) + 's';
+          div.onclick = function() {
+              navigator.clipboard.writeText(isRepeated ? n[0] : n);
+              div.classList.add('ring-4','ring-green-400');
+              setTimeout(()=>div.classList.remove('ring-4','ring-green-400'), 600);
+          };
+          numberGrid6.appendChild(div);
+        });
+      }
+    }
+    }
+    document.getElementById('hotBtn').onclick = function() { if (!this.disabled) showNumbers('hot'); };
+    document.getElementById('coldBtn').onclick = function() { if (!this.disabled) showNumbers('cold'); };
+    document.getElementById('randomBtn').onclick = function() { if (!this.disabled) showNumbers('random'); };
+    repeatBtn.onclick = function() { if (!this.disabled) showNumbers('repeat'); };
+    function renderRecentDraws() {
+      recentDraws.innerHTML = '';
+      if (lastDraws.length === 0) {
+        recentDraws.innerHTML = '<div style="color:#b91c1c;">No recent draws found.</div>';
+        return;
+      }
+      lastDraws.slice(-5).reverse().forEach(draw => {
+        const numbers4 = Array.isArray(draw.numbers4) ? draw.numbers4 : [];
+        const numbers6 = Array.isArray(draw.numbers6) ? draw.numbers6 : [];
+        const div = document.createElement('div');
+        div.className = `transition transform hover:scale-[1.025] recent-draw-card rounded-2xl shadow-lg p-5 mb-4 flex flex-col gap-3 border-l-4 border-indigo-500`;
+        div.innerHTML = `
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-indigo-700 font-bold text-lg md:text-xl">🗓️ ${draw.date}</span>
+          </div>
+          <div class="flex flex-wrap gap-3 items-center">
+            <span class="text-indigo-500 font-semibold text-base md:text-lg">4-digit:</span>
+            <span class="flex flex-wrap gap-2">${numbers4.slice(0,6).map(n => `<span class='inline-block bg-indigo-100 text-indigo-800 font-bold rounded-lg px-3 py-1 text-base md:text-lg shadow-sm'>${n}</span>`).join('')}</span>
+          </div>
+          <div class="flex flex-wrap gap-3 items-center">
+            <span class="text-indigo-500 font-semibold text-base md:text-lg">6-digit:</span>
+            <span class="flex flex-wrap gap-2">${numbers6.slice(0,3).map(n => `<span class='inline-block bg-yellow-100 text-yellow-800 font-bold rounded-lg px-3 py-1 text-base md:text-lg shadow-sm'>${n}</span>`).join('')}</span>
+          </div>
+        `;
+        recentDraws.appendChild(div);
+      });
+    }
+    // Collapsible recent draws
+    let recentOpen = false;
+    toggleRecentBtn.onclick = function() {
+      recentOpen = !recentOpen;
+      if (recentOpen) {
+        renderRecentDraws();
+        recentDraws.style.display = '';
+        toggleRecentBtn.querySelector('span').textContent = langBtnStrings.hide[currentLang];
+      } else {
+        recentDraws.style.display = 'none';
+        toggleRecentBtn.querySelector('span').textContent = langBtnStrings.show[currentLang];
+      }
+      updateLangUI();
+    };
+    function updateLangUI() {
+      // Buttons
+      const hotEl = document.querySelector('.lang-hot');
+      if (hotEl) hotEl.textContent = langBtnStrings.hot[currentLang];
+      const coldEl = document.querySelector('.lang-cold');
+      if (coldEl) coldEl.textContent = langBtnStrings.cold[currentLang];
+      const randomEl = document.querySelector('.lang-random');
+      if (randomEl) randomEl.textContent = langBtnStrings.random[currentLang];
+      const repeatEl = document.querySelector('.lang-repeat');
+      if (repeatEl) repeatEl.textContent = langBtnStrings.repeat[currentLang];
+      // Section titles
+      const recentEl = document.querySelector('.lang-recent');
+      if (recentEl) recentEl.textContent = langBtnStrings.recent[currentLang];
+      const featuresTitleEl = document.querySelector('.lang-features-title');
+      if (featuresTitleEl) featuresTitleEl.textContent = langBtnStrings.featuresTitle[currentLang];
+      // Show/Hide button
+      const showBtn = document.getElementById('toggleRecentBtn');
+      if (showBtn && showBtn.querySelector('span')) {
+        showBtn.querySelector('span').textContent = recentOpen ? langBtnStrings.hide[currentLang] : langBtnStrings.show[currentLang];
+      }
+      // Feature cards
+      const astroEl = document.querySelector('.lang-astro');
+      if (astroEl) astroEl.textContent = langBtnStrings.astro[currentLang];
+      const histEl = document.querySelector('.lang-hist');
+      if (histEl) histEl.textContent = langBtnStrings.hist[currentLang];
+      const randEl = document.querySelector('.lang-rand');
+      if (randEl) randEl.textContent = langBtnStrings.rand[currentLang];
+      const hotcoldEl = document.querySelector('.lang-hotcold');
+      if (hotcoldEl) hotcoldEl.textContent = langBtnStrings.hotcold[currentLang];
+      const astroDescEl = document.querySelector('.lang-astro-desc');
+      if (astroDescEl) astroDescEl.textContent = langBtnStrings.astroDesc[currentLang];
+      const histDescEl = document.querySelector('.lang-hist-desc');
+      if (histDescEl) histDescEl.textContent = langBtnStrings.histDesc[currentLang];
+      const randDescEl = document.querySelector('.lang-rand-desc');
+      if (randDescEl) randDescEl.textContent = langBtnStrings.randDesc[currentLang];
+      const hotcoldDescEl = document.querySelector('.lang-hotcold-desc');
+      if (hotcoldDescEl) hotcoldDescEl.textContent = langBtnStrings.hotcoldDesc[currentLang];
+      const howItWorksEl = document.querySelector('.lang-how-it-works');
+      if (howItWorksEl) howItWorksEl.textContent = langBtnStrings.howItWorks[currentLang];
+      const aiDescTextEl = document.querySelector('.lang-ai-desc-text');
+      if (aiDescTextEl) aiDescTextEl.textContent = langBtnStrings.aiDescText[currentLang];
+      // Disclaimer
+      const disclaimerTextEl = document.querySelector('.lang-disclaimer-text');
+      if (disclaimerTextEl) disclaimerTextEl.innerHTML = langBtnStrings.disclaimerText[currentLang];
+    }
+  </script>
+</body>
+</html>
