@@ -28,37 +28,33 @@ def run_lottery_scraper():
     try:
         logging.info(f"Running lottery scraper at {datetime.now(IST).strftime('%Y-%m-%d %H:%M:%S')} IST")
         # Run the scraper script
-        result = subprocess.run([sys.executable, 'lottery_scraper.py'], capture_output=True, text=True, timeout=300)  # 5 minute timeout
+        result = subprocess.run([sys.executable, 'updateloto.py'], capture_output=True, text=True, timeout=300)  # 5 minute timeout
         if result.returncode == 0:
             logging.info("Lottery scraper completed successfully")
             if result.stdout:
                 logging.info(f"Output: {result.stdout}")
-            
-            # Run the manifest generation script
-            manifest_result = subprocess.run(['node', 'generate-manifest.js'], capture_output=True, text=True, timeout=120)
-            if manifest_result.returncode == 0:
-                logging.info("Manifest generation completed successfully")
-            else:
-                logging.warning(f"Manifest generation had issues: {manifest_result.stderr}")
-
-            # Run the history generation script (optional but kept for compatibility)
+            # Run the history generation script after successful scraping
             hist_result = subprocess.run(['node', 'generate-history.js'], capture_output=True, text=True, timeout=120)  # 2 minute timeout
             if hist_result.returncode == 0:
                 logging.info("History generation completed successfully")
+                if hist_result.stdout:
+                    logging.info(f"History output: {hist_result.stdout}")
+                    
+                # Check if there are actual changes worth committing
+                if has_actual_results():
+                    # If GitHub token is set, commit and push changes
+                    github_token = os.environ.get('GITHUB_TOKEN')
+                    if github_token:
+                        try:
+                            commit_and_push_changes()
+                        except Exception as e:
+                            logging.error(f"Error during git operations: {e}")
+                    else:
+                        logging.info("GITHUB_TOKEN not set. Skipping automatic git push.")
+                else:
+                    logging.info("No actual results found. Skipping git operations.")
             else:
                 logging.warning(f"History generation had issues: {hist_result.stderr}")
-                    
-            # Check if there are actual changes worth committing
-            # We rely on git status in commit_and_push_changes, so we proceed if scripts ran fine.
-            if True:
-                # If GitHub token is set, commit and push changes
-                # Also try pushing if git is configured with SSH/credential helper (implied if token is missing but user wants automation)
-                github_token = os.environ.get('GITHUB_TOKEN')
-                if github_token or True: # Try pushing regardless, let git handle auth errors if any
-                    try:
-                        commit_and_push_changes()
-                    except Exception as e:
-                        logging.error(f"Error during git operations: {e}")
         else:
             logging.error(f"Error running lottery scraper: {result.stderr}")
     except subprocess.TimeoutExpired:
@@ -67,8 +63,22 @@ def run_lottery_scraper():
         logging.error(f"Exception occurred while running scraper: {e}")
 
 def has_actual_results():
-    """Deprecated: Check performed via git status."""
-    return True
+    """Check if the latest results contain actual winning numbers"""
+    try:
+        with open('note/latest.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # Check if any prize category has actual winners (not placeholders)
+        prizes = data.get('prizes', {})
+        for prize_key, prize_data in prizes.items():
+            winners = prize_data.get('winners', [])
+            for winner in winners:
+                if winner != "Please wait, results will be published at 3 PM." and winner != "***":
+                    return True
+        return False
+    except Exception as e:
+        logging.error(f"Error checking for actual results: {e}")
+        return False
 
 def commit_and_push_changes():
     """Commit and push changes to GitHub"""

@@ -10,15 +10,12 @@
   "description": "A modern, mobile-friendly, multilingual Kerala lottery results site powered by static files and real historical data.",
   "main": "generate-history.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "python -m http.server 8000"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "autoprefixer": "^10.4.22",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.19"
+    "tailwindcss": "^3.4.3"
   }
 }

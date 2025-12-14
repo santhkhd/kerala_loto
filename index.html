@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,14 +12,14 @@
       --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
       --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     }
-
+    
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       background: #e9edf5;
       margin: 0;
       color: #222;
     }
-
+    
     /* Enhanced modern styling */
     .enhanced-card {
       transition: all 0.3s ease;
@@ -28,12 +27,11 @@
       overflow: hidden;
       border: none;
     }
-
     .enhanced-card:hover {
       transform: translateY(-5px);
       box-shadow: var(--hover-shadow);
     }
-
+    
     .lottery-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -44,7 +42,6 @@
       margin: 0 auto;
       box-sizing: border-box;
     }
-
     .lottery-card {
       background: #232946;
       color: #fff;
@@ -52,7 +49,7 @@
       min-width: 0;
       width: 100%;
       min-height: 110px;
-      box-shadow: 0 4px 18px rgba(30, 60, 120, 0.13);
+      box-shadow: 0 4px 18px rgba(30,60,120,0.13);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -66,13 +63,10 @@
       border: none;
       margin: 0;
     }
-
-    .lottery-card:hover,
-    .lottery-card:active {
-      box-shadow: 0 10px 32px rgba(37, 99, 235, 0.22);
+    .lottery-card:hover, .lottery-card:active {
+      box-shadow: 0 10px 32px rgba(37,99,235,0.22);
       transform: translateY(-2px) scale(1.025);
     }
-
     .card-top {
       width: 100%;
       background: #232946;
@@ -86,7 +80,6 @@
       box-sizing: border-box;
       position: relative;
     }
-
     .card-bottom {
       width: 100%;
       background: #fff;
@@ -98,13 +91,12 @@
       padding: 13px 0 10px 0;
       text-align: center;
       letter-spacing: 1.2px;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.07);
+      box-shadow: 0 2px 8px rgba(37,99,235,0.07);
       /* Improved readability for date */
       color: #1e3a8a;
       font-weight: 800;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
-
     .badge {
       position: absolute;
       top: 10px;
@@ -115,11 +107,10 @@
       font-weight: 600;
       padding: 2px 10px;
       border-radius: 7px;
-      box-shadow: 0 1px 4px rgba(37, 99, 235, 0.10);
+      box-shadow: 0 1px 4px rgba(37,99,235,0.10);
       letter-spacing: 0.5px;
       z-index: 2;
     }
-
     .new-ribbon {
       position: absolute;
       top: 0;
@@ -132,9 +123,8 @@
       border-radius: 0 0 14px 0;
       z-index: 2;
       letter-spacing: 1px;
-      box-shadow: 0 2px 8px rgba(239, 35, 60, 0.10);
+      box-shadow: 0 2px 8px rgba(239,35,60,0.10);
     }
-
     .lottery-title {
       font-size: 1.13em;
       font-weight: 700;
@@ -143,14 +133,13 @@
       letter-spacing: 1.1px;
       width: 100%;
       text-align: center;
-      text-shadow: 0 2px 8px rgba(30, 60, 120, 0.10);
+      text-shadow: 0 2px 8px rgba(30,60,120,0.10);
       word-break: break-word;
       white-space: normal;
       line-height: 1.25;
       min-height: 2.5em;
       display: block;
     }
-
     .no-results {
       text-align: center;
       padding: 20px;
@@ -160,17 +149,17 @@
       border-radius: 10px;
       margin: 20px auto;
       max-width: 900px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-
+    
     /* Tab bar enhancements */
     .tab-container {
       background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
       border-radius: 50px;
       padding: 6px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
-
+    
     .tab-btn {
       padding: 0.75rem 1.5rem;
       border-radius: 50px;
@@ -186,38 +175,34 @@
       position: relative;
       overflow: hidden;
     }
-
     .tab-btn.active {
       background: var(--primary-gradient);
       color: #fff;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
     }
-
     .tab-btn:hover:not(.active) {
-      background: rgba(37, 99, 235, 0.1);
+      background: rgba(37,99,235,0.1);
       color: #1e3a8a;
     }
-
+    
     /* Live button enhancements */
     .live-btn {
       background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
       transition: all 0.3s ease;
       border-radius: 12px;
       font-weight: 700;
-      box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(255,0,0,0.3);
     }
-
     .live-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(255, 0, 0, 0.4);
+      box-shadow: 0 6px 16px rgba(255,0,0,0.4);
     }
-
+    
     @media (max-width: 900px) {
       .lottery-grid {
         grid-template-columns: repeat(3, 1fr);
       }
     }
-
     @media (max-width: 600px) {
       .lottery-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -226,7 +211,6 @@
         max-width: 100vw;
         margin: 0;
       }
-
       .lottery-card {
         width: 100%;
         min-width: 0;
@@ -235,7 +219,6 @@
         border-radius: 14px;
         margin: 0 auto;
       }
-
       .badge {
         font-size: 0.75em;
         padding: 2px 8px;
@@ -243,51 +226,41 @@
         top: 8px;
         right: 10px;
       }
-
       .new-ribbon {
         font-size: 0.85em;
         padding: 2px 10px 2px 7px;
         border-radius: 0 0 8px 0;
       }
-
       .lottery-title {
         font-size: 0.97em;
         margin-top: 16px;
         min-height: 2.2em;
       }
-
       /* Improved date readability on mobile */
       .card-bottom {
         font-size: 1em;
         padding: 10px 0 8px 0;
         letter-spacing: 1px;
       }
-
+      
       /* Mobile tab bar */
       .tab-container {
         padding: 4px;
       }
-
       .tab-btn {
         padding: 0.5rem 1rem;
         font-size: 0.85rem;
         margin: 0 0.1rem;
       }
     }
-
-    body {
-      padding-bottom: 60px !important;
-    }
-
+    body { padding-bottom: 60px !important; }
     .scrollbar-hide::-webkit-scrollbar {
       display: none;
     }
-
     .scrollbar-hide {
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
-
     #lotteryTabs {
       flex-wrap: nowrap;
       overflow-x: auto;
@@ -296,29 +269,21 @@
     }
   </style>
 </head>
-
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
   <!-- Header with language switcher -->
-  <div
-    class="w-full bg-gradient-to-r from-blue-900 to-blue-500 text-white py-5 px-4 flex items-center justify-between shadow-md relative">
+  <div class="w-full bg-gradient-to-r from-blue-900 to-blue-500 text-white py-5 px-4 flex items-center justify-between shadow-md relative">
     <span id="header-title" class="text-lg font-bold flex-1 text-center">Kerala Lottery Results</span>
     <div class="flex items-center gap-3">
-      <a href="live.html"
-        class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 live-btn"
-        title="Watch Live Draw">
+      <a href="live.html" class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 live-btn" title="Watch Live Draw">
         <span class="text-sm font-bold animate-pulse">LIVE </span>
       </a>
-      <button class="text-2xl bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition"
-        id="langIconBtn" title="Change language">🌐</button>
+      <button class="text-2xl bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition" id="langIconBtn" title="Change language">🌐</button>
     </div>
     <div class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-lg p-6 min-w-[180px]" id="langPopup">
       <div class="font-bold text-blue-700 mb-2">Select Language</div>
-      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold"
-        data-lang="en">English</button>
-      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold"
-        data-lang="ml">മലയാളം</button>
-      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold"
-        data-lang="ta">தமிழ்</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="en">English</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ml">മലയാളം</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
     </div>
   </div>
 
@@ -377,20 +342,20 @@
   <script>
     // Language logic
     let currentLang = localStorage.getItem('lang') || 'en';
-
+    
     const langStrings = {
       en: 'Kerala Lottery Results',
       ml: 'കേരള ലോട്ടറി ഫലം',
       ta: 'கேரளா லாட்டரி முடிவுகள்'
     };
-
+    
     // Short language strings for mobile
     const langStringsShort = {
       en: 'Kerala Lottery',
       ml: 'കേരള ലോട്ടറി',
       ta: 'கேரளா லாட்டரி'
     };
-
+    
     // Lottery name translations
     const lotteryNameTranslations = {
       SAMRUDHI: { en: 'SAMRUDHI', ml: 'സമൃദ്ധി', ta: 'சம்ருத்தி' },
@@ -405,7 +370,7 @@
 
     // Days with no draws (holidays)
     const noDrawDays = [
-
+     
     ];
 
     function setLang(lang) {
@@ -428,29 +393,29 @@
     window.addEventListener('resize', updateHeaderTitle);
 
     // Language popup setup
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       const langIconBtn = document.getElementById('langIconBtn');
       const langPopup = document.getElementById('langPopup');
       const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
-
-      langIconBtn.addEventListener('click', function (e) {
+      
+      langIconBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         langPopup.classList.toggle('hidden');
       });
-
-      document.body.addEventListener('click', function (e) {
+      
+      document.body.addEventListener('click', function(e) {
         if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
           langPopup.classList.add('hidden');
         }
       });
-
+      
       langPopupBtns.forEach(btn => {
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', function() {
           setLang(this.getAttribute('data-lang'));
           langPopup.classList.add('hidden');
         });
       });
-
+      
       setLang(currentLang);
     });
 
@@ -506,7 +471,7 @@
       // Fetch manifest
       let manifest = [];
       try {
-        const res = await fetch('result_manifest.json?v=' + new Date().getTime());
+        const res = await fetch('result_manifest.json');
         manifest = await res.json();
       } catch (e) {
         noResultsMessage.textContent = 'Could not load results manifest.';
@@ -543,7 +508,7 @@
       let filtered = manifest.filter(item => {
         if (filterCategory === 'ALL') return true;
         // Map tab category to code
-        const filterCatMap = {
+        const catMap = {
           'SAMRUDHI': 'SM',
           'BHAGYATHARA': 'BT',
           'STHREE_SAKTHI': 'SS',
@@ -553,12 +518,11 @@
           'KARUNYA': 'KR',
           'POOJA_BUMPER': 'BR'
         };
-        return item.code === filterCatMap[filterCategory];
+        return item.code === catMap[filterCategory];
       });
 
-      // Only show results up to tomorrow
-      const tomorrowStr = new Date(Date.UTC(istTime.getUTCFullYear(), istTime.getUTCMonth(), istTime.getUTCDate() + 1)).toISOString().split('T')[0];
-      filtered = filtered.filter(item => item.date <= tomorrowStr);
+      // Only show results up to today
+      filtered = filtered.filter(item => item.date <= todayStr);
 
       // Add cards for filtered draws
       filtered.forEach(item => {
@@ -566,16 +530,13 @@
         if (bumperLotteries.some(b => b.shortName === item.code && b.date === item.date)) return;
         const isNew = (item.date === todayStr);
         if (isNew) hasTodayResult = true;
-
         // Find translated name - simplified logic
-        let translatedName = item.code || 'Unknown';
-
+        let translatedName = item.code;
         // Try to find a matching translation
         for (const [cat, val] of Object.entries(lotteryNameTranslations)) {
           const catCode = catMap[cat];
           if (catCode && catCode === item.code) {
-            const t = val[lang] || val.en;
-            if (t) translatedName = t;
+            translatedName = val[lang] || val.en || item.code;
             break;
           }
         }
@@ -604,17 +565,17 @@
       noResultsMessage.classList.toggle('hidden', hasTodayResult || filterCategory !== 'ALL');
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       setLang(currentLang);
       updateHeaderTitle();
       renderLotteryCards(currentLang);
     });
 
     // Tab bar filtering logic
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       const tabs = document.querySelectorAll('.tab-btn');
       tabs.forEach(tab => {
-        tab.addEventListener('click', function () {
+        tab.addEventListener('click', function() {
           tabs.forEach(t => t.classList.remove('active'));
           this.classList.add('active');
           const category = this.getAttribute('data-category');
@@ -624,5 +585,4 @@
     });
   </script>
 </body>
-
 </html>

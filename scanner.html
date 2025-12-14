@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,43 +14,35 @@
             --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
-
+        
         /* Enhanced modern styling */
         .enhanced-card {
             transition: all 0.3s ease;
             box-shadow: var(--card-shadow);
         }
-
+        
         .enhanced-card:hover {
             transform: translateY(-2px);
             box-shadow: var(--hover-shadow);
         }
-
+        
         .winner-card {
             background: var(--winner-gradient);
             animation: pulse 2s infinite;
         }
-
+        
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.02);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
-
+        
         .scanner-container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
-
+        
         .scanner-input {
             background: white;
             border-radius: 15px;
@@ -59,7 +50,7 @@
             padding: 30px;
             margin-bottom: 30px;
         }
-
+        
         .scanner-result {
             min-height: 200px;
             border-radius: 15px;
@@ -68,17 +59,17 @@
             background: white;
             box-shadow: var(--card-shadow);
         }
-
+        
         .result-card {
             transition: all 0.3s ease;
             margin-bottom: 20px;
         }
-
+        
         .result-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
-
+        
         .language-selector {
             position: absolute;
             top: 20px;
@@ -90,7 +81,7 @@
             display: flex;
             gap: 10px;
         }
-
+        
         .lang-btn {
             border: none;
             background: transparent;
@@ -100,12 +91,12 @@
             font-weight: bold;
             transition: all 0.3s ease;
         }
-
+        
         .lang-btn.active {
             background: var(--primary-gradient);
             color: white;
         }
-
+        
         .back-button {
             position: absolute;
             top: 20px;
@@ -119,23 +110,23 @@
             font-weight: bold;
             transition: all 0.3s ease;
         }
-
+        
         .back-button:hover {
             transform: translateY(-2px);
             box-shadow: var(--hover-shadow);
         }
-
+        
         @media (max-width: 768px) {
             .scanner-container {
                 padding: 10px;
             }
-
+            
             .language-selector {
                 position: static;
                 margin-bottom: 20px;
                 justify-content: center;
             }
-
+            
             .back-button {
                 position: static;
                 display: inline-block;
@@ -144,11 +135,10 @@
         }
     </style>
 </head>
-
 <body class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
     <!-- Back Button -->
     <a href="index.html" class="back-button" id="backButton">← Back to Home</a>
-
+    
     <!-- Language Selector -->
     <div class="language-selector">
         <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
@@ -158,31 +148,31 @@
 
     <div class="scanner-container">
         <h1 class="text-4xl font-bold text-center mb-8 text-gray-800" id="pageTitle">Lottery Scanner</h1>
-
+        
         <!-- Scanner Input Section -->
         <div class="scanner-input">
             <h2 class="text-2xl font-bold mb-6 text-gray-700" id="inputTitle">Scan Your Ticket</h2>
-
+            
             <div class="space-y-6">
                 <div>
                     <label class="block text-lg font-medium mb-2 text-gray-700" id="numberLabel">Ticket Number</label>
-                    <input type="text" id="ticketNumber" placeholder="Enter ticket number (e.g., PM 162584)"
-                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none transition-colors">
+                    <input type="text" id="ticketNumber" placeholder="Enter ticket number (e.g., PM 162584)" 
+                           class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none transition-colors">
                 </div>
-
+                
                 <div>
                     <label class="block text-lg font-medium mb-2 text-gray-700" id="dateLabel">Draw Date</label>
-                    <input type="date" id="drawDate"
-                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none transition-colors">
+                    <input type="date" id="drawDate" 
+                           class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none transition-colors">
                 </div>
-
-                <button onclick="processManualInput()"
-                    class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-6 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg">
+                
+                <button onclick="processManualInput()" 
+                        class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-6 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg">
                     <span id="scanButton">Scan Ticket</span>
                 </button>
             </div>
         </div>
-
+        
         <!-- Results Section -->
         <div class="scanner-result" id="scannerResults">
             <div class="text-gray-500" id="initialMessage">Enter your ticket details to check for winnings</div>
@@ -259,15 +249,15 @@
         let historyData = [];
 
         // Initialize the page
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Set today's date as default
             const today = new Date();
             const formattedDate = today.toISOString().split('T')[0];
             document.getElementById('drawDate').value = formattedDate;
-
+            
             // Load history data
             loadHistoryData();
-
+            
             // Set initial language
             updateUILanguage();
         });
@@ -276,7 +266,7 @@
         function switchLanguage(lang) {
             currentLang = lang;
             updateUILanguage();
-
+            
             // Update active button
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
@@ -285,7 +275,7 @@
         // Update UI language
         function updateUILanguage() {
             const t = langStrings[currentLang];
-
+            
             document.getElementById('pageTitle').textContent = t.pageTitle;
             document.getElementById('inputTitle').textContent = t.inputTitle;
             document.getElementById('numberLabel').textContent = t.numberLabel;
@@ -310,20 +300,20 @@
             const t = langStrings[currentLang];
             const number = document.getElementById('ticketNumber').value.trim();
             const date = document.getElementById('drawDate').value;
-
+            
             if (!number || !date) {
                 alert(t.pleaseFill);
                 return;
             }
-
+            
             // Search in history.json
             const formattedDate = date.includes('-') ? date : date;
             const result = historyData.find(r => r.date === formattedDate || r.date === date);
-
+            
             let found = null;
             let prizeInfo = null;
             let fileParam = '';
-
+            
             if (result) {
                 // Always set fileParam if result found
                 if (result.lottery && result.draw && result.date) {
@@ -343,10 +333,10 @@
                         fileParam = '';
                     }
                 }
-
+                
                 // Normalize the search number for comparison
                 const searchLower = number.replace(/\s+/g, '').toLowerCase();
-
+                
                 // Check all prizes using enhanced matching logic
                 if (result.prizes && Array.isArray(result.prizes)) {
                     for (const prize of result.prizes) {
@@ -354,17 +344,17 @@
                             for (const winner of prize.winners) {
                                 // Normalize the winner number for comparison
                                 const numClean = winner.replace(/\s+/g, '').toLowerCase();
-
+                                
                                 // Enhanced matching logic to prevent overly broad matches
                                 let isMatch = false;
-
+                                
                                 // Exact match - most precise
                                 if (numClean === searchLower) {
                                     isMatch = true;
                                 }
                                 // Series number matching (e.g., "PM 162584" matching "PM 162584 (KOTTAYAM)")
-                                else if (searchLower.length > 4 && numClean.startsWith(searchLower) &&
-                                    numClean.length > searchLower.length) {
+                                else if (searchLower.length > 4 && numClean.startsWith(searchLower) && 
+                                         numClean.length > searchLower.length) {
                                     // Check if the remaining part is location info in parentheses
                                     const remainder = numClean.substring(searchLower.length).trim();
                                     if (remainder.startsWith('(') && remainder.endsWith(')')) {
@@ -391,7 +381,7 @@
                                         isMatch = true;
                                     }
                                 }
-
+                                
                                 if (isMatch) {
                                     found = { number: number, date: result.date, status: 'winner', code: result.lottery, draw: result.draw, fileParam };
                                     prizeInfo = { label: prize.label, amount: prize.amount };
@@ -403,7 +393,7 @@
                     }
                 }
             }
-
+            
             if (found) {
                 found.prizeInfo = prizeInfo;
                 displayScanResult(found);
@@ -416,7 +406,7 @@
         function displayScanResult(result) {
             const t = langStrings[currentLang];
             const resultsContainer = document.getElementById('scannerResults');
-
+            
             if (result.status === 'winner') {
                 const resultHtml = `
                 <div class="winner-card text-white p-6 text-center font-bold mb-6">
@@ -446,5 +436,4 @@
         }
     </script>
 </body>
-
 </html>

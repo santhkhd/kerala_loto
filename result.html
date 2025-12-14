@@ -1,339 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kerala Lottery Result</title>
-
-    <link href="output.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-            --secondary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-            --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
-            --transition: all 0.3s ease;
-        }
-
-        body {
-            background: #0f172a;
-            font-family: 'Poppins', sans-serif;
-            color: #e2e8f0;
-        }
-
-        .winner-scroll {
-            overflow-x: auto;
-            padding: 8px 0;
-        }
-
-        .highlight-winner {
-            background: var(--accent-gradient) !important;
-            color: #1e293b !important;
-            font-weight: bold;
-            border: 2px solid #f59e0b;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.03);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        @media print {
-            body {
-                font-size: 11px !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                background: #fff !important;
-                color: #000 !important;
-                max-width: 700px !important;
-            }
-
-            #main-content-area {
-                max-width: 700px !important;
-                margin: 0 auto !important;
-            }
-
-            .print-header {
-                display: block !important;
-                text-align: center;
-                font-size: 1.2em;
-                font-weight: bold;
-                margin-bottom: 8px;
-            }
-
-            .print-table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                font-size: 10px !important;
-            }
-
-            .print-table th,
-            .print-table td {
-                border: 1px solid #888 !important;
-                padding: 2px 4px !important;
-            }
-
-            .print-table th {
-                background: #eee !important;
-            }
-
-            .print-hide {
-                display: none !important;
-            }
-        }
-
-        .floating-refresh-btn {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            z-index: 1001;
-            box-shadow: var(--card-shadow);
-            display: none;
-            min-width: 100px;
-            font-size: 14px;
-            padding: 14px 20px;
-            border-radius: 50px;
-            background: var(--success-gradient) !important;
-            color: white !important;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            transform: translateY(0);
-        }
-
-        .floating-refresh-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Mobile specific adjustments */
-        @media (max-width: 768px) {
-            .floating-refresh-btn {
-                bottom: 90px;
-                right: 15px;
-                min-width: 90px;
-                font-size: 16px;
-                padding: 15px 20px;
-            }
-        }
-
-        /* Enhanced card styling */
-        .enhanced-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: var(--transition);
-        }
-
-        .enhanced-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 15px 10px -6px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Gradient text */
-        .gradient-text {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Prize card styling */
-        .prize-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: var(--transition);
-        }
-
-        .prize-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-3px);
-        }
-
-        .first-prize-card {
-            border: 3px solid #f59e0b;
-            box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.3);
-        }
-
-        /* Winner number styling */
-        .winner-number {
-            background: rgba(30, 64, 175, 0.2);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            transition: var(--transition);
-        }
-
-        .winner-number:hover {
-            background: rgba(30, 64, 175, 0.3);
-            transform: scale(1.05);
-        }
-
-        /* Search input styling */
-        .search-input {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(5px);
-            border: 2px solid rgba(59, 130, 246, 0.3);
-            transition: var(--transition);
-            color: #e2e8f0;
-        }
-
-        .search-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-            outline: none;
-        }
-
-        /* Button styling */
-        .primary-btn {
-            background: var(--primary-gradient);
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: var(--transition);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Info card styling */
-        .info-card {
-            border-radius: 16px;
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .info-card:hover {
-            transform: translateY(-3px);
-        }
-
-        /* Table styling */
-        .prize-table {
-            border-collapse: separate;
-            border-spacing: 0;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .prize-table th {
-            background: rgba(30, 64, 175, 0.3);
-        }
-
-        .prize-table td,
-        .prize-table th {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .prize-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .prize-table td:last-child,
-        .prize-table th:last-child {
-            border-right: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kerala Lottery Result</title>
+  
+  <link href="output.css" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      --secondary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+      --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+      --transition: all 0.3s ease;
+    }
+    
+    body { 
+      background: #0f172a; 
+      font-family: 'Poppins', sans-serif;
+      color: #e2e8f0;
+    }
+    
+    .winner-scroll { 
+      overflow-x: auto; 
+      padding: 8px 0;
+    }
+    
+    .highlight-winner { 
+      background: var(--accent-gradient) !important; 
+      color: #1e293b !important; 
+      font-weight: bold; 
+      border: 2px solid #f59e0b;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    
+    @media print {
+      body {
+        font-size: 11px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #fff !important;
+        color: #000 !important;
+        max-width: 700px !important;
+      }
+      #main-content-area {
+        max-width: 700px !important;
+        margin: 0 auto !important;
+      }
+      .print-header {
+        display: block !important;
+        text-align: center;
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+      .print-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 10px !important;
+      }
+      .print-table th, .print-table td {
+        border: 1px solid #888 !important;
+        padding: 2px 4px !important;
+      }
+      .print-table th {
+        background: #eee !important;
+      }
+      .print-hide {
+        display: none !important;
+      }
+    }
+    
+    .floating-refresh-btn {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      z-index: 1001;
+      box-shadow: var(--card-shadow);
+      display: none;
+      min-width: 100px;
+      font-size: 14px;
+      padding: 14px 20px;
+      border-radius: 50px;
+      background: var(--success-gradient) !important;
+      color: white !important;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      transform: translateY(0);
+    }
+    
+    .floating-refresh-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Mobile specific adjustments */
+    @media (max-width: 768px) {
+      .floating-refresh-btn {
+        bottom: 90px;
+        right: 15px;
+        min-width: 90px;
+        font-size: 16px;
+        padding: 15px 20px;
+      }
+    }
+    
+    /* Enhanced card styling */
+    .enhanced-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+    }
+    
+    .enhanced-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 15px 10px -6px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Gradient text */
+    .gradient-text {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Prize card styling */
+    .prize-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+    }
+    
+    .prize-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-3px);
+    }
+    
+    .first-prize-card {
+      border: 3px solid #f59e0b;
+      box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.3);
+    }
+    
+    /* Winner number styling */
+    .winner-number {
+      background: rgba(30, 64, 175, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      transition: var(--transition);
+    }
+    
+    .winner-number:hover {
+      background: rgba(30, 64, 175, 0.3);
+      transform: scale(1.05);
+    }
+    
+    /* Search input styling */
+    .search-input {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(5px);
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      transition: var(--transition);
+      color: #e2e8f0;
+    }
+    
+    .search-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      outline: none;
+    }
+    
+    /* Button styling */
+    .primary-btn {
+      background: var(--primary-gradient);
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: var(--transition);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Info card styling */
+    .info-card {
+      border-radius: 16px;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .info-card:hover {
+      transform: translateY(-3px);
+    }
+    
+    /* Table styling */
+    .prize-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .prize-table th {
+      background: rgba(30, 64, 175, 0.3);
+    }
+    
+    .prize-table td, .prize-table th {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .prize-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .prize-table td:last-child, .prize-table th:last-child {
+      border-right: none;
+    }
+  </style>
 </head>
-
 <body class="bg-gray-900 min-h-screen">
-    <div
-        class="w-full bg-gradient-to-r from-blue-900 to-blue-500 text-white py-5 px-4 flex items-center justify-between shadow-md relative">
-        <button
-            class="text-2xl absolute left-4 top-1/2 -translate-y-1/2 bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition"
-            onclick="goBack()" title="Back" style="display:none;">←</button>
-        <span id="header-title" class="text-lg font-bold flex-1 text-center">Kerala Lottery Results</span>
-        <button
-            class="text-2xl absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition"
-            id="langIconBtn" title="Change language">🌐</button>
-        <div class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-lg p-6 min-w-[180px]" id="langPopup">
-            <div class="font-bold text-blue-700 mb-2">Select Language</div>
-            <button
-                class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold"
-                data-lang="en">English</button>
-            <button
-                class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold"
-                data-lang="ml">മലയാളം</button>
-            <button
-                class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold"
-                data-lang="ta">தமிழ்</button>
-        </div>
+  <div class="w-full bg-gradient-to-r from-blue-900 to-blue-500 text-white py-5 px-4 flex items-center justify-between shadow-md relative">
+    <button class="text-2xl absolute left-4 top-1/2 -translate-y-1/2 bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition" onclick="goBack()" title="Back" style="display:none;">←</button>
+    <span id="header-title" class="text-lg font-bold flex-1 text-center">Kerala Lottery Results</span>
+    <button class="text-2xl absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-none text-white hover:bg-blue-800/30 rounded-full p-2 transition" id="langIconBtn" title="Change language">🌐</button>
+    <div class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-lg p-6 min-w-[180px]" id="langPopup">
+      <div class="font-bold text-blue-700 mb-2">Select Language</div>
+      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="en">English</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ml">മലയാളം</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-blue-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
     </div>
-    <div class="w-full py-8 px-2">
-        <div class="max-w-4xl mx-auto">
-            <div id="main-content-area">
-                <div class="text-center py-10 text-xl text-gray-300" id="loadingMsg">Loading result...</div>
-            </div>
-        </div>
+  </div>
+  <div class="w-full py-8 px-2">
+    <div class="max-w-4xl mx-auto">
+      <div id="main-content-area">
+        <div class="text-center py-10 text-xl text-gray-300" id="loadingMsg">Loading result...</div>
+      </div>
     </div>
-    <!-- Floating Refresh Button -->
-    <button id="refreshBtn"
-        class="floating-refresh-btn bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-5 rounded-full transition-colors duration-200">
-        Refresh
-    </button>
-    <script>
-        function escapeHtml(str) {
-            return str ? str.replace(/[&<>"]/g, function (tag) {
-                const charsToReplace = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
-                return charsToReplace[tag] || tag;
-            }) : '';
-        }
+  </div>
+  <!-- Floating Refresh Button -->
+  <button id="refreshBtn" class="floating-refresh-btn bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-5 rounded-full transition-colors duration-200">
+    Refresh
+  </button>
+  <script>
+    function escapeHtml(str) {
+      return str ? str.replace(/[&<>"]/g, function(tag) {
+        const charsToReplace = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+        return charsToReplace[tag] || tag;
+      }) : '';
+    }
         const schedule = [
-            { dayOfWeek: 0, name: 'SAMRUDHI', shortName: 'SM', baseNumber: 9, baseDate: '2025-06-29' },
-            { dayOfWeek: 1, name: 'BHAGYATHARA', shortName: 'BT', baseNumber: 8, baseDate: '2025-06-23' },
-            { dayOfWeek: 2, name: 'STHREE_SAKTHI', shortName: 'SS', baseNumber: 473, baseDate: '2025-06-24' },
-            { dayOfWeek: 3, name: 'DHANALEKSHMI', shortName: 'DL', baseNumber: 6, baseDate: '2025-06-25' },
-            { dayOfWeek: 4, name: 'KARUNYA_PLUS', shortName: 'KN', baseNumber: 578, baseDate: '2025-06-26' },
-            { dayOfWeek: 5, name: 'SUVARNA_KERALAM', shortName: 'SK', baseNumber: 9, baseDate: '2025-06-27' },
-            { dayOfWeek: 6, name: 'KARUNYA', shortName: 'KR', baseNumber: 712, baseDate: '2025-06-28' }
-        ];
+        { dayOfWeek: 0, name: 'SAMRUDHI', shortName: 'SM', baseNumber: 9, baseDate: '2025-06-29' },
+        { dayOfWeek: 1, name: 'BHAGYATHARA', shortName: 'BT', baseNumber: 8, baseDate: '2025-06-23' },
+        { dayOfWeek: 2, name: 'STHREE_SAKTHI', shortName: 'SS', baseNumber: 473, baseDate: '2025-06-24' },
+        { dayOfWeek: 3, name: 'DHANALEKSHMI', shortName: 'DL', baseNumber: 6, baseDate: '2025-06-25' },
+        { dayOfWeek: 4, name: 'KARUNYA_PLUS', shortName: 'KN', baseNumber: 578, baseDate: '2025-06-26' },
+        { dayOfWeek: 5, name: 'SUVARNA_KERALAM', shortName: 'SK', baseNumber: 9, baseDate: '2025-06-27' },
+        { dayOfWeek: 6, name: 'KARUNYA', shortName: 'KR', baseNumber: 712, baseDate: '2025-06-28' }
+      ];
 
-        function getQueryParam(name) {
-            const url = new URL(window.location.href);
-            return url.searchParams.get(name);
-        }
-        function renderResult(data, searchNumber = '') {
-            const file = getQueryParam('file') || '';
-            const lotteryShortName = file.split('-')[0].toUpperCase();
-            const bumperLotteryCodes = ['BR', 'NY', 'SB', 'CR', 'PM', 'VJ']; // Add other bumper codes here
-            const isBumper = bumperLotteryCodes.includes(lotteryShortName);
+    function getQueryParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+    function renderResult(data, searchNumber = '') {
+      const file = getQueryParam('file') || '';
+      const lotteryShortName = file.split('-')[0].toUpperCase();
+      const bumperLotteryCodes = ['BR', 'NY', 'SB', 'CR', 'PM', 'VJ']; // Add other bumper codes here
+      const isBumper = bumperLotteryCodes.includes(lotteryShortName);
 
-            let html = '';
-            // Lottery title and meta
-            html += `<div class="enhanced-card p-6 mb-6">
+      let html = '';
+      // Lottery title and meta
+      html += `<div class="enhanced-card p-6 mb-6">
         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div class="w-full sm:w-auto text-center sm:text-left">
-            <div class="text-4xl sm:text-5xl font-extrabold tracking-wide mb-2 gradient-text" style="line-height:1.1;">${escapeHtml(data.lottery_name || '')}</div>
+            <div class="text-4xl sm:text-5xl font-extrabold tracking-wide mb-2 gradient-text" style="line-height:1.1;">${escapeHtml(data.lottery_name||'')}</div>
           </div>
           <div class="flex flex-col sm:items-end w-full sm:w-auto text-center sm:text-right">
-            <span class="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">Draw: <b>${escapeHtml(data.draw_number || '')}</b></span>
-            <span class="text-lg sm:text-xl font-semibold text-blue-200 mt-1">Date: <b>${escapeHtml(data.draw_date || '')}</b></span>
+            <span class="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">Draw: <b>${escapeHtml(data.draw_number||'')}</b></span>
+            <span class="text-lg sm:text-xl font-semibold text-blue-200 mt-1">Date: <b>${escapeHtml(data.draw_date||'')}</b></span>
           </div>
         </div>
       </div>`;
-
-            // Search bar
-            html += `<div class="enhanced-card p-6 mb-6">
+      
+      // Search bar
+      html += `<div class="enhanced-card p-6 mb-6">
         <div class="mb-4 flex flex-col items-center gap-3">
           <label for="searchInput" id="searchLabel" class="block text-blue-200 font-semibold text-lg mb-2">Search Ticket Number</label>
           <div class="w-full sm:w-3/4 flex flex-col gap-3 items-center">
@@ -343,107 +311,97 @@
           <div id="searchResultMsg" class="mt-3 text-yellow-300 text-sm font-semibold"></div>
         </div>
       </div>`;
-
-            // Prize cards or Bumper Table
-            html += '<div id="prizes">';
-            const prizeKeys = Object.keys(data.prizes || {});
-            const order = [
-                'bumper_prize', '1st_prize', 'consolation_prize', '2nd_prize', '3rd_prize', '4th_prize', '5th_prize', '6th_prize', '7th_prize', '8th_prize', '9th_prize'
-            ];
-            prizeKeys.sort((a, b) => {
-                let ia = order.indexOf(a), ib = order.indexOf(b);
-                if (ia === -1) ia = 100; if (ib === -1) ib = 100;
-                return ia - ib;
-            });
-
-            // Search logic
-            let foundPrize = null, foundPrizeKey = '', foundWinner = '';
-            if (searchNumber) {
-                const searchLower = searchNumber.trim().toLowerCase().replace(/\s+/g, '');
-                for (const key of prizeKeys) {
-                    const prize = data.prizes[key];
-                    if (!prize || !prize.winners) continue;
-                    for (const w of prize.winners) {
-                        const winnerNorm = w.toLowerCase().replace(/\s+/g, '');
-                        if (winnerNorm.includes(searchLower) && searchLower.length > 0) {
-                            foundPrize = prize;
-                            foundPrizeKey = key;
-                            foundWinner = w;
-                            break;
-                        }
-                    }
-                    if (foundPrize) break;
-                }
+      
+      // Prize cards or Bumper Table
+      html += '<div id="prizes">';
+      const prizeKeys = Object.keys(data.prizes||{});
+      const order = [
+        'bumper_prize','1st_prize','consolation_prize','2nd_prize','3rd_prize','4th_prize','5th_prize','6th_prize','7th_prize','8th_prize','9th_prize'
+      ];
+      prizeKeys.sort((a,b)=>{
+        let ia = order.indexOf(a), ib = order.indexOf(b);
+        if(ia===-1) ia=100; if(ib===-1) ib=100;
+        return ia-ib;
+      });
+      
+      // Search logic
+      let foundPrize = null, foundPrizeKey = '', foundWinner = '';
+      if (searchNumber) {
+        const searchLower = searchNumber.trim().toLowerCase().replace(/\s+/g,'');
+        for (const key of prizeKeys) {
+          const prize = data.prizes[key];
+          if (!prize || !prize.winners) continue;
+          for (const w of prize.winners) {
+            const winnerNorm = w.toLowerCase().replace(/\s+/g,'');
+            if (winnerNorm.includes(searchLower) && searchLower.length > 0) {
+              foundPrize = prize;
+              foundPrizeKey = key;
+              foundWinner = w;
+              break;
             }
-
-            // If found, show summary card
-            if (searchNumber && foundPrize) {
-                html += `<div class="enhanced-card p-5 mb-6 border-2 border-yellow-400 bg-gradient-to-r from-yellow-500/10 to-amber-500/10 animate-pulse">
+          }
+          if (foundPrize) break;
+        }
+      }
+      
+      // If found, show summary card
+      if (searchNumber && foundPrize) {
+        html += `<div class="enhanced-card p-5 mb-6 border-2 border-yellow-400 bg-gradient-to-r from-yellow-500/10 to-amber-500/10 animate-pulse">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <span class="font-bold text-xl text-yellow-100">🎉 Congratulations! <span class="font-bold">Ticket Number</span> <span class="bg-yellow-300 text-yellow-900 px-3 py-2 rounded-lg font-mono font-bold">${escapeHtml(foundWinner)}</span> won <span class="font-bold">${escapeHtml(foundPrize.label || foundPrizeKey.replace(/_/g, ' '))}</span></span>
+            <span class="font-bold text-xl text-yellow-100">🎉 Congratulations! <span class="font-bold">Ticket Number</span> <span class="bg-yellow-300 text-yellow-900 px-3 py-2 rounded-lg font-mono font-bold">${escapeHtml(foundWinner)}</span> won <span class="font-bold">${escapeHtml(foundPrize.label||foundPrizeKey.replace(/_/g,' '))}</span></span>
             <span class="font-bold text-green-300 text-2xl bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">₹${foundPrize.amount ? parseInt(foundPrize.amount).toLocaleString() : ''}</span>
           </div>
         </div>`;
-            } else if (searchNumber) {
-                html += `<div class="enhanced-card p-5 mb-6 border-2 border-red-400 bg-gradient-to-r from-red-500/10 to-rose-500/10">
+      } else if (searchNumber) {
+        html += `<div class="enhanced-card p-5 mb-6 border-2 border-red-400 bg-gradient-to-r from-red-500/10 to-rose-500/10">
           <div class="text-red-200 font-semibold text-lg"><span class="font-bold">Ticket Number</span> <span class="bg-red-200/20 text-red-100 px-3 py-2 rounded-lg font-mono font-bold">${escapeHtml(searchNumber)}</span> did not win any prize in this draw.</div>
         </div>`;
-            }
-
-            // Render all prize cards
-            prizeKeys.forEach((key, idx) => {
-                const prize = data.prizes[key];
-                if (!prize) return;
-
-                const isSpecialPrize = key === '1st_prize' || key === 'bumper_prize';
-                const cardClass = isSpecialPrize ? 'first-prize-card' : '';
-                const prizeClass = isSpecialPrize ? 'text-2xl' : 'text-xl';
-                const amountClass = isSpecialPrize ? 'text-3xl' : 'text-2xl';
-
-                const prizeAmtStr = prize.amount ? '₹' + parseInt(prize.amount).toLocaleString('en-IN') : '';
-
-                // Special styling for 1st Prize Amount
-                let amountHtml = '';
-                if (isSpecialPrize) {
-                    amountHtml = `<span class="${amountClass} font-extrabold text-white ml-2 whitespace-nowrap bg-gradient-to-r from-green-500 to-emerald-600 px-3 py-1 rounded-lg shadow-lg">${prizeAmtStr}</span>`;
-                } else {
-                    amountHtml = `<span class="${amountClass} font-extrabold text-green-300 ml-2 whitespace-nowrap bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">${prizeAmtStr}</span>`;
-                }
-
-                html += `<div class="prize-card ${cardClass} p-5 mb-5">
+      }
+      
+      // Render all prize cards
+      prizeKeys.forEach((key, idx) => {
+        const prize = data.prizes[key];
+        if (!prize) return;
+        
+        const isSpecialPrize = key === '1st_prize' || key === 'bumper_prize';
+        const cardClass = isSpecialPrize ? 'first-prize-card' : '';
+        const prizeClass = isSpecialPrize ? 'text-2xl' : 'text-xl';
+        const amountClass = isSpecialPrize ? 'text-3xl' : 'text-2xl';
+        
+        html += `<div class="prize-card ${cardClass} p-5 mb-5">
           <div class="flex flex-row flex-nowrap items-center justify-between min-w-0 mb-4">
-            <span class="${prizeClass} font-bold text-blue-100 truncate" style="max-width:50%;">${escapeHtml(prize.label || key.replace(/_/g, ' '))}</span>
-            ${amountHtml}
+            <span class="${prizeClass} font-bold text-blue-100 truncate" style="max-width:70%;">${escapeHtml(prize.label||key.replace(/_/g,' '))}</span>
+            <span class="${amountClass} font-extrabold text-green-300 ml-2 whitespace-nowrap bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">₹${prize.amount ? parseInt(prize.amount).toLocaleString() : ''}</span>
           </div>`;
-
-                if (prize.winners && prize.winners.length > 0) {
-                    html += '<div class="flex flex-wrap gap-3 winner-scroll">';
-                    prize.winners.forEach(w => {
-                        const winnerNorm = w.toLowerCase().replace(/\s+/g, '');
-                        const isHighlight = searchNumber && winnerNorm.includes(searchNumber.trim().toLowerCase().replace(/\s+/g, '')) && searchNumber.trim() !== '';
-                        const highlightClass = isHighlight ? ' highlight-winner' : '';
-                        html += `<span class="winner-number px-4 py-2 font-mono font-bold tracking-wide rounded-lg shadow-sm${highlightClass}" style="letter-spacing:0.05em;">${escapeHtml(w)}</span>`;
-                    });
-                    html += '</div>';
-                } else {
-                    html += '<div class="text-gray-400 italic text-lg py-3">No winners announced yet.</div>';
-                }
-                html += '</div>';
-            });
-            html += '</div>';
-
-            // Info cards
-            let totalWinners = 0, totalPrizeMoney = 0, prizeCategories = 0;
-            prizeKeys.forEach(key => {
-                const prize = data.prizes[key];
-                if (prize) {
-                    prizeCategories++;
-                    totalWinners += (prize.winners || []).length;
-                    totalPrizeMoney += (parseInt(prize.amount) || 0) * (prize.winners || []).length;
-                }
-            });
-
-            html += `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 mb-8 print-hide">
+          
+        if (prize.winners && prize.winners.length > 0) {
+          html += '<div class="flex flex-wrap gap-3 winner-scroll">';
+          prize.winners.forEach(w => {
+            const winnerNorm = w.toLowerCase().replace(/\s+/g,'');
+            const isHighlight = searchNumber && winnerNorm.includes(searchNumber.trim().toLowerCase().replace(/\s+/g,'')) && searchNumber.trim() !== '';
+            const highlightClass = isHighlight ? ' highlight-winner' : '';
+            html += `<span class="winner-number px-4 py-2 font-mono font-bold tracking-wide rounded-lg shadow-sm${highlightClass}" style="letter-spacing:0.05em;">${escapeHtml(w)}</span>`;
+          });
+          html += '</div>';
+        } else {
+          html += '<div class="text-gray-400 italic text-lg py-3">No winners announced yet.</div>';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+      
+      // Info cards
+      let totalWinners = 0, totalPrizeMoney = 0, prizeCategories = 0;
+      prizeKeys.forEach(key => {
+        const prize = data.prizes[key];
+        if (prize) {
+          prizeCategories++;
+          totalWinners += (prize.winners||[]).length;
+          totalPrizeMoney += (parseInt(prize.amount)||0) * (prize.winners||[]).length;
+        }
+      });
+      
+      html += `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 mb-8 print-hide">
         <div class="info-card bg-gradient-to-br from-blue-800/50 to-blue-900/50 p-5 text-center">
           <div class="text-xs text-blue-300 mb-1">Total Winners</div>
           <div class="text-2xl font-bold text-blue-100">${totalWinners.toLocaleString()}</div>
@@ -454,45 +412,45 @@
         </div>
         <div class="info-card bg-gradient-to-br from-amber-800/50 to-amber-900/50 p-5 text-center">
           <div class="text-xs text-amber-300 mb-1">Draw Number</div>
-          <div class="text-2xl font-bold text-amber-100">${escapeHtml(data.draw_number || '')}</div>
+          <div class="text-2xl font-bold text-amber-100">${escapeHtml(data.draw_number||'')}</div>
         </div>
         <div class="info-card bg-gradient-to-br from-purple-800/50 to-purple-900/50 p-5 text-center">
           <div class="text-xs text-purple-300 mb-1">Prize Categories</div>
           <div class="text-2xl font-bold text-purple-100">${prizeCategories}</div>
         </div>
       </div>`;
-
-            // Print-only compact header and table
-            html += `<div class='print-header' style='display:none;'>${escapeHtml(data.lottery_name || '')}<br>Draw: ${escapeHtml(data.draw_number || '')}<br>Date: ${escapeHtml(data.draw_date || '')}</div>`;
-
-            // Build a flat list of all winners with their prize
-            let allWinners = [];
-            prizeKeys.forEach(key => {
-                const prize = data.prizes[key];
-                if (prize && prize.winners && prize.winners.length) {
-                    prize.winners.forEach(w => {
-                        allWinners.push({ winner: w, prize: prize.label || key.replace(/_/g, ' ') });
-                    });
-                }
-            });
-
-            html += `<table class='print-table' style='display:none;margin:0 auto 8px auto;'>
+      
+      // Print-only compact header and table
+      html += `<div class='print-header' style='display:none;'>${escapeHtml(data.lottery_name||'')}<br>Draw: ${escapeHtml(data.draw_number||'')}<br>Date: ${escapeHtml(data.draw_date||'')}</div>`;
+      
+      // Build a flat list of all winners with their prize
+      let allWinners = [];
+      prizeKeys.forEach(key => {
+        const prize = data.prizes[key];
+        if (prize && prize.winners && prize.winners.length) {
+          prize.winners.forEach(w => {
+            allWinners.push({winner: w, prize: prize.label||key.replace(/_/g,' ')});
+          });
+        }
+      });
+      
+      html += `<table class='print-table' style='display:none;margin:0 auto 8px auto;'>
         <thead><tr><th>Winning Number</th><th>Prize</th></tr></thead><tbody>`;
-            allWinners.forEach(row => {
-                html += `<tr><td>${escapeHtml(row.winner)}</td><td>${escapeHtml(row.prize)}</td></tr>`;
-            });
-            html += `</tbody></table>`;
-
-            // Page break for print/PDF
-            html += '<div class="page-break"></div>';
-
-            // Print/download button
-            html += `<div class="text-center mt-6 mb-8">
+      allWinners.forEach(row => {
+        html += `<tr><td>${escapeHtml(row.winner)}</td><td>${escapeHtml(row.prize)}</td></tr>`;
+      });
+      html += `</tbody></table>`;
+      
+      // Page break for print/PDF
+      html += '<div class="page-break"></div>';
+      
+      // Print/download button
+      html += `<div class="text-center mt-6 mb-8">
         <button onclick="window.print()" class="primary-btn py-4 px-8 rounded-xl text-xl font-bold shadow-lg">Download/Print PDF</button>
       </div>`;
-
-            // Disclaimer
-            html += `<div class="enhanced-card p-6 my-8">
+      
+      // Disclaimer
+      html += `<div class="enhanced-card p-6 my-8">
         <div class="text-center text-yellow-200">
           <h3 class="text-xl font-bold mb-3 text-yellow-100">⚠️ Disclaimer</h3>
           <p class="mb-3">The file contains the numbers of Winners of the day for all prizes. The Kerala lottery result is also published in the Kerala Government Gazette.</p>
@@ -500,8 +458,8 @@
         </div>
       </div>`;
 
-            // Prize Structure Table (dynamic for all lotteries)
-            html += `<div class="enhanced-card p-6 my-8">
+      // Prize Structure Table (dynamic for all lotteries)
+      html += `<div class="enhanced-card p-6 my-8">
         <h2 class="text-2xl font-bold mb-5 text-center tracking-wide gradient-text">${escapeHtml(data.lottery_name)} - Prize Structure</h2>
         <div class="overflow-x-auto">
           <table class="prize-table w-full text-base text-left">
@@ -517,22 +475,22 @@
                 const prize = data.prizes[key];
                 if (!prize) return '';
                 return `<tr class="hover:bg-white/5">
-                  <td class="p-4">${escapeHtml(prize.label || key.replace(/_/g, ' '))}</td>
+                  <td class="p-4">${escapeHtml(prize.label || key.replace(/_/g,' '))}</td>
                   <td class="p-4 text-right">${prize.winners ? prize.winners.length : 0}</td>
                   <td class="p-4 text-right font-bold text-green-300">₹${prize.amount ? parseInt(prize.amount).toLocaleString() : ''}</td>
                 </tr>`;
-            }).join('')}
+              }).join('')}
             </tbody>
           </table>
         </div>
       </div>`;
 
-            // Recent Results Table Placeholder
-            html += `<div id="recentResultsContainer"></div>`;
+      // Recent Results Table Placeholder
+      html += `<div id="recentResultsContainer"></div>`;
 
-            // How to Claim Your Winnings info box
-            html += `<div class="enhanced-card p-6 my-8 bg-gradient-to-br from-green-900/30 to-emerald-900/30 border border-green-500/30">
-        <h2 class="text-2xl font-bold mb-5 text-green-100 text-center tracking-wide">How to Claim Your Winnings for ${escapeHtml(data.lottery_name || '')} (${escapeHtml(data.draw_number || '')}) Kerala Lottery:</h2>
+      // How to Claim Your Winnings info box
+      html += `<div class="enhanced-card p-6 my-8 bg-gradient-to-br from-green-900/30 to-emerald-900/30 border border-green-500/30">
+        <h2 class="text-2xl font-bold mb-5 text-green-100 text-center tracking-wide">How to Claim Your Winnings for ${escapeHtml(data.lottery_name||'')} (${escapeHtml(data.draw_number||'')}) Kerala Lottery:</h2>
         <ol class="list-decimal list-inside space-y-4 text-green-200 ml-4">
           <li class="pl-2"><b class="text-green-100">Check Your Number:</b><br>Go to the official Kerala Lottery website <a href="https://statelottery.kerala.gov.in/" class="underline text-green-300 hover:text-green-100" target="_blank">statelottery.kerala.gov.in</a> and match your ticket number with the winning number. If it matches, congratulations!</li>
           <li class="pl-2"><b class="text-green-100">Claiming the Prize:</b><br>Visit the Kerala Lottery Office in Thiruvananthapuram and submit your winning ticket. Make sure your ticket is in good condition — not torn or damaged.</li>
@@ -542,205 +500,198 @@
         </ol>
       </div>`;
 
-            document.getElementById('main-content-area').innerHTML = html;
+      document.getElementById('main-content-area').innerHTML = html;
 
-            // Add event listeners
-            setTimeout(() => {
-                const searchInput = document.getElementById('searchInput');
-                const searchBtn = document.getElementById('searchBtn');
-                const refreshBtn = document.getElementById('refreshBtn');
+      // Add event listeners
+      setTimeout(() => {
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
 
-                // Show refresh button based on time
-                const now = new Date();
-                const indianTime = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata', hour12: false });
-                const [hourStr, minStr] = indianTime.split(':');
-                const hour = parseInt(hourStr, 10);
-                const min = parseInt(minStr, 10);
-                // Show between 15:00 (3:00 PM) and 16:30 (4:30 PM) IST
-                console.log('Current Indian time:', indianTime, 'Hour:', hour, 'Min:', min);
-                if ((hour === 15) || (hour === 16 && min <= 30)) {
-                    console.log('Showing refresh button - time condition met');
-                    if (refreshBtn) {
-                        refreshBtn.style.display = 'block';
-                        console.log('Refresh button display set to block');
-                    } else {
-                        console.log('Refresh button element not found');
-                    }
-                } else {
-                    console.log('Not showing refresh button - outside time window');
-                }
-
-                if (searchBtn) {
-                    searchBtn.onclick = () => {
-                        renderResult(data, searchInput.value);
-                    };
-                }
-                if (searchInput) {
-                    searchInput.onkeydown = (e) => {
-                        if (e.key === 'Enter') {
-                            renderResult(data, searchInput.value);
-                        }
-                    };
-                }
-                if (refreshBtn) {
-                    refreshBtn.onclick = () => {
-                        const mainContent = document.getElementById('main-content-area');
-                        const loadingMsg = document.getElementById('loadingMsg');
-                        if (mainContent) mainContent.innerHTML = ''; // Clear old results
-                        if (loadingMsg) {
-                            loadingMsg.textContent = 'Refreshing...';
-                            loadingMsg.style.display = 'block';
-                        }
-                        fetchAndRenderData();
-                    };
-                }
-            }, 100);
-
-            // Show print-only header/table for print
-            if (window.matchMedia && window.matchMedia('print').matches) {
-                document.querySelectorAll('.print-header, .print-table').forEach(el => el.style.display = 'block');
-            }
+        // Show refresh button based on time
+        const now = new Date();
+        const indianTime = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata', hour12: false });
+        const [hourStr, minStr] = indianTime.split(':');
+        const hour = parseInt(hourStr, 10);
+        const min = parseInt(minStr, 10);
+        // Show between 15:00 (3:00 PM) and 16:30 (4:30 PM) IST
+        console.log('Current Indian time:', indianTime, 'Hour:', hour, 'Min:', min);
+        if ((hour === 15) || (hour === 16 && min <= 30)) {
+          console.log('Showing refresh button - time condition met');
+          if (refreshBtn) {
+            refreshBtn.style.display = 'block';
+            console.log('Refresh button display set to block');
+          } else {
+            console.log('Refresh button element not found');
+          }
+        } else {
+          console.log('Not showing refresh button - outside time window');
         }
 
-        async function fetchAndRenderData() {
-            let file = getQueryParam('file');
-            if (!file) {
-                document.getElementById('loadingMsg').textContent = 'No result file specified.';
-                return;
-            }
-
-            // Fetch manifest to validate file
-            let manifest = [];
-            try {
-                const res = await fetch('result_manifest.json?v=' + new Date().getTime());
-                manifest = await res.json();
-            } catch (e) {
-                document.getElementById('loadingMsg').textContent = 'Could not load results manifest.';
-                return;
-            }
-
-            // Only allow navigation to files present in manifest
-            const validEntry = manifest.find(m => m.filename === file);
-            if (!validEntry) {
-                document.getElementById('loadingMsg').textContent = 'Result not available or draw may have been cancelled.';
-                return;
-            }
-
-            // Local file fetch (relative path)
-            fetch('note/' + encodeURIComponent(file))
-                .then(res => res.ok ? res.json() : null)
-                .then(data => {
-                    if (data) {
-                        renderResult(data);
-                    } else {
-                        document.getElementById('loadingMsg').textContent = 'Result not available yet. Please check back later.';
-                    }
-                });
+        if (searchBtn) {
+          searchBtn.onclick = () => {
+            renderResult(data, searchInput.value);
+          };
         }
-
-        (function () {
+        if (searchInput) {
+           searchInput.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+              renderResult(data, searchInput.value);
+            }
+          };
+        }
+        if (refreshBtn) {
+          refreshBtn.onclick = () => {
+            const mainContent = document.getElementById('main-content-area');
+            const loadingMsg = document.getElementById('loadingMsg');
+            if(mainContent) mainContent.innerHTML = ''; // Clear old results
+            if(loadingMsg) {
+                loadingMsg.textContent = 'Refreshing...';
+                loadingMsg.style.display = 'block';
+            }
             fetchAndRenderData();
-        })();
-    </script>
-    <script>
-        // Language translations
-        const translations = {
-            en: {
-                searchLabel: "Search Ticket Number",
-                searchPlaceholder: "eg: AA 123456 or 1234",
-                searchButton: "Search"
-            },
-            ml: {
-                searchLabel: "ടിക്കറ്റ് നമ്പർ തിരയുക",
-                searchPlaceholder: "ഉദാ: AA 123456 അല്ലെങ്കിൽ 1234",
-                searchButton: "തിരയുക"
-            },
-            ta: {
-                searchLabel: "டிக்கெட் எண்ணைத் தேடு",
-                searchPlaceholder: "உதா: AA 123456 அல்லது 1234",
-                searchButton: "தேடு"
-            }
-        };
-        // Language selector logic (fix: update on popup selection)
-        function updateLang(lang) {
-            const t = translations[lang] || translations.en;
-            const searchLabel = document.getElementById('searchLabel');
-            const searchInput = document.getElementById('searchInput');
-            const searchBtn = document.getElementById('searchBtn');
-            if (searchLabel) searchLabel.textContent = t.searchLabel;
-            if (searchInput) searchInput.placeholder = t.searchPlaceholder;
-            if (searchBtn) searchBtn.textContent = t.searchButton;
+          };
         }
-        document.addEventListener('DOMContentLoaded', function () {
-            const langSelect = document.getElementById('langSelect');
-            if (langSelect) {
-                langSelect.addEventListener('change', function () {
-                    updateLang(this.value);
-                });
-                updateLang(langSelect.value);
-            }
-            // Also update on popup selection
-            const langPopupBtns = document.querySelectorAll('.lang-popup-btn');
-            langPopupBtns.forEach(btn => {
-                btn.addEventListener('click', function () {
-                    if (langSelect) langSelect.value = this.getAttribute('data-lang');
-                    updateLang(this.getAttribute('data-lang'));
-                });
-            });
-        });
-        // Language popup logic (shared with other pages)
-        document.addEventListener('DOMContentLoaded', function () {
-            const langIconBtn = document.getElementById('langIconBtn');
-            const langPopup = document.getElementById('langPopup');
-            const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
-            langIconBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                langPopup.classList.toggle('hidden');
-            });
-            document.body.addEventListener('click', function (e) {
-                if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
-                    langPopup.classList.add('hidden');
-                }
-            });
-            langPopupBtns.forEach(btn => {
-                btn.addEventListener('click', function () {
-                    if (typeof setLang === 'function') setLang(this.getAttribute('data-lang'));
-                    langPopup.classList.add('hidden');
-                });
-            });
-        });
-        function goBack() {
-            window.history.length > 1 ? window.history.back() : window.location.href = 'index.html';
-        }
-    </script>
-    <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-2 shadow-lg z-40"
-        aria-label="Bottom Navigation">
-        <a class="flex flex-col items-center text-blue-300 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-            href="index.html" aria-label="Home">
-            <span class="material-icons" aria-hidden="true">home</span>
-            <span class="text-xs">Home</span>
-        </a>
-        <a class="flex flex-col items-center text-blue-300 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-            href="prediction.html" aria-label="Lucky">
-            <span class="material-icons" aria-hidden="true">star</span>
-            <span class="text-xs">Lucky</span>
-        </a>
-        <a class="flex flex-col items-center text-blue-300 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-            href="search.html" aria-label="Search">
-            <span class="material-icons" aria-hidden="true">search</span>
-            <span class="text-xs">Search</span>
-        </a>
-        <a class="flex flex-col items-center text-blue-300 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-            href="scanner.html" aria-label="Scanner">
-            <span class="material-icons" aria-hidden="true">qr_code_scanner</span>
-            <span class="text-xs">Scanner</span>
-        </a>
-        <a class="flex flex-col items-center text-blue-300 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-            href="live.html" aria-label="Live">
-            <span class="material-icons" aria-hidden="true">live_tv</span>
-            <span class="text-xs">Live</span>
-        </a>
-    </nav>
-</body>
+      }, 100);
 
+      // Show print-only header/table for print
+      if (window.matchMedia && window.matchMedia('print').matches) {
+        document.querySelectorAll('.print-header, .print-table').forEach(el => el.style.display = 'block');
+      }
+    }
+
+    async function fetchAndRenderData() {
+      let file = getQueryParam('file');
+      if (!file) {
+        document.getElementById('loadingMsg').textContent = 'No result file specified.';
+        return;
+      }
+
+      // Fetch manifest to validate file
+      let manifest = [];
+      try {
+        const res = await fetch('result_manifest.json');
+        manifest = await res.json();
+      } catch (e) {
+        document.getElementById('loadingMsg').textContent = 'Could not load results manifest.';
+        return;
+      }
+
+      // Only allow navigation to files present in manifest
+      const validEntry = manifest.find(m => m.filename === file);
+      if (!validEntry) {
+        document.getElementById('loadingMsg').textContent = 'Result not available or draw may have been cancelled.';
+        return;
+      }
+
+      // Local file fetch (relative path)
+      fetch('note/' + encodeURIComponent(file))
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data) {
+            renderResult(data);
+          } else {
+            document.getElementById('loadingMsg').textContent = 'Result not available yet. Please check back later.';
+          }
+        });
+    }
+
+    (function() {
+      fetchAndRenderData();
+    })();
+  </script>
+  <script>
+    // Language translations
+    const translations = {
+      en: {
+        searchLabel: "Search Ticket Number",
+        searchPlaceholder: "eg: AA 123456 or 1234",
+        searchButton: "Search"
+      },
+      ml: {
+        searchLabel: "ടിക്കറ്റ് നമ്പർ തിരയുക",
+        searchPlaceholder: "ഉദാ: AA 123456 അല്ലെങ്കിൽ 1234",
+        searchButton: "തിരയുക"
+      },
+      ta: {
+        searchLabel: "டிக்கெட் எண்ணைத் தேடு",
+        searchPlaceholder: "உதா: AA 123456 அல்லது 1234",
+        searchButton: "தேடு"
+      }
+    };
+    // Language selector logic (fix: update on popup selection)
+    function updateLang(lang) {
+      const t = translations[lang] || translations.en;
+      const searchLabel = document.getElementById('searchLabel');
+      const searchInput = document.getElementById('searchInput');
+      const searchBtn = document.getElementById('searchBtn');
+      if (searchLabel) searchLabel.textContent = t.searchLabel;
+      if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+      if (searchBtn) searchBtn.textContent = t.searchButton;
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      const langSelect = document.getElementById('langSelect');
+      if (langSelect) {
+        langSelect.addEventListener('change', function() {
+          updateLang(this.value);
+        });
+        updateLang(langSelect.value);
+      }
+      // Also update on popup selection
+      const langPopupBtns = document.querySelectorAll('.lang-popup-btn');
+      langPopupBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (langSelect) langSelect.value = this.getAttribute('data-lang');
+          updateLang(this.getAttribute('data-lang'));
+        });
+      });
+    });
+    // Language popup logic (shared with other pages)
+    document.addEventListener('DOMContentLoaded', function() {
+      const langIconBtn = document.getElementById('langIconBtn');
+      const langPopup = document.getElementById('langPopup');
+      const langPopupBtns = langPopup.querySelectorAll('.lang-popup-btn');
+      langIconBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        langPopup.classList.toggle('hidden');
+      });
+      document.body.addEventListener('click', function(e) {
+        if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
+          langPopup.classList.add('hidden');
+        }
+      });
+      langPopupBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (typeof setLang === 'function') setLang(this.getAttribute('data-lang'));
+          langPopup.classList.add('hidden');
+        });
+      });
+    });
+    function goBack() {
+      window.history.length > 1 ? window.history.back() : window.location.href = 'index.html';
+    }
+  </script>
+  <nav class="fixed bottom-0 left-0 w-full bg-gray-900 flex justify-around items-center py-2 shadow-lg z-40" aria-label="Bottom Navigation">
+    <a class="flex flex-col items-center text-blue-300 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition" href="index.html" aria-label="Home">
+      <span class="material-icons" aria-hidden="true">home</span>
+      <span class="text-xs">Home</span>
+    </a>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition" href="prediction.html" aria-label="Lucky">
+      <span class="material-icons" aria-hidden="true">star</span>
+      <span class="text-xs">Lucky</span>
+    </a>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition" href="search.html" aria-label="Search">
+      <span class="material-icons" aria-hidden="true">search</span>
+      <span class="text-xs">Search</span>
+    </a>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition" href="scanner.html" aria-label="Scanner">
+      <span class="material-icons" aria-hidden="true">qr_code_scanner</span>
+      <span class="text-xs">Scanner</span>
+    </a>
+    <a class="flex flex-col items-center text-blue-300 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition" href="live.html" aria-label="Live">
+      <span class="material-icons" aria-hidden="true">live_tv</span>
+      <span class="text-xs">Live</span>
+    </a>
+  </nav>
+</body>
 </html>

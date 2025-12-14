@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup, Tag
 import json
 import re
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 import os
 
 def get_last_n_result_links(n=50):
@@ -40,8 +40,8 @@ def get_last_n_result_links(n=50):
                 if date_str:
                     try:
                         result_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-                        # Allow results up to tomorrow
-                        if result_date <= today + timedelta(days=1):
+                        # Exclude today's date
+                        if result_date < today:
                             links.append(url)
                             seen.add(url)
                             if len(links) >= n:
@@ -210,19 +210,95 @@ def process_result_page(result_url):
 
 
 # --- MAIN EXECUTION ---
-if __name__ == "__main__":
-    print("Fetching latest results from website...")
-    # Fetch last 30 to be safe and cover the gap
-    urls_to_process = get_last_n_result_links(30)
-    
-    if not urls_to_process:
-        print("No URLs found to process.")
-    else:
-        # Process each URL
-        print(f"Found {len(urls_to_process)} links to process.")
-        for i, url in enumerate(urls_to_process, 1):
-            print(f"Processing {i}/{len(urls_to_process)}: {url}")
-            process_result_page(url)
-            time.sleep(1)  # Be respectful to the server
+# Define the list of URLs to process
+urls_to_process = [
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-730',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-26', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-28', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-28', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-493',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-26',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-597',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-27', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-731', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-29', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-596',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-25',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-492',
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-27', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-27', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-729',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-25', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-595', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-24', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-491', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-26', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-26', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-728',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-24', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-594', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-23', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-490',
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-25', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-25', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-727',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-23',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-593',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-22', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-489',
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-24', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-24', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-726', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-22', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-592',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-21',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-488',
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-23', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-23', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-725',
+    'https://www.kllotteryresult.com/kerala-lottery-result-BR-105',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-21', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-20',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-487', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-22', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-22',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-20', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-591',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-19',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-486', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-21', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-21',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-724', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-19', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-590',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-18',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-485', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-20',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-20', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-723',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-18',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-589',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-17',
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-484', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-19', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-19',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-722',
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-588', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-16', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SS-483', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-BT-18', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SM-18', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KR-721', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-SK-17', 
+    'https://www.kllotteryresult.com/kerala-lottery-result-KN-587',
+    'https://www.kllotteryresult.com/kerala-lottery-result-DL-15'
+]
 
-    print("All lottery results have been downloaded to the 'note' folder.")
+# Process each URL
+print("Starting to download lottery results...")
+for i, url in enumerate(urls_to_process, 1):
+    print(f"Processing {i}/{len(urls_to_process)}: {url}")
+    process_result_page(url)
+    time.sleep(1)  # Be respectful to the server
+
+print("All lottery results have been downloaded to the 'note' folder.")
