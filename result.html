@@ -400,10 +400,20 @@
                 const prizeClass = isSpecialPrize ? 'text-2xl' : 'text-xl';
                 const amountClass = isSpecialPrize ? 'text-3xl' : 'text-2xl';
 
+                const prizeAmtStr = prize.amount ? '₹' + parseInt(prize.amount).toLocaleString('en-IN') : '';
+
+                // Special styling for 1st Prize Amount
+                let amountHtml = '';
+                if (isSpecialPrize) {
+                    amountHtml = `<span class="${amountClass} font-extrabold text-white ml-2 whitespace-nowrap bg-gradient-to-r from-green-500 to-emerald-600 px-3 py-1 rounded-lg shadow-lg">${prizeAmtStr}</span>`;
+                } else {
+                    amountHtml = `<span class="${amountClass} font-extrabold text-green-300 ml-2 whitespace-nowrap bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">${prizeAmtStr}</span>`;
+                }
+
                 html += `<div class="prize-card ${cardClass} p-5 mb-5">
           <div class="flex flex-row flex-nowrap items-center justify-between min-w-0 mb-4">
-            <span class="${prizeClass} font-bold text-blue-100 truncate" style="max-width:70%;">${escapeHtml(prize.label || key.replace(/_/g, ' '))}</span>
-            <span class="${amountClass} font-extrabold text-green-300 ml-2 whitespace-nowrap bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">₹${prize.amount ? parseInt(prize.amount).toLocaleString() : ''}</span>
+            <span class="${prizeClass} font-bold text-blue-100 truncate" style="max-width:50%;">${escapeHtml(prize.label || key.replace(/_/g, ' '))}</span>
+            ${amountHtml}
           </div>`;
 
                 if (prize.winners && prize.winners.length > 0) {
