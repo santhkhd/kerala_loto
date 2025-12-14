@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottery Result</title>
+    <link href="output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Add custom styles similar to index.html if needed */
+        body {
+            background: #e9edf5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding-bottom: 80px;
+        }
+
+        .prize-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .prize-label {
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .prize-amount {
+            font-size: 0.9em;
+            color: #059669;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .winner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+        }
+
+        .winner-tag {
+            background: #f3f4f6;
+            text-align: center;
+            padding: 6px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #374151;
+        }
+
+        .highlight {
+            background-color: #fca5a5 !important;
+            color: #7f1d1d !important;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+    <div class="max-w-3xl mx-auto">
+        <!-- Header -->
+        <div class="bg-blue-900 text-white p-4 sticky top-0 z-50 flex items-center shadow-md">
+            <a href="index.html" class="mr-4"><span class="material-icons">arrow_back</span></a>
+            <h1 id="result-title" class="text-xl font-bold flex-1 truncate">Loading...</h1>
+            <button onclick="shareResult()" class="border-none bg-transparent text-white"><span
+                    class="material-icons">share</span></button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="p-4 bg-white shadow-sm mb-4">
+            <div class="relative">
+                <input type="text" id="search-input" placeholder="Enter last 4 digits..."
+                    class="w-full border p-3 pl-10 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    maxlength="4" type="tel">
+                <span class="material-icons absolute left-3 top-3.5 text-gray-400">search</span>
+            </div>
+        </div>
+
+        <!-- Result Content -->
+        <div id="result-container" class="px-4">
+            <!-- Prizes injected here -->
+        </div>
+
+        <div id="loading" class="text-center py-10">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-900 mx-auto"></div>
+            <p class="mt-4 text-gray-600">Loading numbers...</p>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const filename = urlParams.get('file');
+
+        async function loadResult() {
+            if (!filename) {
+                document.getElementById('result-title').textContent = "Result Not Found";
+                document.getElementById('loading').classList.add('hidden');
+                return;
+            }
+
+            try {
+                const res = await fetch(`note/${filename}`);
+                if (!res.ok) throw new Error("File not found");
+                const data = await res.json();
+                renderResult(data);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('result-title').textContent = "Error Loading Result";
+                document.getElementById('result-container').innerHTML = `<div class="text-center text-red-600 mt-10">Failed to load result.<br>Please try again later.</div>`;
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+
+        function renderResult(data) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('result-title').textContent = `${data.lottery_name} (${data.draw_number})`;
+
+            const container = document.getElementById('result-container');
+            const prizesOrder = ['1st_prize', '2nd_prize', '3rd_prize', 'consolation_prize', '4th_prize', '5th_prize', '6th_prize', '7th_prize', '8th_prize'];
+
+            let html = `
+        <div class="text-center text-gray-600 mb-4 text-sm font-semibold">
+           Draw Date: ${data.draw_date.split('-').reverse().join('/')}
+        </div>
+      `;
+
+            // Sort prizes based on priority defined in keys or logical order
+            // We iterate available keys and try to map to standard order, or display all
+            const prizeKeys = Object.keys(data.prizes);
+
+            // Add custom sort if needed, but for now iterate keys
+            // Better to map specific keys first
+            prizesOrder.forEach(key => {
+                if (data.prizes[key]) {
+                    html += renderPrizeSection(key, data.prizes[key]);
+                }
+            });
+
+            // Render any remaining keys
+            prizeKeys.forEach(key => {
+                if (!prizesOrder.includes(key)) {
+                    html += renderPrizeSection(key, data.prizes[key]);
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        function renderPrizeSection(key, prizeData) {
+            const amountStr = prizeData.amount ? `₹${prizeData.amount.toLocaleString('en-IN')}` : '';
+            return `
+        <div class="prize-card">
+          <div class="flex justify-between items-baseline mb-2 border-b pb-2">
+            <div class="prize-label">${prizeData.label}</div>
+            <div class="prize-amount">${amountStr}</div>
+          </div>
+          <div class="winner-grid">
+            ${prizeData.winners.map(w => `<div class="winner-tag">${w}</div>`).join('')}
+          </div>
+        </div>
+      `;
+        }
+
+        // Search Logic
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', function (e) {
+            const term = e.target.value;
+            const tags = document.querySelectorAll('.winner-tag');
+            tags.forEach(tag => {
+                tag.classList.remove('highlight');
+                if (term.length >= 4 && tag.textContent.includes(term)) {
+                    tag.classList.add('highlight');
+                    tag.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            });
+        });
+
+        // Share Logic
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.title,
+                    text: document.getElementById('result-title').textContent,
+                    url: window.location.href
+                });
+            } else {
+                alert('Share not supported on this device');
+            }
+        }
+
+        loadResult();
+    </script>
+</body>
+
+</html>
