@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lucky Number Prediction</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="output.css" rel="stylesheet">
+  <link href="output.css?v=2" rel="stylesheet">
   <style>
     /* Enhanced modern styling */
     :root {
@@ -17,7 +18,7 @@
       --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
       --hover-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     }
-    
+
     /* Enhanced modern styling */
     .enhanced-card {
       transition: all 0.3s ease;
@@ -25,26 +26,42 @@
       overflow: hidden;
       border: none;
     }
+
     .enhanced-card:hover {
       transform: translateY(-5px);
       box-shadow: var(--hover-shadow);
     }
-    
+
     /* Custom animation for number pop/fadeUp */
     @keyframes fadeUp {
-      0% { opacity: 0; transform: translateY(20px) scale(0.95); }
-      60% { opacity: 1; transform: translateY(-4px) scale(1.05); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+
+      60% {
+        opacity: 1;
+        transform: translateY(-4px) scale(1.05);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
-    .number-badge, .big-number-animate {
-      animation: fadeUp 0.5s cubic-bezier(.23,1.5,.32,1);
+
+    .number-badge,
+    .big-number-animate {
+      animation: fadeUp 0.5s cubic-bezier(.23, 1.5, .32, 1);
       opacity: 0;
       transform: translateY(20px) scale(0.95);
       animation-fill-mode: forwards;
     }
+
     .big-number-animate {
       animation-duration: 0.7s;
     }
+
     .spinner {
       border: 4px solid #e0e7ff;
       border-top: 4px solid #2563eb;
@@ -55,10 +72,17 @@
       margin: 0 auto 18px auto;
       display: block;
     }
+
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
+
     .number-badge.repeated {
       background: linear-gradient(135deg, #facc15 0%, #f59e42 100%);
       border: 2px solid #f59e42;
@@ -67,6 +91,7 @@
       box-shadow: 0 4px 16px #f59e4280, 0 1.5px 0 #fff7cc;
       transition: box-shadow 0.2s, transform 0.2s;
     }
+
     .number-badge.repeated.most-repeated {
       border: 3px solid #f59e42;
       box-shadow: 0 6px 24px #f59e4280, 0 2px 0 #fff7cc;
@@ -74,6 +99,7 @@
       color: #b45309;
       z-index: 2;
     }
+
     .number-badge .repeat-count {
       position: absolute;
       top: -14px;
@@ -95,12 +121,14 @@
       text-align: center;
       transform: scale(1.1) rotate(-8deg);
     }
-    .number-badge:hover, .number-badge:active {
+
+    .number-badge:hover,
+    .number-badge:active {
       box-shadow: 0 8px 32px #f59e4280, 0 2px 0 #fff7cc;
       transform: scale(1.07) translateY(-2px);
       z-index: 3;
     }
-    
+
     /* Enhanced button styles */
     .prediction-btn {
       transition: all 0.3s ease;
@@ -109,19 +137,22 @@
       font-weight: 600;
       letter-spacing: 0.5px;
     }
+
     .prediction-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     }
+
     .prediction-btn:active {
       transform: translateY(0);
     }
+
     .prediction-btn:disabled {
       opacity: 0.6;
       transform: none;
       box-shadow: none;
     }
-    
+
     /* Big number display - improved readability */
     .big-number-display {
       background: var(--primary-gradient);
@@ -130,31 +161,34 @@
       transition: all 0.3s ease;
       color: white;
       font-weight: 800;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
       text-align: center;
       padding: 2rem;
     }
+
     .big-number-display:hover {
       transform: scale(1.02);
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     }
-    
+
     /* Number grid enhancements */
     .number-grid-container {
       display: grid;
       gap: 15px;
     }
+
     @media (min-width: 640px) {
       .number-grid-container {
         grid-template-columns: repeat(3, 1fr);
       }
     }
+
     @media (min-width: 768px) {
       .number-grid-container {
         grid-template-columns: repeat(4, 1fr);
       }
     }
-    
+
     .number-badge-modern {
       border-radius: 16px;
       font-weight: 700;
@@ -165,46 +199,48 @@
       overflow: hidden;
       /* Improved text readability */
       color: white;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
+
     .number-badge-modern:hover {
       transform: translateY(-3px) scale(1.05);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
     }
+
     .number-badge-modern:active {
       transform: translateY(-1px) scale(1.02);
     }
-    
+
     /* Hot button */
     #hotBtn {
       background: var(--hot-gradient);
       box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
     }
-    
+
     /* Cold button */
     #coldBtn {
       background: var(--cold-gradient);
       box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
     }
-    
+
     /* Random button */
     #randomBtn {
       background: var(--random-gradient);
       box-shadow: 0 4px 15px rgba(56, 249, 215, 0.3);
     }
-    
+
     /* Repeat button */
     #repeatBtn {
       background: var(--repeat-gradient);
       box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
     }
-    
+
     /* Recent draws enhancement */
     .recent-draw-card {
       background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
       border-left: 4px solid #667eea;
     }
-    
+
     /* AI features card */
     .ai-features-card {
       background: var(--primary-gradient);
@@ -212,22 +248,27 @@
       border-radius: 20px;
       box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
     }
+
     .ai-features-card .text-gray-700 {
       color: rgba(255, 255, 255, 0.9);
     }
+
     .ai-features-card .bg-gray-50 {
       background: rgba(255, 255, 255, 0.1);
     }
+
     .ai-features-card .text-yellow-800 {
       color: #fff3cd;
     }
+
     .ai-features-card .bg-yellow-100 {
       background: rgba(255, 193, 7, 0.2);
     }
+
     .ai-features-card .border-yellow-300 {
       border-color: rgba(255, 193, 7, 0.3);
     }
-    
+
     /* Feature cards */
     .feature-card {
       background: rgba(255, 255, 255, 0.15);
@@ -235,23 +276,25 @@
       border-radius: 16px;
       transition: all 0.3s ease;
     }
+
     .feature-card:hover {
       transform: translateY(-5px);
       background: rgba(255, 255, 255, 0.25);
     }
-    
+
     /* Improved text readability */
-    #numberLabel, #numberLabel6 {
+    #numberLabel,
+    #numberLabel6 {
       color: #1e3a8a;
       font-weight: 700;
-      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     }
-    
+
     #loadingMsg {
       color: #1e3a8a;
       font-weight: 600;
     }
-    
+
     /* Toggle button enhancements */
     .toggle-btn {
       background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
@@ -260,76 +303,98 @@
       font-weight: 600;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
     .toggle-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     }
-    
+
     @media (max-width: 480px) {
       .number-badge {
         font-size: 1.2rem !important;
         padding: 0.7rem 0.5rem !important;
       }
+
       .number-badge .repeat-count {
         top: -10px;
         right: -10px;
         font-size: 0.65em;
         padding: 2px 6px;
       }
+
       .prediction-btn {
         padding: 0.75rem 1rem;
         font-size: 0.9rem;
       }
+
       /* Improved big number display on mobile */
       .big-number-display {
         font-size: 2.5rem;
         padding: 1.5rem;
       }
-      
+
       .feature-card {
         border-radius: 12px;
       }
     }
   </style>
 </head>
+
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex flex-col">
-  <div class="bg-gradient-to-r from-blue-900 to-indigo-800 text-white py-5 px-4 flex items-center justify-between shadow-lg">
+  <div
+    class="bg-gradient-to-r from-blue-900 to-indigo-800 text-white py-5 px-4 flex items-center justify-between shadow-lg">
     <button class="text-2xl hover:bg-white/20 rounded-full p-2 transition" onclick="goBack()" title="Back">←</button>
     <span id="header-title" class="text-lg font-bold flex-1 text-center">Lucky Number Prediction</span>
-    <button class="text-2xl hover:bg-white/20 rounded-full p-2 transition" id="langIconBtn" title="Change language">🌐</button>
+    <button class="text-2xl hover:bg-white/20 rounded-full p-2 transition" id="langIconBtn"
+      title="Change language">🌐</button>
     <div class="hidden fixed top-16 right-4 z-50 bg-white rounded-xl shadow-2xl p-6 min-w-[180px]" id="langPopup">
       <div class="font-bold text-indigo-700 mb-2">Select Language</div>
-      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="en">English</button>
-      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ml">മലയാളം</button>
-      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold" data-lang="ta">தமிழ்</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold"
+        data-lang="en">English</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold"
+        data-lang="ml">മലയാളം</button>
+      <button class="block w-full text-left py-2 rounded hover:bg-indigo-50 lang-popup-btn text-gray-800 font-semibold"
+        data-lang="ta">தமிழ்</button>
     </div>
   </div>
   <main class="flex-1 flex flex-col items-center justify-center px-4 py-8">
     <div class="w-full max-w-4xl mx-auto enhanced-card bg-white shadow-xl p-6 mb-8">
       <h2 id="luckyTitle" class="text-3xl font-bold text-center text-indigo-700 mb-6">Generate Your Lucky Number</h2>
       <div class="flex flex-wrap gap-4 justify-center mb-6">
-        <button class="prediction-btn bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="hotBtn" disabled>
+        <button
+          class="prediction-btn bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg"
+          id="hotBtn" disabled>
           <span class="text-2xl">🔥</span> <span class="lang-hot">Hot</span>
         </button>
-        <button class="prediction-btn bg-gradient-to-r from-blue-400 to-cyan-500 hover:from-blue-500 hover:to-cyan-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="coldBtn" disabled>
+        <button
+          class="prediction-btn bg-gradient-to-r from-blue-400 to-cyan-500 hover:from-blue-500 hover:to-cyan-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg"
+          id="coldBtn" disabled>
           <span class="text-2xl">❄️</span> <span class="lang-cold">Cold</span>
         </button>
-        <button class="prediction-btn bg-gradient-to-r from-green-400 to-teal-500 hover:from-green-500 hover:to-teal-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="randomBtn" disabled>
+        <button
+          class="prediction-btn bg-gradient-to-r from-green-400 to-teal-500 hover:from-green-500 hover:to-teal-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg"
+          id="randomBtn" disabled>
           <span class="text-2xl">🎲</span> <span class="lang-random">Random</span>
         </button>
-        <button class="prediction-btn bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg" id="repeatBtn" disabled>
+        <button
+          class="prediction-btn bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-xl transition flex items-center gap-2 shadow-lg"
+          id="repeatBtn" disabled>
           <span class="text-2xl">🔁</span> <span class="lang-repeat">Repeated</span>
         </button>
       </div>
       <div id="loadingMsg" class="text-center text-indigo-500 font-semibold mb-4 text-lg">Loading history data...</div>
-      <div id="numberLabel" class="text-center text-indigo-600 font-semibold mb-4 text-xl">Tap a button to see predictions</div>
+      <div id="numberLabel" class="text-center text-indigo-600 font-semibold mb-4 text-xl">Tap a button to see
+        predictions</div>
       <div id="spinner" class="spinner" style="display:none;"></div>
-      <div id="bigNumber" class="text-5xl font-extrabold text-center text-white big-number-display py-8 px-4 mb-8 shadow-lg w-full" style="display:none;"></div>
+      <div id="bigNumber"
+        class="text-5xl font-extrabold text-center text-white big-number-display py-8 px-4 mb-8 shadow-lg w-full"
+        style="display:none;"></div>
       <div id="numberGrid" class="number-grid-container gap-4 w-full"></div>
-      <div id="numberLabel6" class="text-center text-indigo-600 font-semibold mt-8 mb-4 text-xl" style="display:none;"></div>
+      <div id="numberLabel6" class="text-center text-indigo-600 font-semibold mt-8 mb-4 text-xl" style="display:none;">
+      </div>
       <div id="numberGrid6" class="number-grid-container gap-4 w-full" style="display:none;"></div>
     </div>
-    
+
     <!-- New Features Section -->
     <div class="w-full max-w-4xl mx-auto enhanced-card ai-features-card shadow-xl p-6 mb-8">
       <h2 class="mb-6 text-2xl font-bold flex items-center gap-3">
@@ -358,18 +423,23 @@
         </div>
       </div>
       <div class="text-base text-gray-700 bg-gray-50 rounded-xl p-4 mb-4 w-full lang-ai-desc">
-        <b class="lang-how-it-works">How it works:</b> <span class="block mt-2 lang-ai-desc-text">Uses advanced algorithms combining astrology, historical data, and statistical analysis to generate predictions. For entertainment purposes only!</span>
+        <b class="lang-how-it-works">How it works:</b> <span class="block mt-2 lang-ai-desc-text">Uses advanced
+          algorithms combining astrology, historical data, and statistical analysis to generate predictions. For
+          entertainment purposes only!</span>
       </div>
-      <div class="flex items-center gap-3 text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-xl p-4 w-full text-base font-semibold lang-disclaimer">
+      <div
+        class="flex items-center gap-3 text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-xl p-4 w-full text-base font-semibold lang-disclaimer">
         <span class="text-2xl">⚠️</span>
-        <span class="lang-disclaimer-text"><b>Disclaimer:</b> This is for entertainment only. No guarantee of winning. Play responsibly.</span>
+        <span class="lang-disclaimer-text"><b>Disclaimer:</b> This is for entertainment only. No guarantee of winning.
+          Play responsibly.</span>
       </div>
     </div>
-    
+
     <div class="w-full max-w-4xl mx-auto enhanced-card bg-white shadow-xl p-6 mb-8" id="recentCard">
       <h2 class="mb-4 text-xl font-bold flex items-center gap-3 text-indigo-700">
         <span class="text-2xl">🕑</span> <span class="lang-recent">Recent Draws</span>
-        <button id="toggleRecentBtn" class="ml-auto toggle-btn text-white font-bold py-2 px-6 rounded-lg transition text-sm">
+        <button id="toggleRecentBtn"
+          class="ml-auto toggle-btn text-white font-bold py-2 px-6 rounded-lg transition text-sm">
           <span class="lang-show">Show</span>
         </button>
       </h2>
@@ -421,17 +491,17 @@
       }
     }
     window.addEventListener('resize', updateHeaderTitle);
-    langIconBtn.addEventListener('click', function(e) {
+    langIconBtn.addEventListener('click', function (e) {
       e.stopPropagation();
       langPopup.classList.toggle('hidden');
     });
-    document.body.addEventListener('click', function(e) {
+    document.body.addEventListener('click', function (e) {
       if (!langPopup.contains(e.target) && e.target !== langIconBtn) {
         langPopup.classList.add('hidden');
       }
     });
     langPopupBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function () {
         setLang(this.getAttribute('data-lang'));
         langPopup.classList.add('hidden');
         updateLangUI();
@@ -483,7 +553,7 @@
         ta: '<b>கவனிக்கவும்:</b> இது பொழுதுபோக்கிற்காக மட்டுமே. வெற்றிக்கு உத்தரவாதம் இல்லை. பொறுப்புடன் விளையாடுங்கள்.'
       }
     };
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       setLang(currentLang);
       updateHeaderTitle();
       updateLangUI();
@@ -540,27 +610,27 @@
       freq4 = {}; freq6 = {}; all4 = []; all6 = []; lastDraws = [];
       historyData.forEach(draw => {
         (draw.numbers4 || []).forEach(n => {
-          freq4[n] = (freq4[n]||0)+1; all4.push(n);
+          freq4[n] = (freq4[n] || 0) + 1; all4.push(n);
         });
         (draw.numbers6 || []).forEach(n => {
-          freq6[n] = (freq6[n]||0)+1; all6.push(n);
+          freq6[n] = (freq6[n] || 0) + 1; all6.push(n);
         });
-        lastDraws.push({date: draw.date, numbers4: draw.numbers4, numbers6: draw.numbers6});
+        lastDraws.push({ date: draw.date, numbers4: draw.numbers4, numbers6: draw.numbers6 });
       });
     }
-    function getHotNumbers(freq, count=24) {
-      return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,count).map(x=>x[0]);
+    function getHotNumbers(freq, count = 24) {
+      return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, count).map(x => x[0]);
     }
-    function getColdNumbers(freq, count=24) {
-      return Object.entries(freq).sort((a,b)=>a[1]-b[1]).slice(0,count).map(x=>x[0]);
+    function getColdNumbers(freq, count = 24) {
+      return Object.entries(freq).sort((a, b) => a[1] - b[1]).slice(0, count).map(x => x[0]);
     }
-    function getRandomNumbers(arr, count=24) {
-      const shuffled = arr.slice().sort(()=>Math.random()-0.5);
-      return shuffled.slice(0,count);
+    function getRandomNumbers(arr, count = 24) {
+      const shuffled = arr.slice().sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, count);
     }
-    function getRepeatedNumbersWithCount(freq, minCount=2, max=24) {
+    function getRepeatedNumbersWithCount(freq, minCount = 2, max = 24) {
       // Return array of [number, count] for numbers with count >= minCount, sorted by count desc
-      return Object.entries(freq).filter(x=>x[1]>=minCount).sort((a,b)=>b[1]-a[1]).slice(0,max);
+      return Object.entries(freq).filter(x => x[1] >= minCount).sort((a, b) => b[1] - a[1]).slice(0, max);
     }
     function showNumbers(type) {
       bigNumber.style.display = 'none';
@@ -616,8 +686,8 @@
           numberGrid.innerHTML = '<div class="col-span-6 text-center text-yellow-700 font-semibold py-6">No repeated numbers found yet.<br>Add more results to see repeated numbers!</div>';
           bigNumber.style.display = 'none';
         } else {
-      nums.forEach((n, i) => {
-        const div = document.createElement('div');
+          nums.forEach((n, i) => {
+            const div = document.createElement('div');
             // Choose gradient and text color based on type
             let badgeTypeClass = '';
             if (badgeClass === 'hot') {
@@ -640,27 +710,27 @@
               div.title = `Appeared ${count} times. Tap to copy.`;
               if (i === 0) div.classList.add('most-repeated');
             } else {
-        div.textContent = n;
-        div.title = 'Tap to copy';
+              div.textContent = n;
+              div.title = 'Tap to copy';
             }
             div.style.animationDelay = (i * 0.03) + 's';
-        div.onclick = function() {
+            div.onclick = function () {
               navigator.clipboard.writeText(isRepeated ? n[0] : n);
-              div.classList.add('ring-4','ring-green-400');
-              setTimeout(()=>div.classList.remove('ring-4','ring-green-400'), 600);
-        };
-        numberGrid.appendChild(div);
-      });
-      if (nums.length > 0) {
+              div.classList.add('ring-4', 'ring-green-400');
+              setTimeout(() => div.classList.remove('ring-4', 'ring-green-400'), 600);
+            };
+            numberGrid.appendChild(div);
+          });
+          if (nums.length > 0) {
             bigNumber.textContent = isRepeated ? (nums[0][0] + ' ×' + nums[0][1]) : nums[0];
-        bigNumber.style.display = 'block';
+            bigNumber.style.display = 'block';
             bigNumber.classList.add('big-number-animate');
-        bigNumber.onclick = function() {
+            bigNumber.onclick = function () {
               navigator.clipboard.writeText(isRepeated ? nums[0][0] : nums[0]);
-          bigNumber.style.background = 'linear-gradient(135deg,#10b981 0%,#2563eb 100%)';
-          setTimeout(()=>bigNumber.style.background='', 600);
-        };
-      }
+              bigNumber.style.background = 'linear-gradient(135deg,#10b981 0%,#2563eb 100%)';
+              setTimeout(() => bigNumber.style.background = '', 600);
+            };
+          }
         }
       }, 350); // Simulate fetch/processing delay for animation
       // Show 6-digit numbers below
@@ -672,8 +742,8 @@
         if (isRepeated && nums6.length === 0) {
           numberGrid6.innerHTML = '<div class="col-span-6 text-center text-yellow-700 font-semibold py-6">No repeated numbers found yet.<br>Add more results to see repeated numbers!</div>';
         } else {
-        nums6.forEach((n, i) => {
-          const div = document.createElement('div');
+          nums6.forEach((n, i) => {
+            const div = document.createElement('div');
             // Choose gradient and text color based on type
             let badgeTypeClass = '';
             if (badgeClass6 === 'hot') {
@@ -696,24 +766,24 @@
               div.title = `Appeared ${count} times. Tap to copy.`;
               if (i === 0) div.classList.add('most-repeated');
             } else {
-          div.textContent = n;
-          div.title = 'Tap to copy';
+              div.textContent = n;
+              div.title = 'Tap to copy';
             }
             div.style.animationDelay = (i * 0.04) + 's';
-          div.onclick = function() {
+            div.onclick = function () {
               navigator.clipboard.writeText(isRepeated ? n[0] : n);
-              div.classList.add('ring-4','ring-green-400');
-              setTimeout(()=>div.classList.remove('ring-4','ring-green-400'), 600);
-          };
-          numberGrid6.appendChild(div);
-        });
+              div.classList.add('ring-4', 'ring-green-400');
+              setTimeout(() => div.classList.remove('ring-4', 'ring-green-400'), 600);
+            };
+            numberGrid6.appendChild(div);
+          });
+        }
       }
     }
-    }
-    document.getElementById('hotBtn').onclick = function() { if (!this.disabled) showNumbers('hot'); };
-    document.getElementById('coldBtn').onclick = function() { if (!this.disabled) showNumbers('cold'); };
-    document.getElementById('randomBtn').onclick = function() { if (!this.disabled) showNumbers('random'); };
-    repeatBtn.onclick = function() { if (!this.disabled) showNumbers('repeat'); };
+    document.getElementById('hotBtn').onclick = function () { if (!this.disabled) showNumbers('hot'); };
+    document.getElementById('coldBtn').onclick = function () { if (!this.disabled) showNumbers('cold'); };
+    document.getElementById('randomBtn').onclick = function () { if (!this.disabled) showNumbers('random'); };
+    repeatBtn.onclick = function () { if (!this.disabled) showNumbers('repeat'); };
     function renderRecentDraws() {
       recentDraws.innerHTML = '';
       if (lastDraws.length === 0) {
@@ -731,11 +801,11 @@
           </div>
           <div class="flex flex-wrap gap-3 items-center">
             <span class="text-indigo-500 font-semibold text-base md:text-lg">4-digit:</span>
-            <span class="flex flex-wrap gap-2">${numbers4.slice(0,6).map(n => `<span class='inline-block bg-indigo-100 text-indigo-800 font-bold rounded-lg px-3 py-1 text-base md:text-lg shadow-sm'>${n}</span>`).join('')}</span>
+            <span class="flex flex-wrap gap-2">${numbers4.slice(0, 6).map(n => `<span class='inline-block bg-indigo-100 text-indigo-800 font-bold rounded-lg px-3 py-1 text-base md:text-lg shadow-sm'>${n}</span>`).join('')}</span>
           </div>
           <div class="flex flex-wrap gap-3 items-center">
             <span class="text-indigo-500 font-semibold text-base md:text-lg">6-digit:</span>
-            <span class="flex flex-wrap gap-2">${numbers6.slice(0,3).map(n => `<span class='inline-block bg-yellow-100 text-yellow-800 font-bold rounded-lg px-3 py-1 text-base md:text-lg shadow-sm'>${n}</span>`).join('')}</span>
+            <span class="flex flex-wrap gap-2">${numbers6.slice(0, 3).map(n => `<span class='inline-block bg-yellow-100 text-yellow-800 font-bold rounded-lg px-3 py-1 text-base md:text-lg shadow-sm'>${n}</span>`).join('')}</span>
           </div>
         `;
         recentDraws.appendChild(div);
@@ -743,7 +813,7 @@
     }
     // Collapsible recent draws
     let recentOpen = false;
-    toggleRecentBtn.onclick = function() {
+    toggleRecentBtn.onclick = function () {
       recentOpen = !recentOpen;
       if (recentOpen) {
         renderRecentDraws();
@@ -802,4 +872,5 @@
     }
   </script>
 </body>
+
 </html>
