@@ -1,7 +1,7 @@
 {
-  "lottery_name": "KARUNYA",
-  "draw_number": "KR-731",
-  "draw_date": "2025-11-15",
+  "lottery_name": "BHAGYATHARA",
+  "draw_number": "BT-33",
+  "draw_date": "2025-12-15",
   "venue": "",
   "prizes": {
     "1st_prize": {
@@ -55,7 +55,7 @@
     },
     "7th_prize": {
       "amount": 500,
-      "label": "7th Prize",
+      "label": "7th_prize",
       "winners": [
         "***"
       ]

@@ -1,73 +1,63 @@
 [
   {
-    "filename": "KN-601-2025-12-12.json",
-    "lottery_code": "KN",
+    "code": "SM",
+    "draw_number": "33",
+    "date": "2025-12-14",
+    "filename": "SM-33-2025-12-14.json"
+  },
+  {
+    "code": "KR",
+    "draw_number": "734",
+    "date": "2025-12-13",
+    "filename": "KR-734-2025-12-13.json"
+  },
+  {
+    "code": "KN",
     "draw_number": "601",
     "date": "2025-12-12",
-    "title": "KARUNYA PLUS KN-601"
+    "filename": "KN-601-2025-12-12.json"
   },
   {
-    "filename": "SK-31-2025-12-12.json",
-    "lottery_code": "SK",
-    "draw_number": "31",
-    "date": "2025-12-12",
-    "title": "SUVARNA KERALAM SK-31"
-  },
-  {
-    "filename": "SS-497-2025-12-10.json",
-    "lottery_code": "SS",
-    "draw_number": "497",
-    "date": "2025-12-10",
-    "title": "STHREE SAKTHI SS-497"
-  },
-  {
-    "filename": "DL-30-2025-12-10.json",
-    "lottery_code": "DL",
+    "code": "DL",
     "draw_number": "30",
     "date": "2025-12-10",
-    "title": "DHANALAKSHMI DL-30"
+    "filename": "DL-30-2025-12-10.json"
   },
   {
-    "filename": "BT-32-2025-12-08.json",
-    "lottery_code": "BT",
+    "code": "BT",
     "draw_number": "32",
     "date": "2025-12-08",
-    "title": "BHAGYATHARA BT-32"
+    "filename": "BT-32-2025-12-08.json"
   },
   {
-    "filename": "SM-32-2025-12-07.json",
-    "lottery_code": "SM",
+    "code": "SM",
     "draw_number": "32",
     "date": "2025-12-07",
-    "title": "SAMRUDHI SM-32"
+    "filename": "SM-32-2025-12-07.json"
   },
   {
-    "filename": "KR-733-2025-12-06.json",
-    "lottery_code": "KR",
+    "code": "KR",
     "draw_number": "733",
     "date": "2025-12-06",
-    "title": "KARUNYA KR-733"
+    "filename": "KR-733-2025-12-06.json"
   },
   {
-    "filename": "SK-30-2025-12-05.json",
-    "lottery_code": "SK",
+    "code": "SK",
     "draw_number": "30",
     "date": "2025-12-05",
-    "title": "SUVARNA KERALAM SK-30"
+    "filename": "SK-30-2025-12-05.json"
   },
   {
-    "filename": "KN-600-2025-12-04.json",
-    "lottery_code": "KN",
+    "code": "KN",
     "draw_number": "600",
     "date": "2025-12-04",
-    "title": "KARUNYA PLUS KN-600"
+    "filename": "KN-600-2025-12-04.json"
   },
   {
-    "filename": "DL-29-2025-12-03.json",
-    "lottery_code": "DL",
+    "code": "DL",
     "draw_number": "29",
     "date": "2025-12-03",
-    "title": "DHANALAKSHMI DL-29"
+    "filename": "DL-29-2025-12-03.json"
   },
   {
     "code": "SS",
@@ -428,13 +418,6 @@
     "draw_number": "105",
     "date": "2025-10-04",
     "filename": "BR-105-2025-10-04.json"
-  },
-  {
-    "filename": "KR-725-2025-10-04.json",
-    "lottery_code": "KR",
-    "draw_number": "725",
-    "date": "2025-10-04",
-    "title": "KARUNYA KR-725"
   },
   {
     "code": "SK",
@@ -905,13 +888,6 @@
     "filename": "BT-11-2025-07-14.json"
   },
   {
-    "filename": "SM-11-2025-07-14.json",
-    "lottery_code": "SM",
-    "draw_number": "11",
-    "date": "2025-07-14",
-    "title": "SAMRUDHI (SM) SM-11"
-  },
-  {
     "code": "SM",
     "draw_number": "11",
     "date": "2025-07-13",
@@ -934,13 +910,6 @@
     "draw_number": "9",
     "date": "2025-07-10",
     "filename": "DL-9-2025-07-10.json"
-  },
-  {
-    "filename": "KN-580-2025-07-10.json",
-    "lottery_code": "KN",
-    "draw_number": "580",
-    "date": "2025-07-10",
-    "title": "KARUNYA PLUS KN-580"
   },
   {
     "code": "DL",
@@ -1199,13 +1168,6 @@
     "draw_number": "103",
     "date": "2025-05-28",
     "filename": "BR-103-2025-05-28.json"
-  },
-  {
-    "filename": "DL-3-2025-05-28.json",
-    "lottery_code": "DL",
-    "draw_number": "3",
-    "date": "2025-05-28",
-    "title": "DHANALAKSHMI DL-3"
   },
   {
     "code": "SS",
