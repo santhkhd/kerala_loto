@@ -16,6 +16,9 @@ dist/
 .DS_Store
 
 # Ignore HTML and CSS files except for index.html
-*.html
-*.css
+# HTML and CSS - allow all for now to ensure site works
+# *.html
+# *.css
 !index.html
+!input.css
+!output.css
