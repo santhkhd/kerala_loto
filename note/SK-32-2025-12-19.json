@@ -8,7 +8,7 @@
       "amount": 10000000,
       "label": "1st Prize",
       "winners": [
-        "RS 589486\r\n(PATHANAMTHITTA)"
+        "RS 589486 (PATHANAMTHITTA)"
       ]
     },
     "consolation_prize": {
@@ -32,14 +32,14 @@
       "amount": 3000000,
       "label": "2nd Prize",
       "winners": [
-        "RV 824216(ERNAKULAM)"
+        "RV 824216 (ERNAKULAM)"
       ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
       "winners": [
-        "RV 566899"
+        "RV 566899 (PALAKKAD)"
       ]
     },
     "4th_prize": {
