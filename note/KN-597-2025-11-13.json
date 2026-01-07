@@ -1,6 +1,6 @@
 {
   "lottery_name": "KARUNYA PLUS",
-  "draw_number": "KN-597",
+  "draw_number": "597",
   "draw_date": "2025-11-13",
   "venue": "",
   "prizes": {
@@ -112,7 +112,7 @@
     },
     "7th_prize": {
       "amount": 500,
-      "label": "7th_prize",
+      "label": "7th Prize",
       "winners": [
         "0137",
         "0144",
@@ -388,8 +388,8 @@
         "5881",
         "5911",
         "6008",
+        "6028",
         "6068",
-        "6128",
         "6302",
         "6511",
         "6538",

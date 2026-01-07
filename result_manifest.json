@@ -1,5 +1,35 @@
 [
   {
+    "code": "KN",
+    "draw_number": "605",
+    "date": "2026-01-08",
+    "filename": "KN-605-2026-01-08.json"
+  },
+  {
+    "code": "DL",
+    "draw_number": "34",
+    "date": "2026-01-07",
+    "filename": "DL-34-2026-01-07.json"
+  },
+  {
+    "code": "SS",
+    "draw_number": "501",
+    "date": "2026-01-06",
+    "filename": "SS-501-2026-01-06.json"
+  },
+  {
+    "code": "BT",
+    "draw_number": "36",
+    "date": "2026-01-05",
+    "filename": "BT-36-2026-01-05.json"
+  },
+  {
+    "code": "SM",
+    "draw_number": "36",
+    "date": "2026-01-04",
+    "filename": "SM-36-2026-01-04.json"
+  },
+  {
     "code": "BT",
     "draw_number": "34",
     "date": "2025-12-22",

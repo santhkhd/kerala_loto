@@ -1,6 +1,6 @@
 {
   "lottery_name": "KARUNYA",
-  "draw_number": "KR-730",
+  "draw_number": "730",
   "draw_date": "2025-11-08",
   "venue": "",
   "prizes": {
@@ -112,7 +112,7 @@
     },
     "7th_prize": {
       "amount": 500,
-      "label": "7th_prize",
+      "label": "7th Prize",
       "winners": [
         "0065",
         "0290",

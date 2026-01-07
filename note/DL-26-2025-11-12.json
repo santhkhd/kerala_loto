@@ -1,6 +1,6 @@
 {
   "lottery_name": "DHANALAKSHMI",
-  "draw_number": "DL-26",
+  "draw_number": "26",
   "draw_date": "2025-11-12",
   "venue": "",
   "prizes": {
@@ -112,7 +112,7 @@
     },
     "7th_prize": {
       "amount": 500,
-      "label": "7th_prize",
+      "label": "7th Prize",
       "winners": [
         "0287",
         "0437",

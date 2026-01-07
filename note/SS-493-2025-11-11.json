@@ -1,6 +1,6 @@
 {
   "lottery_name": "STHREE SAKTHI",
-  "draw_number": "SS-493",
+  "draw_number": "493",
   "draw_date": "2025-11-11",
   "venue": "",
   "prizes": {
@@ -112,7 +112,7 @@
     },
     "7th_prize": {
       "amount": 500,
-      "label": "7th_prize",
+      "label": "7th Prize",
       "winners": [
         "0102",
         "0270",
