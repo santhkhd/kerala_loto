@@ -4,6 +4,7 @@ import logging
 from datetime import datetime
 import pytz
 import sys
+import time
 
 # Set up logging
 logging.basicConfig(
@@ -85,4 +86,16 @@ def main():
         logging.error("Failed to update GitHub.")
 
 if __name__ == "__main__":
-    main()
+    # To run this 7 times automatically on PythonAnywhere's single task limit:
+    runs = 7
+    delay_minutes = 15
+    
+    for i in range(runs):
+        logging.info(f"--- Starting Run {i+1} of {runs} ---")
+        main()
+        
+        if i < runs - 1:
+            logging.info(f"Waiting {delay_minutes} minutes before next check...")
+            time.sleep(delay_minutes * 60)
+    
+    logging.info("=== All 5 scheduled runs completed for today. ===")
