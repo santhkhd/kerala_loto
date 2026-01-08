@@ -55,9 +55,8 @@ def commit_and_push():
     if run_command(['git', 'add', '.'], "Git Add"):
         commit_msg = f"Auto-update: {datetime.now(IST).strftime('%Y-%m-%d %H:%M:%S')} IST"
         if run_command(['git', 'commit', '-m', commit_msg], "Git Commit"):
-            # Push specifically to the main branch from current HEAD
-            # This triggers the GitHub Pages deployment.
-            return run_command(['git', 'push', 'origin', 'HEAD:main'], "Git Push to Main")
+            # Push specifically to the master branch from current HEAD
+            return run_command(['git', 'push', 'origin', 'HEAD:master'], "Git Push to Master")
     return False
 
 def main():
@@ -66,7 +65,7 @@ def main():
     # 0. Sync with GitHub first
     # This cleans up the repo and ensures we have the latest code from main
     run_command(['git', 'fetch', 'origin'], "Git Fetch")
-    run_command(['git', 'reset', '--mix', 'origin/main'], "Git Sync (Reset to Remote Main)")
+    run_command(['git', 'reset', '--mix', 'origin/master'], "Git Sync (Reset to Remote Master)")
     
     # 1. Run the scraper
     # You can use 'main.py' or 'lottery_scraper.py'
