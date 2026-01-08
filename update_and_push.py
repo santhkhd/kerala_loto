@@ -79,6 +79,9 @@ def main():
     # 3. Generate History
     run_command(['node', 'generate-history.js'], "History Generation")
 
+    # 4. Generate PDF Links
+    run_command(['node', 'generate-pdf-links.js'], "PDF Link Generation")
+
     # 4. Push to GitHub
     if commit_and_push():
         logging.info("Update and push completed successfully!")
