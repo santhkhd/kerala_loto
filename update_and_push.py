@@ -44,8 +44,8 @@ def commit_and_push():
     # Check if there are any changes
     status = subprocess.run(['git', 'status', '--porcelain'], capture_output=True, text=True)
     if not status.stdout.strip():
-        logging.info("No changes to commit.")
-        return True
+        logging.info("No changes to commit (result likely not available yet).")
+        return False
         
     # Git identity check (ensures it doesn't fail on new environments)
     subprocess.run(['git', 'config', '--global', 'user.name', 'Lottery Bot'], check=False)
@@ -82,20 +82,27 @@ def main():
     # 4. Push to GitHub
     if commit_and_push():
         logging.info("Update and push completed successfully!")
+        return True
     else:
         logging.error("Failed to update GitHub.")
+        return False
 
 if __name__ == "__main__":
-    # To run this 7 times automatically on PythonAnywhere's single task limit:
+    # To run this up to 7 times automatically on PythonAnywhere:
+    # It will stop as soon as it successfully pushes a new result.
     runs = 7
     delay_minutes = 15
     
     for i in range(runs):
         logging.info(f"--- Starting Run {i+1} of {runs} ---")
-        main()
+        success = main()
         
+        if success:
+            logging.info("Result found and pushed. Stopping further runs for today.")
+            break
+            
         if i < runs - 1:
             logging.info(f"Waiting {delay_minutes} minutes before next check...")
             time.sleep(delay_minutes * 60)
     
-    logging.info("=== All 5 scheduled runs completed for today. ===")
+    logging.info("=== Daily update task finished. ===")
