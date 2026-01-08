@@ -83,6 +83,34 @@ standard_labels = {
     "8th_prize": "8th Prize", "9th_prize": "9th Prize"
 }
 
+def is_result_real(prizes):
+    """Check if the result actually contains winning numbers, not just placeholders."""
+    if not prizes:
+        return False
+    
+    # Check 1st prize specifically
+    first_prize = prizes.get("1st_prize", {})
+    winners = first_prize.get("winners", [])
+    
+    if not winners:
+        return False
+        
+    # If winners contain placeholders like '***' or 'Please wait', it's not real yet
+    for w in winners:
+        if "***" in w or "Please wait" in w:
+            return False
+            
+    # Check if we have at least one valid-looking lottery number (e.g., "AB 123456")
+    has_real_number = False
+    for p_id, p_data in prizes.items():
+        for w in p_data.get("winners", []):
+            if re.search(r'\d{6}', w):
+                has_real_number = True
+                break
+        if has_real_number: break
+        
+    return has_real_number
+
 def process_result_page(result_url):
     try:
         result_res = requests.get(result_url)
@@ -202,9 +230,13 @@ def process_result_page(result_url):
     filepath = f"note/{filename}"
     
     try:
-        with open(filepath, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-        print(f"Saved: {filepath}\n")
+        # ONLY save if the result is "real" (contains actual winning numbers)
+        if is_result_real(prizes):
+            with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            print(f"Saved: {filepath}\n")
+        else:
+            print(f"Skipping {filename}: Results are not yet fully published (placeholders found).\n")
     except Exception as e:
         print(f"Error saving {filepath}: {e}")
 
