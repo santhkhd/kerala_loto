@@ -168,14 +168,16 @@ function updateTranslations() {
     const langTitle = document.querySelector('.lang-modal h3');
     if (langTitle) langTitle.textContent = t.selectLang;
 
+    const liveBtn = document.querySelector('.live-header-btn');
+    if (liveBtn) liveBtn.textContent = ' ' + t.live;
+
     // Update nav labels
     const navItems = document.querySelectorAll('.nav-item');
-    if (navItems.length >= 5) {
+    if (navItems.length >= 4) {
         navItems[0].querySelector('span').textContent = t.home;
-        navItems[1].querySelector('span').textContent = t.live;
-        navItems[2].querySelector('span').textContent = t.lucky;
-        navItems[3].querySelector('span').textContent = t.search;
-        navItems[4].querySelector('span').textContent = t.scanner;
+        navItems[1].querySelector('span').textContent = t.lucky;
+        navItems[2].querySelector('span').textContent = t.search;
+        navItems[3].querySelector('span').textContent = t.scanner;
     }
 }
 
