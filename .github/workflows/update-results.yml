@@ -40,8 +40,9 @@ jobs:
 
       - name: Generate manifest and history
         run: |
-          node generate-manifest.js
-          node generate-history.js
+          python generate_manifest.py
+          python generate_history.py
+          python generate_pdf_links.py
 
       - name: Commit and push if changed
         run: |
