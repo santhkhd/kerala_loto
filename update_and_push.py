@@ -23,7 +23,7 @@ def run_command(command, description):
     """Run a system command and log the output"""
     logging.info(f"Starting: {description}")
     try:
-        # Use shell=True for node commands if needed, but list format is safer
+        # Check if the command exists (especially for node which caused issues)
         result = subprocess.run(command, capture_output=True, text=True, timeout=300)
         if result.returncode == 0:
             logging.info(f"Success: {description}")
@@ -32,6 +32,8 @@ def run_command(command, description):
             return True
         else:
             logging.error(f"Error in {description}: {result.stderr}")
+            if "not found" in result.stderr or "No such file" in result.stderr:
+                logging.error(f"Is {command[0]} installed and in PATH?")
             return False
     except Exception as e:
         logging.error(f"Exception during {description}: {e}")
@@ -47,7 +49,7 @@ def commit_and_push():
         logging.info("No changes to commit (result likely not available yet).")
         return False
         
-    # Git identity check (ensures it doesn't fail on new environments)
+    # Git identity check
     subprocess.run(['git', 'config', '--global', 'user.name', 'Lottery Bot'], check=False)
     subprocess.run(['git', 'config', '--global', 'user.email', 'bot@lottery.com'], check=False)
 
@@ -68,17 +70,18 @@ def main():
     run_command(['git', 'reset', '--mix', 'origin/master'], "Git Sync (Reset to Remote Master)")
     
     # 1. Run the scraper (using the more robust updateloto.py)
+    # This uses fallback proxies which are useful on restricted environments like PythonAnywhere
     if not run_command([sys.executable, 'updateloto.py'], "Lottery Scraper"):
         logging.warning("Scraper failed or had warnings, proceeding anyway...")
 
-    # 2. Generate Manifest (Important for the web app to see new results)
-    run_command(['node', 'generate-manifest.js'], "Manifest Generation")
+    # 2. Generate Manifest (Using Python version to remove Node.js dependency)
+    run_command([sys.executable, 'generate_manifest.py'], "Manifest Generation")
 
-    # 3. Generate History
-    run_command(['node', 'generate-history.js'], "History Generation")
+    # 3. Generate History (Using Python version to remove Node.js dependency)
+    run_command([sys.executable, 'generate_history.py'], "History Generation")
 
-    # 4. Generate PDF Links
-    run_command(['node', 'generate-pdf-links.js'], "PDF Link Generation")
+    # 4. Generate PDF Links (Using Python version to remove Node.js dependency)
+    run_command([sys.executable, 'generate_pdf_links.py'], "PDF Link Generation")
 
     # 5. Push to GitHub
     if commit_and_push():
@@ -89,7 +92,7 @@ def main():
         return False
 
 if __name__ == "__main__":
-    # To run this up to 7 times automatically on PythonAnywhere:
+    # To run this up to 7 times automatically:
     # It will stop as soon as it successfully pushes a new result.
     runs = 7
     delay_minutes = 15

@@ -37,14 +37,18 @@ def robust_get(url: str, headers: dict, timeout: int = 20, max_retries: int = 3)
     last_exc = None
     for attempt in range(1, max_retries + 1):
         try:
+            print(f"Attempting to fetch {url} (Attempt {attempt})...")
             res = requests.get(url, headers=headers, timeout=timeout)
             if res.status_code in (403, 429) or res.status_code >= 500:
+                print(f"Server returned status {res.status_code}. Retry might be needed.")
                 raise requests.exceptions.RequestException(f"HTTP {res.status_code}")
             return res
         except requests.exceptions.RequestException as exc:
+            print(f"Connection error on attempt {attempt}: {exc}")
             last_exc = exc
             # Try proxy fallback if available
             if SCRAPER_API_KEY:
+                print(f"Trying ScraperAPI fallback for {url}...")
                 try:
                     proxy_url = build_proxy_url(url)
                     res = requests.get(proxy_url, headers=headers, timeout=timeout)
@@ -55,17 +59,23 @@ def robust_get(url: str, headers: dict, timeout: int = 20, max_retries: int = 3)
                     last_exc = exc2
             # Backoff between attempts
             time.sleep(min(2 * attempt, 6))
-    # Exhausted retries
+    
+    print(f"Maximum retries reached for {url}.")
     if last_exc:
         raise last_exc
     raise RuntimeError("Failed to fetch URL and no exception captured")
 
 def fetch_text_via_jina(url: str) -> str:
-    """Fetch page text via r.jina.ai to bypass Cloudflare challenges without API keys."""
+    """Fetch page text via r.jina.ai to bypass Cloudflare/Proxy challenges."""
+    print(f"Trying Jina AI fallback for {url}...")
     proxied = "https://r.jina.ai/http://" + url.replace("https://", "").replace("http://", "")
-    res = requests.get(proxied, headers=HEADERS, timeout=30)
-    res.raise_for_status()
-    return res.text
+    try:
+        res = requests.get(proxied, headers=HEADERS, timeout=30)
+        res.raise_for_status()
+        return res.text
+    except Exception as e:
+        print(f"Jina AI fallback failed: {e}")
+        raise
 
 def fetch_page_text(url: str) -> str:
     """Fetch page HTML using direct request first, then fallback to Jina proxy."""
@@ -73,7 +83,8 @@ def fetch_page_text(url: str) -> str:
         res = robust_get(url, HEADERS, timeout=25)
         res.raise_for_status()
         return res.text
-    except Exception:
+    except Exception as e:
+        print(f"Direct fetch failed for {url}. Switching to fallback...")
         return fetch_text_via_jina(url)
 
 def parse_date_from_text(text: str) -> Optional[date]:
