@@ -939,3 +939,12 @@ AttributeError: 'list' object has no attribute 'get'
 2026-01-09 10:08:24,367 - INFO - Output: Data is up to date (09/01/2026). No new PDFs to generate.
 2026-01-09 10:08:24,367 - INFO - Checking for changes to commit...
 2026-01-09 10:08:24,462 - INFO - Starting: Git Add
+2026-01-09 17:07:29,731 - INFO - --- Starting Run 1 of 7 ---
+2026-01-09 17:07:29,732 - INFO - === Starting Kerala Lottery Update Task ===
+2026-01-09 17:07:29,732 - INFO - Starting: Git Fetch
+2026-01-09 17:07:32,027 - INFO - Success: Git Fetch
+2026-01-09 17:07:32,028 - INFO - Starting: Git Sync (Reset to Remote Master)
+2026-01-09 17:07:32,260 - ERROR - Error in Git Sync (Reset to Remote Master): error: unable to unlink old 'update_and_push.log': Invalid argument
+fatal: Could not reset index file to revision 'origin/master'.
+
+2026-01-09 17:07:32,260 - INFO - Starting: Lottery Scraper
