@@ -57,8 +57,10 @@ def commit_and_push():
     if run_command(['git', 'add', '.'], "Git Add"):
         commit_msg = f"Auto-update: {datetime.now(IST).strftime('%Y-%m-%d %H:%M:%S')} IST"
         if run_command(['git', 'commit', '-m', commit_msg], "Git Commit"):
-            # Push specifically to the master branch from current HEAD
-            return run_command(['git', 'push', 'origin', 'HEAD:master'], "Git Push to Master")
+            # Push to both remotes to ensure all copies are updated
+            success_origin = run_command(['git', 'push', 'origin', 'HEAD:master'], "Git Push to Origin (Master)")
+            success_loto = run_command(['git', 'push', 'loto', 'HEAD:master'], "Git Push to Loto (Master)")
+            return success_origin or success_loto
     return False
 
 def main():
