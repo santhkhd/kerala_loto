@@ -11,6 +11,8 @@ def parse_json_file(file_path, file_name):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
+        if not isinstance(data, dict):
+            return None
     except Exception as e:
         return None
 
