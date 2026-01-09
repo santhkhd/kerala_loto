@@ -67,7 +67,7 @@ def main():
     # 0. Sync with GitHub first
     # This cleans up the repo and ensures we have the latest code from master
     run_command(['git', 'fetch', 'origin'], "Git Fetch")
-    run_command(['git', 'reset', '--mix', 'origin/master'], "Git Sync (Reset to Remote Master)")
+    run_command(['git', 'reset', '--hard', 'origin/master'], "Git Sync (Reset to Remote Master)")
     
     # 1. Run the scraper (using the more robust updateloto.py)
     # This uses fallback proxies which are useful on restricted environments like PythonAnywhere
