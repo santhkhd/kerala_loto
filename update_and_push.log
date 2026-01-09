@@ -894,3 +894,48 @@ Saved: note/BT-36-2026-01-05.json
 2026-01-08 16:58:49,087 - INFO - Update and push completed successfully!
 2026-01-08 16:58:49,087 - INFO - Result found and pushed. Stopping further runs for today.
 2026-01-08 16:58:49,087 - INFO - === Daily update task finished. ===
+2026-01-09 10:08:10,629 - INFO - --- Starting Run 1 of 7 ---
+2026-01-09 10:08:10,629 - INFO - === Starting Kerala Lottery Update Task ===
+2026-01-09 10:08:10,629 - INFO - Starting: Git Fetch
+2026-01-09 10:08:11,353 - INFO - Success: Git Fetch
+2026-01-09 10:08:11,353 - INFO - Starting: Git Sync (Reset to Remote Master)
+2026-01-09 10:08:11,435 - INFO - Success: Git Sync (Reset to Remote Master)
+2026-01-09 10:08:11,435 - INFO - Output: Unstaged changes after reset:
+M	update_and_push.log
+2026-01-09 10:08:11,435 - INFO - Starting: Lottery Scraper
+2026-01-09 10:08:23,973 - INFO - Success: Lottery Scraper
+2026-01-09 10:08:23,973 - INFO - Output: ==================================================
+Checking for new results at 2026-01-09 15:38:11 IST
+==================================================
+Attempting to fetch https://www.kllotteryresult.com/ (Attempt 1)...
+Connection error on attempt 1: HTTPSConnectionPool(host='www.kllotteryresult.com', port=443): Max retries exceeded with url: / (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+Attempting to fetch https://www.kllotteryresult.com/ (Attempt 2)...
+Connection error on attempt 2: HTTPSConnectionPool(host='www.kllotteryresult.com', port=443): Max retries exceeded with url: / (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+Attempting to fetch https://www.kllotteryresult.com/ (Attempt 3)...
+Connection error on attempt 3: HTTPSConnectionPool(host='www.kllotteryresult.com', port=443): Max retries exceeded with url: / (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+Maximum retries reached for https://www.kllotteryresult.com/.
+Direct fetch failed for https://www.kllotteryresult.com/. Switching to fallback...
+Trying Jina AI fallback for https://www.kllotteryresult.com/...
+Jina AI fallback failed: 403 Client Error: Forbidden for url: https://r.jina.ai/http://www.kllotteryresult.com/
+Error fetching homepage: 403 Client Error: Forbidden for url: https://r.jina.ai/http://www.kllotteryresult.com/
+No latest results found. This might be a normal occurrence if results aren't published yet.
+2026-01-09 10:08:23,973 - INFO - Starting: Manifest Generation
+2026-01-09 10:08:24,043 - INFO - Success: Manifest Generation
+2026-01-09 10:08:24,043 - INFO - Output: Manifest written to /home/santhoshriha/kerala_loto/result_manifest.json with 242 results.
+2026-01-09 10:08:24,043 - INFO - Starting: History Generation
+2026-01-09 10:08:24,288 - ERROR - Error in History Generation: Traceback (most recent call last):
+  File "/home/santhoshriha/kerala_loto/generate_history.py", line 108, in <module>
+    main()
+    ~~~~^^
+  File "/home/santhoshriha/kerala_loto/generate_history.py", line 80, in main
+    result = parse_json_file(os.path.join(NOTE_DIR, f), f)
+  File "/home/santhoshriha/kerala_loto/generate_history.py", line 26, in parse_json_file
+    draw = str(data.get('draw_number', '')).zfill(2)
+               ^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+2026-01-09 10:08:24,288 - INFO - Starting: PDF Link Generation
+2026-01-09 10:08:24,367 - INFO - Success: PDF Link Generation
+2026-01-09 10:08:24,367 - INFO - Output: Data is up to date (09/01/2026). No new PDFs to generate.
+2026-01-09 10:08:24,367 - INFO - Checking for changes to commit...
+2026-01-09 10:08:24,462 - INFO - Starting: Git Add

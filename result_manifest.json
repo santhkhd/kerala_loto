@@ -138,10 +138,10 @@
     "filename": "KR-734-2025-12-13.json"
   },
   {
-    "code": "KN",
-    "draw_number": "601",
+    "code": "SK",
+    "draw_number": "31",
     "date": "2025-12-12",
-    "filename": "KN-601-2025-12-12.json"
+    "filename": "SK-31-2025-12-12.json"
   },
   {
     "code": "DL",
@@ -1032,10 +1032,10 @@
     "filename": "SK-11-2025-07-11.json"
   },
   {
-    "code": "DL",
-    "draw_number": "9",
+    "code": "KN",
+    "draw_number": "580",
     "date": "2025-07-10",
-    "filename": "DL-9-2025-07-10.json"
+    "filename": "KN-580-2025-07-10.json"
   },
   {
     "code": "DL",
