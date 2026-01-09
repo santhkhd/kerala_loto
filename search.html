@@ -9,100 +9,152 @@
     <link rel="stylesheet" href="index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        .search-wrapper {
-            padding: 16px;
+        .search-container {
+            padding: 24px 16px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
+            background: linear-gradient(180deg, var(--primary-light) 0%, var(--bg) 100%);
+            border-bottom-left-radius: 32px;
+            border-bottom-right-radius: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
 
-        .input-row {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+        .input-deck {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
 
-        .field-box {
+        .premium-field {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 8px 12px;
-            flex: 1;
-            min-width: 140px;
+            border-radius: 16px;
+            padding: 12px 14px;
             border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            transition: border-color 0.2s;
+            gap: 4px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .field-box:focus-within {
+        .premium-field::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .premium-field:focus-within {
             border-color: var(--primary);
+            background: white;
+            box-shadow: 0 10px 20px rgba(30, 64, 175, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .premium-field:focus-within::after {
+            width: 100%;
         }
 
         .field-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .field-label i {
+            font-size: 1rem;
         }
 
         .field-input {
             border: none;
             outline: none;
-            font-size: 1.15rem;
-            font-weight: 700;
+            font-size: 1.1rem;
+            font-weight: 800;
             color: var(--text-main);
             width: 100%;
             background: transparent;
-            text-transform: uppercase;
+            padding: 4px 0;
         }
 
-        .btn-row {
-            display: flex;
+        .field-input::placeholder {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: none;
+        }
+
+        .action-row {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
             gap: 12px;
             margin-top: 4px;
         }
 
-        .btn-check {
-            flex: 1;
-            background: var(--primary);
-            color: white;
+        .btn-premium {
             border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            gap: 10px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-premium:active {
+            transform: scale(0.96);
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+        }
+
+        .btn-check i {
+            font-size: 1.5rem;
         }
 
         .btn-clear {
-            flex: 1;
             background: var(--card-bg);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            border: 1.5px solid var(--border);
+            color: var(--text-main);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-clear i {
+            color: #ef4444;
+            font-size: 1.5rem;
         }
 
         /* Result Styles */
         .winner-banner {
-            background: #ecfdf5;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
             color: #065f46;
-            padding: 20px;
-            border-radius: 16px;
+            padding: 24px;
+            border-radius: 20px;
             text-align: center;
-            margin: 0 16px 16px 16px;
+            margin: 0 16px 20px 16px;
             border: 1px solid #10b981;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.1);
             animation: slideDown 0.4s ease-out;
             display: none;
         }
@@ -112,55 +164,105 @@
         }
 
         .winner-banner h3 {
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin-bottom: 4px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             color: #059669;
+        }
+
+        .winner-banner i {
+            font-size: 2rem;
+            color: #10b981;
         }
 
         .winner-card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 24px;
+            padding: 30px;
             margin: 0 16px;
             text-align: center;
-            border: 1px solid var(--primary);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
             display: none;
+        }
+
+        .winner-card::before {
+            content: '★';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            font-size: 140px;
+            color: var(--primary-light);
+            z-index: 0;
+            opacity: 0.3;
         }
 
         .winner-card.show {
             display: block;
+            animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .prize-title {
             color: var(--primary);
-            font-size: 1.4rem;
-            font-weight: 800;
+            font-size: 1.6rem;
+            font-weight: 900;
             margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .number-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 14px;
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 1.5px;
+            margin: 12px 0;
+            border: 2px dashed var(--primary);
         }
 
         .prize-amount {
-            color: var(--accent);
-            font-size: 2.2rem;
+            color: #f43f5e;
+            /* Vibrant Rose */
+            font-size: 3rem;
             font-weight: 900;
-            margin: 8px 0;
+            margin: 12px 0;
         }
 
         .view-btn {
             background: var(--primary);
             color: white;
             text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 700;
-            display: inline-block;
-            margin-top: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            box-shadow: 0 8px 16px rgba(30, 64, 175, 0.2);
+            transition: all 0.3s;
         }
 
         @keyframes slideDown {
@@ -181,14 +283,23 @@
             border-color: #059669;
         }
 
-        body.dark .winner-card span#p-number {
-            background: #374151 !important;
-            color: white !important;
+        body.dark .winner-card::before {
+            opacity: 0.1;
         }
 
-        body.dark .winner-card span {
-            color: #9ca3af;
-            /* muted text */
+        body.dark .number-badge {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+            border-color: var(--primary);
+            border-style: solid;
+        }
+
+        body.dark .winner-card .label-text {
+            color: var(--text-muted) !important;
+        }
+
+        body.dark .winner-card #p-date {
+            color: #ffffff !important;
         }
     </style>
 </head>
@@ -197,7 +308,7 @@
     <div class="app-shell">
         <header class="app-header">
             <div class="title-group">
-                <h1 style="font-size: 1.2rem; font-weight: 700;">Check Ticket</h1>
+                <h1 style="font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px;">Verify Ticket</h1>
             </div>
             <button class="theme-toggle" id="theme-toggle">
                 <i class="material-icons">dark_mode</i>
@@ -208,24 +319,24 @@
             </button>
         </header>
 
-        <div class="search-wrapper">
-            <div class="input-row">
-                <div class="field-box">
-                    <span class="field-label">Ticket Number</span>
-                    <input type="text" id="ticket-input" class="field-input" placeholder="e.g. PG 247439">
+        <div class="search-container">
+            <div class="input-deck">
+                <div class="premium-field">
+                    <span class="field-label"><i class="material-icons">confirmation_number</i> Ticket</span>
+                    <input type="text" id="ticket-input" class="field-input" placeholder="PG 247439">
                 </div>
-                <div class="field-box">
-                    <span class="field-label">Select Date</span>
-                    <input type="date" id="date-input" class="field-input" style="font-family: inherit;">
+                <div class="premium-field">
+                    <span class="field-label"><i class="material-icons">event</i> Date</span>
+                    <input type="date" id="date-input" class="field-input">
                 </div>
             </div>
 
-            <div class="btn-row">
-                <button class="btn-check" onclick="verifyTicket()">
-                    <i class="material-icons">search</i> Check
+            <div class="action-row">
+                <button class="btn-premium btn-check" onclick="verifyTicket()">
+                    <i class="material-icons">fact_check</i> Check Now
                 </button>
-                <button class="btn-clear" onclick="clearSearch()">
-                    <i class="material-icons">close</i> Clear
+                <button class="btn-premium btn-clear" onclick="clearSearch()">
+                    <i class="material-icons">restart_alt</i> Clear
                 </button>
             </div>
         </div>
@@ -239,14 +350,19 @@
         <!-- Result Card -->
         <div id="win-card" class="winner-card">
             <div class="prize-title" id="p-rank">1st Prize</div>
-            <div>
-                <span style="color:#6b7280; font-weight:600;">Number:</span>
-                <span id="p-number"
-                    style="font-weight:800; background:#f3f4f6; padding:4px 8px; border-radius:6px;">--</span>
+            <div style="margin: 15px 0;">
+                <span class="label-text"
+                    style="color:#6b7280; font-weight:700; text-transform:uppercase; font-size:0.8rem; display:block; margin-bottom:5px;">Winning
+                    Number</span>
+                <span id="p-number" class="number-badge">--</span>
             </div>
             <div class="prize-amount" id="p-amount">₹0</div>
-            <div style="color:#6b7280; font-weight:600; margin-bottom:12px;">Date: <span id="p-date">--</span></div>
-            <a href="#" id="p-link" class="view-btn">View Full Result Page</a>
+            <div class="label-text" style="color:#6b7280; font-weight:700; margin-bottom:12px; font-size:0.9rem;">
+                Draw Date: <span id="p-date" style="color:var(--text-main)">--</span>
+            </div>
+            <a href="#" id="p-link" class="view-btn">
+                <i class="material-icons">visibility</i> View Full Analytics
+            </a>
         </div>
 
         <div id="status-msg" style="text-align:center; color:#6b7280; margin-top:20px; font-weight:600;"></div>
