@@ -156,8 +156,8 @@ function initLang() {
 
 function updateTranslations() {
     const t = i18n[currentLang];
-    const title = document.querySelector('h1');
-    if (title) title.textContent = t.pageTitle;
+    // const title = document.querySelector('h1');
+    // if (title) title.textContent = t.pageTitle;
 
     const empty = document.getElementById('empty-msg');
     if (empty) empty.textContent = t.noResults;

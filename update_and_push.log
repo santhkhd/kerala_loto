@@ -1232,3 +1232,137 @@ Script execution completed.
 fatal: Could not reset index file to revision 'origin/master'.
 
 2026-01-09 17:25:34,640 - INFO - Starting: Lottery Scraper
+2026-01-09 17:25:57,335 - INFO - Success: Lottery Scraper
+2026-01-09 17:25:57,336 - INFO - Output: ==================================================
+Checking for new results at 2026-01-09 17:25:35 IST
+==================================================
+Attempting to fetch https://www.kllotteryresult.com/ (Attempt 1)...
+Homepage links: abs=23 candidates=23
+Candidate: https://www.facebook.com/people/Kerala-Lottery-Results/100094590109908/
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-35
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-36
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-BT-37
+Candidate: https://www.kllotteryresult.com/kerala-lottery-result-DL-33
+Attempting to fetch https://www.facebook.com/people/Kerala-Lottery-Results/100094590109908/ (Attempt 1)...
+Direct fetch failed for https://www.facebook.com/people/Kerala-Lottery-Results/100094590109908/. Switching to fallback...
+Trying Jina AI fallback for https://www.facebook.com/people/Kerala-Lottery-Results/100094590109908/...
+Jina AI fallback failed: 403 Client Error: Forbidden for url: https://r.jina.ai/http://www.facebook.com/people/Kerala-Lottery-Results/100094590109908/
+Skip https://www.facebook.com/people/Kerala-Lottery-Results/100094590109908/: fetch error 403 Client Error: Forbidden for url: https://r.jina.ai/http://www.facebook.com/people/Kerala-Lottery-Results/100094590109908/
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-BT-35 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-BT-36 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-BT-37 (Attempt 1)...
+Skip https://www.kllotteryresult.com/kerala-lottery-result-BT-37: future date 2026-01-12
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-DL-33 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-DL-34 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-DL-35 (Attempt 1)...
+Skip https://www.kllotteryresult.com/kerala-lottery-result-DL-35: future date 2026-01-14
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-KN-604 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-KN-605 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-KN-606 (Attempt 1)...
+Skip https://www.kllotteryresult.com/kerala-lottery-result-KN-606: future date 2026-01-15
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-KR-737 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-KR-738 (Attempt 1)...
+Skip https://www.kllotteryresult.com/kerala-lottery-result-KR-738: future date 2026-01-10
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-KR-739 (Attempt 1)...
+Skip https://www.kllotteryresult.com/kerala-lottery-result-KR-739: future date 2026-01-17
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SK-34 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SK-35 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SK-36 (Attempt 1)...
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SK-36: future date 2026-01-16
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SM-36 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SM-37 (Attempt 1)...
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SM-37: future date 2026-01-11
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SS-500 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SS-501 (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SS-502 (Attempt 1)...
+Skip https://www.kllotteryresult.com/kerala-lottery-result-SS-502: future date 2026-01-13
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-today (Attempt 1)...
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-today-predictions (Attempt 1)...
+Processing 10 latest results:
+Processing result 1: https://www.kllotteryresult.com/kerala-lottery-result-SK-35
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SK-35 (Attempt 1)...
+TITLE TEXT: 'Kerala Lottery Result Today 09.01.2026 Suvarna Keralam (SK-35) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\SK-35-2026-01-09.json
+Latest result saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+Result 1 processed successfully.
+Processing result 2: https://www.kllotteryresult.com/kerala-lottery-result-today
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-today (Attempt 1)...
+TITLE TEXT: 'Kerala Lottery Result Today  09.01.2026 for Suvarna Keralam SK-35 - Full Winners List'
+Saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\RK-XX-2026-01-09.json
+Latest result saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+Result 2 processed successfully.
+Processing result 3: https://www.kllotteryresult.com/kerala-lottery-result-today-predictions
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-today-predictions (Attempt 1)...
+TITLE TEXT: 'Kerala Lottery Today Karunya(KR-738) Prediction  and Guessing Numbers | kerala lottery Last 4 number guessing'
+Saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\XX-KR-738-2026-01-09.json
+Latest result saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+Result 3 processed successfully.
+Processing result 4: https://www.kllotteryresult.com/kerala-lottery-result-KN-605
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-KN-605 (Attempt 1)...
+TITLE TEXT: 'Kerala Lottery Result Today 08.01.2026 Karunya Plus (KN-605) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\KN-605-2026-01-08.json
+Latest result saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+Result 4 processed successfully.
+Processing result 5: https://www.kllotteryresult.com/kerala-lottery-result-DL-34
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-DL-34 (Attempt 1)...
+TITLE TEXT: 'Kerala Lottery Result Today 07.01.2026 Dhanalakshmi (DL-34) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\DL-34-2026-01-07.json
+Latest result saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+Result 5 processed successfully.
+Processing result 6: https://www.kllotteryresult.com/kerala-lottery-result-SS-501
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SS-501 (Attempt 1)...
+TITLE TEXT: 'Kerala Lottery Result Today 06.01.2026 Sthree Sakthi (SS-501) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\SS-501-2026-01-06.json
+Latest result saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+Result 6 processed successfully.
+Processing result 7: https://www.kllotteryresult.com/kerala-lottery-result-BT-36
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-BT-36 (Attempt 1)...
+TITLE TEXT: 'Kerala Lottery Result Today 05.01.2026 Bhagyathara (BT-36) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\BT-36-2026-01-05.json
+Latest result saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+Result 7 processed successfully.
+Processing result 8: https://www.kllotteryresult.com/kerala-lottery-result-SM-36
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SM-36 (Attempt 1)...
+TITLE TEXT: 'Kerala Lottery Result Today 04.01.2026 Samrudhi (SM-36) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\SM-36-2026-01-04.json
+Latest result saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+Result 8 processed successfully.
+Processing result 9: https://www.kllotteryresult.com/kerala-lottery-result-KR-737
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-KR-737 (Attempt 1)...
+TITLE TEXT: 'Kerala Lottery Result Today 03.01.2026 Karunya (KR-737) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\KR-737-2026-01-03.json
+Latest result saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+Result 9 processed successfully.
+Processing result 10: https://www.kllotteryresult.com/kerala-lottery-result-SK-34
+Attempting to fetch https://www.kllotteryresult.com/kerala-lottery-result-SK-34 (Attempt 1)...
+TITLE TEXT: 'Kerala Lottery Result Today 02.01.2026 Suvarna Keralam (SK-34) - Full Winning Numbers'
+Saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\SK-34-2026-01-02.json
+Latest result saved to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+Result 10 processed successfully.
+Script execution completed.
+2026-01-09 17:25:57,338 - INFO - Starting: Manifest Generation
+2026-01-09 17:25:57,440 - INFO - Success: Manifest Generation
+2026-01-09 17:25:57,440 - INFO - Output: Manifest written to C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\result_manifest.json with 244 results.
+2026-01-09 17:25:57,441 - INFO - Starting: History Generation
+2026-01-09 17:25:58,157 - INFO - Success: History Generation
+2026-01-09 17:25:58,158 - INFO - Output: Generated C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\history.json with 248 draws.
+2026-01-09 17:25:58,159 - INFO - Starting: PDF Link Generation
+2026-01-09 17:25:58,304 - INFO - Success: PDF Link Generation
+2026-01-09 17:25:58,304 - INFO - Output: Data is up to date (09/01/2026). No new PDFs to generate.
+2026-01-09 17:25:58,304 - INFO - Checking for changes to commit...
+2026-01-09 17:25:58,614 - INFO - Starting: Git Add
+2026-01-09 17:25:58,826 - INFO - Success: Git Add
+2026-01-09 17:25:58,826 - INFO - Starting: Git Commit
+2026-01-09 17:26:00,146 - INFO - Success: Git Commit
+2026-01-09 17:26:00,146 - INFO - Output: [master 7cae727f] Auto-update: 2026-01-09 17:25:58 IST
+ 2 files changed, 92442 insertions(+), 92302 deletions(-)
+2026-01-09 17:26:00,147 - INFO - Pushing to multiple branches for redundancy...
+2026-01-09 17:26:00,147 - INFO - Starting: Git Push to Origin (Master)
+2026-01-09 17:26:04,279 - INFO - Success: Git Push to Origin (Master)
+2026-01-09 17:26:04,280 - INFO - Starting: Git Push to Origin (Main)
+2026-01-09 17:26:06,429 - INFO - Success: Git Push to Origin (Main)
+2026-01-09 17:26:06,429 - INFO - Starting: Git Push to Loto Mirror (Master)
+2026-01-09 17:26:10,498 - INFO - Success: Git Push to Loto Mirror (Master)
+2026-01-09 17:26:10,498 - INFO - Update and push completed successfully!
+2026-01-09 17:26:10,498 - INFO - Result found and pushed. Stopping further runs for today.
+2026-01-09 17:26:10,499 - INFO - === Daily update task finished. ===
