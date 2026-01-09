@@ -1,10 +1,10 @@
 import subprocess
 import os
 import logging
-from datetime import datetime
-import pytz
 import sys
 import time
+from datetime import datetime
+import pytz
 
 # Set up logging
 logging.basicConfig(
@@ -63,13 +63,12 @@ def main():
     logging.info("=== Starting Kerala Lottery Update Task ===")
     
     # 0. Sync with GitHub first
-    # This cleans up the repo and ensures we have the latest code from main
+    # This cleans up the repo and ensures we have the latest code from master
     run_command(['git', 'fetch', 'origin'], "Git Fetch")
     run_command(['git', 'reset', '--mix', 'origin/master'], "Git Sync (Reset to Remote Master)")
     
-    # 1. Run the scraper
-    # You can use 'main.py' or 'lottery_scraper.py'
-    if not run_command([sys.executable, 'main.py'], "Lottery Scraper"):
+    # 1. Run the scraper (using the more robust updateloto.py)
+    if not run_command([sys.executable, 'updateloto.py'], "Lottery Scraper"):
         logging.warning("Scraper failed or had warnings, proceeding anyway...")
 
     # 2. Generate Manifest (Important for the web app to see new results)
@@ -81,7 +80,7 @@ def main():
     # 4. Generate PDF Links
     run_command(['node', 'generate-pdf-links.js'], "PDF Link Generation")
 
-    # 4. Push to GitHub
+    # 5. Push to GitHub
     if commit_and_push():
         logging.info("Update and push completed successfully!")
         return True
