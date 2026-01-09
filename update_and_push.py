@@ -57,10 +57,15 @@ def commit_and_push():
     if run_command(['git', 'add', '.'], "Git Add"):
         commit_msg = f"Auto-update: {datetime.now(IST).strftime('%Y-%m-%d %H:%M:%S')} IST"
         if run_command(['git', 'commit', '-m', commit_msg], "Git Commit"):
-            # Push to both remotes to ensure all copies are updated
-            success_origin = run_command(['git', 'push', 'origin', 'HEAD:master'], "Git Push to Origin (Master)")
-            success_loto = run_command(['git', 'push', 'loto', 'HEAD:master'], "Git Push to Loto (Master)")
-            return success_origin or success_loto
+            # Push to both main and master to ensure visibility and website updates
+            logging.info("Pushing to multiple branches for redundancy...")
+            success_master = run_command(['git', 'push', 'origin', 'HEAD:master'], "Git Push to Origin (Master)")
+            success_main = run_command(['git', 'push', 'origin', 'HEAD:main', '--force'], "Git Push to Origin (Main)")
+            
+            # For the loto mirror
+            success_loto = run_command(['git', 'push', 'loto', 'HEAD:master', '--force'], "Git Push to Loto Mirror (Master)")
+            
+            return success_master or success_main or success_loto
     return False
 
 def main():
