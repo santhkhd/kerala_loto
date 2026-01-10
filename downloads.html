@@ -169,6 +169,10 @@
                     const card = document.createElement('div');
                     card.className = 'pdf-card fade-in';
 
+                    // Create download button with specific filename fragment for Android app handling
+                    const fileName = `${item.lottery.replace(/\s+/g, '_')}-${item.draw_no}.pdf`;
+                    const downloadHref = `${item.url}#filename=${fileName}`;
+
                     card.innerHTML = `
                         <div class="pdf-info">
                             <div class="pdf-title">${item.lottery}</div>
@@ -178,8 +182,13 @@
                             <a href="${item.url}#target=external" class="action-btn btn-view" target="_blank" rel="noopener noreferrer">
                                 <i class="material-icons" style="font-size:1.1rem">visibility</i> View
                             </a>
-                            <a href="${item.url}" class="action-btn btn-download">
-                                <i class="material-icons" style="font-size:1.1rem">download</i> Download
+                            <a href="${downloadHref}" class="action-btn btn-download">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Download
                             </a>
                         </div>
                     `;
