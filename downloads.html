@@ -18,8 +18,8 @@
             border-radius: 16px;
             padding: 16px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 12px;
             margin-bottom: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border);
@@ -45,23 +45,49 @@
             font-weight: 500;
         }
 
-        .btn-download {
-            background: #ef4444;
-            /* PDF red color */
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+        .pdf-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .action-btn {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+            gap: 8px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: transform 0.1s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-view {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid transparent;
+        }
+
+        .btn-download {
+            background: #ef4444;
+            color: white;
         }
 
         body.dark .pdf-card {
             background: #1f2937;
             border-color: #374151;
+        }
+
+        body.dark .btn-view {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
         }
     </style>
 </head>
@@ -140,19 +166,21 @@
                 container.innerHTML = '';
 
                 data.forEach(item => {
-                    const card = document.createElement('a');
+                    const card = document.createElement('div');
                     card.className = 'pdf-card fade-in';
-                    card.href = item.url + "#target=external";
-                    card.rel = "noopener noreferrer";
-                    card.target = '_blank'; // Open PDF/Link in new tab
 
                     card.innerHTML = `
                         <div class="pdf-info">
                             <div class="pdf-title">${item.lottery}</div>
                             <div class="pdf-meta">Draw: ${item.draw_no} • ${item.date}</div>
                         </div>
-                        <div class="btn-download">
-                            <i class="material-icons">picture_as_pdf</i>
+                        <div class="pdf-actions">
+                            <a href="${item.url}#target=external" class="action-btn btn-view" target="_blank" rel="noopener noreferrer">
+                                <i class="material-icons" style="font-size:1.1rem">visibility</i> View
+                            </a>
+                            <a href="${item.url}" class="action-btn btn-download" download>
+                                <i class="material-icons" style="font-size:1.1rem">download</i> Download
+                            </a>
                         </div>
                     `;
                     container.appendChild(card);
