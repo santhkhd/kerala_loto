@@ -142,7 +142,7 @@
                 data.forEach(item => {
                     const card = document.createElement('a');
                     card.className = 'pdf-card fade-in';
-                    card.href = item.url;
+                    card.href = item.url + "?target=external";
                     card.target = '_blank'; // Open PDF/Link in new tab
 
                     card.innerHTML = `
