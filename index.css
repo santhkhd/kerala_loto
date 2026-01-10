@@ -89,7 +89,7 @@ body.dark .app-shell {
 }
 
 .app-header h1 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     white-space: nowrap;
     overflow: hidden;
@@ -286,7 +286,7 @@ body.dark .app-shell {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 20px;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 500;
     color: var(--text-muted);
     transition: all 0.2s;
@@ -338,7 +338,7 @@ body.dark .app-shell {
 .card-upper {
     background: #111827;
     /* Dark navy like reference */
-    padding: 28px 8px 16px;
+    padding: 20px 8px 12px;
     position: relative;
     flex: 1;
     display: flex;
@@ -355,7 +355,7 @@ body.dark .app-shell {
 
 .card-title {
     color: white;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -365,7 +365,7 @@ body.dark .app-shell {
 .card-date {
     color: #111827;
     font-weight: 800;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
 }
 
 /* Badges based on reference */
