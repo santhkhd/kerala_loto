@@ -119,78 +119,80 @@ def parse_date_from_text(text: str) -> Optional[date]:
 
 def get_last_n_result_links(n=10):
     MAIN_URL = "https://www.kllotteryresult.com/"
-    today = datetime.now().date()
+    today = datetime.now(IST).date()
     try:
         page_text = fetch_page_text(MAIN_URL)
     except Exception as e:
         print(f"Error fetching homepage: {e}")
         return []
 
-    # Extract links using both HTML parsing and regex as fallback
-    candidates_set = set()
-    try:
-        soup = BeautifulSoup(page_text, "html.parser")
-        for a in soup.find_all("a", href=True):
-            href = a["href"].strip()
-            if "kerala-lottery-result" in href.lower():
-                if href.startswith("http"):
-                    candidates_set.add(href)
-                else:
-                    candidates_set.add(f"https://www.kllotteryresult.com{href}")
-    except Exception:
-        pass
-    # Regex fallback
-    if not candidates_set:
-        abs_links = re.findall(r'https?://www\\.kllotteryresult\\.com/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I)
-        rel_links = re.findall(r'/[a-z0-9-]*kerala-lottery-result[a-z0-9-]*/?', page_text, flags=re.I)
-        for p in abs_links:
-            candidates_set.add(p)
-        for p in rel_links:
-            candidates_set.add(f"https://www.kllotteryresult.com{p}")
-    candidates = sorted(candidates_set)
-
-    # Logging: counts (abs/rel) — we normalized to absolute URLs, so report abs only
-    abs_count = len([c for c in candidates if c.startswith("http")])
-    print(f"Homepage links: abs={abs_count} candidates={len(candidates)}")
+    # Parse homepage for links and try to associate dates immediately
+    candidates = []
+    soup = BeautifulSoup(page_text, "html.parser")
+    
+    # 1. Smart Parse: Look for dates near links in the homepage content
+    # This avoids fetching every single page just to check the date
+    for a in soup.find_all("a", href=True):
+        href = a["href"].strip()
+        if "kerala-lottery-result" in href.lower():
+            full_url = href if href.startswith("http") else f"https://www.kllotteryresult.com{href}"
+            
+            # Check parent texts for date (e.g. "Held on 10/01/2026")
+            # Look at the link text, the previous sibling, or parent container text
+            context_text = a.get_text() + " " + (a.find_previous(string=True) or "") + " " + (a.parent.get_text() if a.parent else "")
+            
+            date_found = parse_date_from_text(context_text)
+            if date_found:
+                 candidates.append((date_found, full_url))
+            else:
+                # If date not found in context, mark as needing fetch (use a dummy old date for sort, or today if desperate)
+                # But to be safe, we'll fetch these later only if needed.
+                # For now, let's assume if we can't find a date, it might be an older archive link or just obscure.
+                # We'll prioritize ones with dates.
+                pass
+                
+    # If we found candidates with dates, sort them
     if candidates:
-        for preview_url in candidates[:5]:
-            print(f"Candidate: {preview_url}")
+        # Sort by date descending
+        candidates.sort(key=lambda x: x[0], reverse=True)
+        
+        # Filter for today or very recent
+        results = []
+        for d, u in candidates:
+            if d <= today:
+                if (today - d).days <= 7: # Only care about last 7 days max
+                    if u not in results:
+                         results.append(u)
+                         
+        if results:
+            print(f"Smart-parsed {len(results)} relevant links from homepage.")
+            return results[:n]
 
+    # 2. Fallback: If verifying from homepage failed, use the old method but LIMIT it strictly
+    print("Could not extract dates from homepage text. Falling back to fetching recent links...")
+    
+    raw_links_set = set()
+    # Collect potential links again
+    for a in soup.find_all("a", href=True):
+        href = a["href"].strip()
+        if "kerala-lottery-result" in href.lower():
+            full_url = href if href.startswith("http") else f"https://www.kllotteryresult.com{href}"
+            raw_links_set.add(full_url)
+            
+    # Limit to checking top 5 links to avoid blocks
+    sorted_raw_links = sorted(list(raw_links_set))[:5] 
+    
     results = []
-    seen = set()
-    dated_candidates: List[Tuple[date, str]] = []
-    for url in candidates:
-        if url in seen:
-            continue
-        seen.add(url)
-        # fetch the result page text (direct first, then fallback) and validate date <= today
+    for url in sorted_raw_links:
         try:
-            page_text2 = fetch_page_text(url)
-        except Exception as e:
-            print(f"Skip {url}: fetch error {e}")
+             # Just check the first few
+             pt = fetch_page_text(url)
+             rd = parse_date_from_text(pt)
+             if rd and rd <= today and (today - rd).days <= 5:
+                 results.append(url)
+        except:
             continue
-        # find date using robust parser
-        result_date = parse_date_from_text(page_text2) or None
-        if not result_date:
-            print(f"Skip {url}: no date found")
-            continue
-        # Include results from the last 30 days to ensure we don't miss any
-        # This will help capture the missing results
-        days_diff = (today - result_date).days
-        if result_date <= today and days_diff <= 30:
-            dated_candidates.append((result_date, url))
-        elif result_date <= today:
-            # Still include older results but with lower priority
-            # Add a large number to sort them after recent results
-            dated_candidates.append((result_date, url))
-        else:
-            print(f"Skip {url}: future date {result_date}")
-    # Sort by date descending and return top n URLs
-    # For recent results (within 30 days), sort normally
-    # For older results, we still include them but they'll be at the end
-    dated_candidates.sort(key=lambda x: x[0], reverse=True)
-    for d, u in dated_candidates[:n]:
-        results.append(u)
+            
     return results
 
 # Mappings
