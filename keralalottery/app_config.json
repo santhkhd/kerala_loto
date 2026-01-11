@@ -1,0 +1,52 @@
+{
+    "app": {
+        "status": true,
+        "toolbar": true,
+        "navigation_drawer": true,
+        "geolocation": false,
+        "cache": true,
+        "open_link_in_external_browser": false,
+        "zoom_controls": false,
+        "user_agent": "",
+        "privacy_policy_url": "https://santhkhd.github.io/kerala_loto/privacy_policy.html",
+        "more_apps_url": "https://play.google.com/store/apps/developer?id=Solodroid",
+        "redirect_url": ""
+    },
+    "intro": {
+        "status": false,
+        "sliders": []
+    },
+    "menus": [
+        {
+            "name": "Home",
+            "type": "url",
+            "url": "https://santhkhd.github.io/kerala_loto/",
+            "url_dark": "https://santhkhd.github.io/kerala_loto/"
+        },
+        {
+            "name": "Downloads",
+            "type": "url",
+            "url": "https://santhkhd.github.io/kerala_loto/downloads.html",
+            "url_dark": "https://santhkhd.github.io/kerala_loto/downloads.html"
+        }
+    ],
+    "ads": {
+        "status": true,
+        "main_ads": "admob",
+        "backup_ads": "none",
+        "interstitial_ad_interval": 3,
+        "native_ad_index": 1,
+        "admob_banner_unit_id": "ca-app-pub-8211285362401989/7641995418",
+        "admob_interstitial_unit_id": "ca-app-pub-8211285362401989/6751090733",
+        "admob_native_unit_id": "ca-app-pub-8211285362401989/4949127274",
+        "admob_app_open_ad_unit_id": "ca-app-pub-8211285362401989/8687425254",
+        "placement": {
+            "banner_home": true,
+            "interstitial_post_list": true,
+            "interstitial_web_page_link": true,
+            "native_exit_dialog": true,
+            "app_open_ad_on_start": true,
+            "app_open_ad_on_resume": true
+        }
+    }
+}

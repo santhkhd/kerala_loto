@@ -80,11 +80,6 @@
             color: white;
         }
 
-        .btn-share {
-            background: #25D366;
-            color: white;
-        }
-
         body.dark .pdf-card {
             background: #1f2937;
             border-color: #374151;
@@ -178,14 +173,6 @@
                     const fileName = `${item.lottery.replace(/\s+/g, '_')}-${item.draw_no}.pdf`;
                     const downloadHref = `${item.url}#filename=${fileName}`;
 
-                    // Format the share message
-                    const appLink = "https://play.google.com/store/apps/details?id=com.kerala.lottery.results.today.sanshiv";
-                    const shareText = `📢 Kerala Lottery Result Published! \n\n🏆 ${item.lottery} (${item.draw_no})\n\n📲 Check full result & Download PDF in our Official App:\n${appLink}\n\n📄 Direct PDF Link:`;
-                    const shareUrl = `shareapp://?message=${encodeURIComponent(shareText)}&url=${item.url}`;
-
-                    // Google Docs Viewer URL for viewing PDF without downloading
-                    const viewUrl = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(item.url)}`;
-
                     card.innerHTML = `
                         <div class="pdf-info">
                             <div class="pdf-title">${item.lottery}</div>
@@ -202,11 +189,6 @@
                                     <line x1="12" y1="15" x2="12" y2="3"></line>
                                 </svg>
                                 Download
-                            </a>
-                            <a href="${shareUrl}" class="action-btn btn-share" style="background: var(--primary);">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="0" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.66 0 1.61 1.39 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
-                                </svg>
                             </a>
                         </div>
                     `;
