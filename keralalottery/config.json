@@ -41,43 +41,20 @@
       }
     ]
   },
-  "menus": [
-    {
-      "name": "Home",
-      "type": "url",
-      "icon": "https://raw.githubusercontent.com/solodroidev/content/uploads/images/webview/icons/home.png",
-      "url": "https://solodroidev.github.io/webdroid/pages/light/home.html",
-      "url_dark": "https://solodroidev.github.io/webdroid/pages/dark/home.html"
-    },
-    {
-      "name": "Portfolio",
-      "type": "url",
-      "icon": "https://raw.githubusercontent.com/solodroidev/content/uploads/images/webview/icons/portfolio.png",
-      "url": "https://solodroidev.github.io/webdroid/pages/light/portfolio.html",
-      "url_dark": "https://solodroidev.github.io/webdroid/pages/dark/portfolio.html"
-    },
-    {
-      "name": "Testimonials",
-      "type": "url",
-      "icon": "https://raw.githubusercontent.com/solodroidev/content/uploads/images/webview/icons/testimonials.png",
-      "url": "https://solodroidev.github.io/webdroid/pages/light/testimonials.html",
-      "url_dark": "hhttps://solodroidev.github.io/webdroid/pages/dark/testimonials.html"
-    },
-    {
-      "name": "Contact us",
-      "type": "url",
-      "icon": "https://raw.githubusercontent.com/solodroidev/content/uploads/images/webview/icons/contact.png",
-      "url": "https://solodroidev.github.io/webdroid/pages/light/contact.html",
-      "url_dark": "https://solodroidev.github.io/webdroid/pages/dark/contact.html"
-    },
-    {
-      "name": "Privacy Policy",
-      "type": "assets",
-      "icon": "https://raw.githubusercontent.com/solodroidev/content/uploads/images/webview/icons/privacy-policy.png",
-      "url": "privacy_policy.html",
-      "url_dark": "privacy_policy_dark.html"
-    }
-  ],
+   "menus": [
+        {
+            "name": "Home",
+            "type": "url",
+            "url": "https://santhkhd.github.io/kerala_loto/",
+            "url_dark": "https://santhkhd.github.io/kerala_loto/"
+        },
+        {
+            "name": "Downloads",
+            "type": "url",
+            "url": "https://santhkhd.github.io/kerala_loto/downloads.html",
+            "url_dark": "https://santhkhd.github.io/kerala_loto/downloads.html"
+        }
+    ],
   "ads": {
     "ad_status": true,
     "main_ads": "admob",
@@ -122,3 +99,4 @@
     }
   }
 }
+
