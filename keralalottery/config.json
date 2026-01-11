@@ -5,7 +5,7 @@
     "navigation_drawer": true,
     "geolocation": true,
     "cache": true,
-    "open_link_in_external_browser": true,
+    "open_link_in_external_browser": false,
     "zoom_controls": false,
     "user_agent": "",
     "privacy_policy_url": "https://sites.google.com/view/webdroid-privacy-policy",
