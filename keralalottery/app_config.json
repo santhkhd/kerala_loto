@@ -1,7 +1,7 @@
 {
     "app": {
         "status": true,
-        "toolbar": false,
+        "toolbar": true,
         "navigation_drawer": true,
         "geolocation": false,
         "cache": true,
@@ -36,10 +36,10 @@
         "backup_ads": "none",
         "interstitial_ad_interval": 3,
         "native_ad_index": 1,
-        "admob_banner_unit_id": "ca-app-pub-3940256099942544/6300978111",
-        "admob_interstitial_unit_id": "ca-app-pub-3940256099942544/1033173712",
-        "admob_native_unit_id": "ca-app-pub-3940256099942544/2247696110",
-        "admob_app_open_ad_unit_id": "ca-app-pub-3940256099942544/3419835294",
+        "admob_banner_unit_id": "ca-app-pub-8211285362401989/7641995418",
+        "admob_interstitial_unit_id": "ca-app-pub-8211285362401989/6751090733",
+        "admob_native_unit_id": "ca-app-pub-8211285362401989/4949127274",
+        "admob_app_open_ad_unit_id": "ca-app-pub-8211285362401989/8687425254",
         "placement": {
             "banner_home": true,
             "interstitial_post_list": true,
