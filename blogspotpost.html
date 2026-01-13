@@ -94,7 +94,7 @@
             background: transparent;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            /* padding: 0; Removed to avoid conflict with fixed navbar */
             color: #333;
         }
 
@@ -230,19 +230,46 @@
 
         .top-prize-winner {
             background-color: #eff6ff;
-            color: #1e40af;
-            /* Deep Blue */
-            padding: 15px 20px;
-            border-radius: 10px;
+            color: #1a237e;
+            padding: 12px 15px;
+            /* Reduced padding for compactness */
+            border-radius: 12px;
             font-family: 'Roboto', 'Arial', sans-serif;
-            font-weight: 900;
             text-align: center;
-            border: 2px solid #bfdbfe;
-            margin-bottom: 15px;
-            font-size: 1.8em;
-            /* Very Large */
-            letter-spacing: 1px;
+            border: 2px solid #bcd6f1;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .top-prize-winner:hover {
+            transform: scale(1.02);
+            border-color: #2563eb;
+        }
+
+        .winner-number {
+            font-size: 1.5em;
+            /* Reduced from 1.8em for better fit */
+            font-weight: 900;
+            color: #d32f2f;
+            /* Highlight number in red */
+            letter-spacing: 1px;
+            line-height: 1.1;
+        }
+
+        .winner-place {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #555;
+            margin-top: 4px;
+            text-transform: uppercase;
+            background: #e0e0e0;
+            padding: 2px 8px;
+            border-radius: 4px;
         }
 
         .info-section {
@@ -351,12 +378,15 @@
     <script>
         // --- Lottery Names Map ---
         const lotteryMap = {
-            "AK": "Akshaya",
+            "SS": "Sthree Sakthi",
+            "SM": "Samrudhi",
             "KR": "Karunya",
-            "ST": "Stree Shakti",
+            "SK": "Suvarna Keralam",
+            "KN": "Karunya Plus",
+            "DL": "Dhanalakshmi",
+            "BT": "Bhagyathara",
+            "AK": "Akshaya",
             "W": "Win-Win",
-            "X": "Xmas New Year Bumper",
-            "S": "Suvarna Keralam",
             "NR": "Nirmal",
             "FC": "Fifty Fifty",
             "KL": "Kerala State Lottery"
@@ -504,25 +534,65 @@
             }
 
             function updateDynamicSEO(data) {
-                document.title = `${data.lottery_name} Lottery Result - ${data.draw_date}`;
+                const name = data.lottery_name || data.draw_name || "Kerala Lottery";
+                const date = data.draw_date;
+                document.title = `${name} Lottery Result - ${date}`;
                 const metaDesc = document.querySelector('meta[name="description"]');
-                metaDesc.content = `Check ${data.lottery_name} results for ${data.draw_date}. Live winning numbers, prize details, and claim process. Fast and accurate.`;
+                metaDesc.content = `Check ${name} results for ${date}. Live winning numbers, prize details, and claim process. Fast and accurate.`;
             }
 
             function renderFullResults(data) {
-                document.getElementById('lottery-name').textContent = `${data.lottery_name} Lottery Result`;
-                document.getElementById('draw-details').textContent = `Draw No: ${data.draw_number} | Date: ${data.draw_date}`;
+                const name = data.lottery_name || data.draw_name || "Kerala Lottery";
+                const number = data.draw_number || data.draw_code || "";
+                const date = data.draw_date;
+
+                document.getElementById('lottery-name').textContent = `${name} Lottery Result`;
+                document.getElementById('draw-details').textContent = `Draw No: ${number} | Date: ${date}`;
 
                 let html = '';
                 const topPrizes = ['1st_prize', '2nd_prize', '3rd_prize', 'prize_1', 'prize_2', 'prize_3', 'first', 'second', 'third'];
 
-                for (const prizeKey in data.prizes) {
-                    const prize = data.prizes[prizeKey];
-                    html += `<div class="prize-section"><h2>${prize.label} <span class="amount">₹${prize.amount.toLocaleString('en-IN')}</span></h2>`;
+                const prizes = data.prizes || {};
 
-                    if (topPrizes.includes(prizeKey)) {
+                for (const prizeKey in prizes) {
+                    if (prizeKey === 'amounts' || prizeKey === 'guess' || prizeKey === 'mc') continue;
+
+                    let prize = prizes[prizeKey];
+                    // Normalization if prize is just an array (Legacy/API structure mismatch)
+                    if (Array.isArray(prize)) {
+                        const amounts = prizes.amounts || {};
+                        let amountKey = prizeKey;
+                        if (prizeKey === 'first') amountKey = '1st';
+                        const amountStr = amounts[amountKey] || "0";
+                        const amount = amountStr.replace(/[^0-9]/g, '');
+
+                        let label = prizeKey.toUpperCase().replace('_', ' ') + " PRIZE";
+                        if (prizeKey === 'consolation') label = "CONSOLATION PRIZE";
+                        if (prizeKey === 'first') label = "1ST PRIZE";
+
+                        prize = {
+                            label: label,
+                            amount: amount,
+                            winners: prize
+                        };
+                    }
+
+                    if (!prize.winners || prize.winners.length === 0) continue;
+
+                    html += `<div class="prize-section"><h2>${prize.label} <span class="amount">₹${parseInt(prize.amount).toLocaleString('en-IN')}</span></h2>`;
+
+                    if (topPrizes.includes(prizeKey) || prizeKey === 'first') {
                         html += `<div class="top-prize-winners-list">
-              ${prize.winners.map(w => `<div class="top-prize-winner">${w}</div>`).join('')}
+              ${prize.winners.map(w => {
+                            const match = w.match(/^([^(]+)(?:\(([^)]+)\))?$/);
+                            const number = match ? match[1].trim() : w;
+                            const place = match && match[2] ? match[2].trim() : '';
+
+                            return `<div class="top-prize-winner">
+                            <span class="winner-number">${number}</span>
+                            ${place ? `<span class="winner-place">${place}</span>` : ''}
+                          </div>`;
+                        }).join('')}
             </div>`;
                     } else {
                         const isFourDigitPrize = prize.winners.length > 0 && /^\d{4}$/.test(prize.winners[0]);
@@ -538,18 +608,42 @@
             }
 
             function renderAdditionalInfo(data) {
+                const name = data.lottery_name || data.draw_name || "Kerala Lottery";
+                const number = data.draw_number || data.draw_code || "";
+
                 let prizeTableHTML = `
-          <h3>${data.lottery_name} - Prize Structure</h3>
+          <h3>${name} - Prize Structure</h3>
           <table class="prize-table">
             <tr><th>Prize</th><th>No. of Winners</th><th>Prize Amount</th></tr>`;
-                for (const prizeKey in data.prizes) {
-                    const prize = data.prizes[prizeKey];
-                    prizeTableHTML += `<tr><td>${prize.label}</td><td>${prize.winners.length}</td><td>₹${prize.amount.toLocaleString('en-IN')}</td></tr>`;
+
+                const prizes = data.prizes || {};
+
+                for (const prizeKey in prizes) {
+                    if (prizeKey === 'amounts' || prizeKey === 'guess' || prizeKey === 'mc') continue;
+                    let prize = prizes[prizeKey];
+                    // Normalization
+                    if (Array.isArray(prize)) {
+                        const amounts = prizes.amounts || {};
+                        let amountKey = prizeKey;
+                        if (prizeKey === 'first') amountKey = '1st';
+                        const amountStr = amounts[amountKey] || "0";
+                        let label = prizeKey.toUpperCase() + " PRIZE";
+                        if (prizeKey === 'consolation') label = "CONSOLATION PRIZE";
+                        if (prizeKey === 'first') label = "1ST PRIZE";
+
+                        prize = {
+                            label: label,
+                            amount: amountStr,
+                            winners: prize
+                        };
+                    }
+
+                    prizeTableHTML += `<tr><td>${prize.label}</td><td>${prize.winners.length}</td><td>${prize.amount}</td></tr>`;
                 }
                 prizeTableHTML += '</table>';
 
                 const claimHTML = `
-          <h3>How to Claim Your Winnings for ${data.lottery_name} (${data.draw_number})</h3>
+          <h3>How to Claim Your Winnings for ${name} (${number})</h3>
           <ul>
             <li><strong>Verify Your Number:</strong> Cross-check your ticket at <a href="https://statelottery.kerala.gov.in" target="_blank" rel="noopener">Kerala State Lotteries</a>.</li>
             <li><strong>Claim Period:</strong> Submit your ticket within 30 days at a Kerala Lottery Office.</li>
