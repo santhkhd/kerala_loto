@@ -133,9 +133,28 @@ def prepare_post_content():
     
     full_draw_code = data.get('draw_code', '') # e.g. SS-482
     if not full_draw_code:
-        # Fallback if not in latest.json directly (it should be there)
-        # Try to extract from filename or just use draw_number
-        full_draw_code = f"XX-{draw_number}"
+        # Smart Fallback: Infer Code from Name if missing
+        # Map Name -> Code Prefix
+        code_map = {
+            "STHREE SAKTHI": "SS",
+            "AKSHAYA": "AK",
+            "KARUNYA PLUS": "KN",
+            "KARUNYA": "KR",
+            "NIRMAL": "NR",
+            "FIFTY FIFTY": "FF",
+            "WIN WIN": "W"
+        }
+        
+        # Default to XX if not found
+        prefix = "XX"
+        name_upper = lottery_name.upper()
+        
+        for name, code in code_map.items():
+            if name in name_upper:
+                prefix = code
+                break
+                
+        full_draw_code = f"{prefix}-{draw_number}"
 
     # IMPORTANT: The Title Format MUST be "NAME,CODE" for the badge logic to extract it
     title = f"{lottery_name.upper()},{full_draw_code}"
