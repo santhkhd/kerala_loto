@@ -189,10 +189,20 @@ def publish_post(service):
     }
 
     try:
-        # Check if post already exists to avoid duplicates? 
-        # For now, just post.
-        posts = service.posts()
-        result = posts.insert(blogId=BLOG_ID, body=body).execute()
+        # Check if post already exists to avoid duplicates
+        posts_resource = service.posts()
+        
+        # List recent posts (limit 10 is enough to check usually)
+        list_response = posts_resource.list(blogId=BLOG_ID, maxResults=10, fetchBodies=False).execute()
+        items = list_response.get('items', [])
+        
+        for post in items:
+            if post['title'].strip() == title.strip():
+                print(f"Skipping: Post with title '{title}' already exists.")
+                return False
+                
+        # If not found, insert new post
+        result = posts_resource.insert(blogId=BLOG_ID, body=body).execute()
         print(f"Post published: {result['url']}")
         return True
     except HttpError as error:
