@@ -3,7 +3,8 @@ name: Update Kerala Lottery Results
 on:
   workflow_dispatch:
   schedule:
-    # Run every 15 mins from 3:15 PM to 4:45 PM IST (09:45 to 11:15 UTC)
+    # Run every 15 mins from 3:00 PM to 5:00 PM IST (09:30 to 11:30 UTC)
+    - cron: "30 9 * * *"
     - cron: "45 9 * * *"
     - cron: "0 10 * * *"
     - cron: "15 10 * * *"
@@ -11,6 +12,7 @@ on:
     - cron: "45 10 * * *"
     - cron: "0 11 * * *"
     - cron: "15 11 * * *"
+    - cron: "30 11 * * *"
 
 concurrency:
   group: update-results
@@ -42,6 +44,7 @@ jobs:
       - name: Run updater
         run: |
           set -e
+          echo "Starting Update Process..."
           python updateloto.py
           python generate_manifest.py
           python generate_history.py
@@ -49,8 +52,8 @@ jobs:
 
       - name: Commit and push if changed
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "Lottery Bot"
+          git config user.email "bot@lottery.com"
           
           # Stage all changes
           git add .
@@ -58,8 +61,9 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "chore: update results & artifacts $(date -u +'%Y-%m-%d %H:%M:%SZ')"
-            # Push to both branches for redundancy and website updates
-            git push origin HEAD:master --force
+            git commit -m "Auto-update: $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            
+            # Push to main and master
             git push origin HEAD:main --force
+            git push origin HEAD:master --force || echo "Master branch might not exist or be protected"
           fi
