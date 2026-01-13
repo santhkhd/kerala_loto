@@ -66,58 +66,54 @@ def process_and_save(data):
             "winners": ["Wait"]
         }
 
-    # 2. Other Prizes Mapping
-    # API key -> My Schema Key
-    key_map = {
-        "consolation": "consolation_prize",
-        "2nd": "2nd_prize",
-        "3rd": "3rd_prize",
-        "4th": "4th_prize",
-        "5th": "5th_prize",
-        "6th": "6th_prize",
-        "7th": "7th_prize",
-        "8th": "8th_prize", 
-        "9th": "9th_prize"
-    }
     
-    # Default amounts if API doesn't specify or we fail to parse
+    # 2. Dynamic Prize Parsing
+    # We iterate over whatever keys the API returns in 'prizes'
+    # This ensures Bumper lotteries (which might have different keys) are captured.
+    
+    # Standard amounts fallback just in case
     std_amounts = {
-        "consolation_prize": 5000, "2nd_prize": 3000000, "3rd_prize": 500000,
-        "4th_prize": 5000, "5th_prize": 2000, "6th_prize": 1000,
-        "7th_prize": 500, "8th_prize": 200, "9th_prize": 100
+        "consolation": 5000, "2nd": 3000000, "3rd": 500000,
+        "4th": 5000, "5th": 2000, "6th": 1000,
+        "7th": 500, "8th": 200, "9th": 100
     }
+
+    # Iterate through ALL keys returned by the API's 'prizes' object
+    # The API 'prizes' object contains keys like "2nd", "3rd", "consolation", but also maybe "10th" for bumpers
+    # We ignore "amounts", "guess", "mc" as they are meta-data
+    ignore_keys = ["amounts", "guess", "mc"]
     
-    for api_key, my_key in key_map.items():
-        # Check if this prize category exists in API response
-        # Sometimes keys might be missing if no winners yet
-        winners = prizes_data.get(api_key, [])
-        
-        # Ensure winners is a list
-        if isinstance(winners, str): winners = [winners]
-        
-        # If winners list is empty, put a placeholder? Or leave empty?
-        # App expects winners.
-        if not winners:
-            winners = [] # Empty list implies no winners declared yet
+    for api_key, val in prizes_data.items():
+        if api_key in ignore_keys:
+            continue
             
-        # Parse Amount
+        # Determine our internal key name
+        if api_key == "consolation":
+            my_key = "consolation_prize"
+            label = "Consolation Prize"
+        else:
+            # "2nd" -> "2nd_prize"
+            my_key = f"{api_key}_prize"
+            # "2nd" -> "2nd Prize"
+            label = f"{api_key.capitalize()} Prize"
+
+        # Get Winners
+        winners = val
+        if isinstance(winners, str): winners = [winners]
+        if not winners: winners = []
+        
+        # Determine Amount
+        # Try to get from the 'amounts' object first
         amt_val = 0
         if api_key in amounts_map:
             amt_str = amounts_map[api_key]
-            # "₹1,00,00,000/-" -> 10000000
             try:
+                # Remove non-digits (₹, ,, /-)
                 amt_val = int(re.sub(r"[^\d]", "", amt_str))
             except:
-                amt_val = std_amounts.get(my_key, 0)
+                amt_val = std_amounts.get(api_key, 0)
         else:
-            amt_val = std_amounts.get(my_key, 0)
-
-        # Label Construction
-        if api_key == "consolation":
-            label = "Consolation Prize"
-        else:
-            # "2nd" -> "2nd Prize"
-            label = api_key.capitalize() + " Prize"
+             amt_val = std_amounts.get(api_key, 0)
 
         final_prizes[my_key] = {
             "amount": amt_val,
