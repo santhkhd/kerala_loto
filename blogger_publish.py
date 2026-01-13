@@ -161,7 +161,10 @@ def prepare_post_content():
                 break
         
         if prefix != "XX":     
-            full_draw_code = f"{prefix}-{draw_number}"
+            if draw_number.startswith(prefix):
+                 full_draw_code = draw_number
+            else:
+                 full_draw_code = f"{prefix}-{draw_number}"
 
     # IMPORTANT: The Title Format MUST be "NAME,CODE" for the badge logic to extract it
     title = f"{lottery_name.upper()},{full_draw_code}"
