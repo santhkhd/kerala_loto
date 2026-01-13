@@ -132,7 +132,12 @@ def prepare_post_content():
     # We can try to extract it from the 'draw_code' in the JSON if available, or guess it.
     
     full_draw_code = data.get('draw_code', '') # e.g. SS-482
-    if not full_draw_code:
+    
+    # Logic to fix double prefixes e.g. XX-BT-17
+    if full_draw_code.startswith("XX-") and len(full_draw_code) > 6:
+        full_draw_code = full_draw_code.replace("XX-", "")
+
+    if not full_draw_code or full_draw_code.startswith("XX-"):
         # Smart Fallback: Infer Code from Name if missing
         # Map Name -> Code Prefix
         code_map = {
@@ -142,7 +147,8 @@ def prepare_post_content():
             "KARUNYA": "KR",
             "NIRMAL": "NR",
             "FIFTY FIFTY": "FF",
-            "WIN WIN": "W"
+            "WIN WIN": "W",
+            "BHAGYATHARA": "BT"
         }
         
         # Default to XX if not found
@@ -153,8 +159,9 @@ def prepare_post_content():
             if name in name_upper:
                 prefix = code
                 break
-                
-        full_draw_code = f"{prefix}-{draw_number}"
+        
+        if prefix != "XX":     
+            full_draw_code = f"{prefix}-{draw_number}"
 
     # IMPORTANT: The Title Format MUST be "NAME,CODE" for the badge logic to extract it
     title = f"{lottery_name.upper()},{full_draw_code}"
