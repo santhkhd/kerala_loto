@@ -1,6 +1,7 @@
 import os
 import json
 import re
+import time
 from datetime import datetime
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -148,6 +149,7 @@ def main():
             service.posts().insert(blogId=BLOG_ID, body=body).execute()
             print(f"[{count+1}/{len(files)}] Published: {title} on {pub_date}")
             count += 1
+            time.sleep(10) # Wait 10 seconds to avoid rate limits
         except HttpError as e:
             print(f"Error publishing {filename}: {e}")
             
