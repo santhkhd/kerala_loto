@@ -125,8 +125,22 @@ def prepare_post_content():
     )
 
     # 5. Prepare Title and Labels
-    title = f"{lottery_name} Lottery Result {date_str} Live Updates"
-    labels = ["Kerala Lottery Result", lottery_name, "Lottery Result Today", "Live Results"]
+    # User Requirement: "STHREE SAKTHI,SS-482" format for the badge to work
+    # We will upper-case the lottery name and append ",<DrawCode>"
+    # We need to construct the DrawCode. Usually it is SS-482.
+    # The 'draw_number' we have is just '482', we need the code prefix.
+    # We can try to extract it from the 'draw_code' in the JSON if available, or guess it.
+    
+    full_draw_code = data.get('draw_code', '') # e.g. SS-482
+    if not full_draw_code:
+        # Fallback if not in latest.json directly (it should be there)
+        # Try to extract from filename or just use draw_number
+        full_draw_code = f"XX-{draw_number}"
+
+    # IMPORTANT: The Title Format MUST be "NAME,CODE" for the badge logic to extract it
+    title = f"{lottery_name.upper()},{full_draw_code}"
+    
+    labels = ["Kerala Lottery Result", lottery_name, "Lottery Result Today", "Live Results", full_draw_code]
 
     return title, content, labels
 
