@@ -1588,3 +1588,42 @@ hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 fatal: Could not reset index file to revision 'origin/master'.
 
 2026-01-13 15:29:56,596 - INFO - Starting: Lottery Scraper
+2026-01-13 15:29:58,260 - INFO - Success: Lottery Scraper
+2026-01-13 15:29:58,260 - INFO - Output: --- Starting API-based Lottery Update ---
+Fetching data from https://indialotteryapi.com/wp-json/klr/v1/latest...
+Saved result to: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\SS-502-2026-01-13.json
+Updated latest.json at: C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\note\latest.json
+2026-01-13 15:29:58,262 - INFO - Starting: Manifest Generation
+2026-01-13 15:29:58,336 - INFO - Success: Manifest Generation
+2026-01-13 15:29:58,337 - INFO - Output: Manifest written to C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\result_manifest.json with 248 results.
+2026-01-13 15:29:58,337 - INFO - Starting: History Generation
+2026-01-13 15:30:02,052 - INFO - Success: History Generation
+2026-01-13 15:30:02,052 - INFO - Output: Generated C:\Users\santh\Downloads\keralaloto\backup\kerala_loto-main\history.json with 252 draws.
+2026-01-13 15:30:02,052 - INFO - Starting: PDF Link Generation
+2026-01-13 15:30:02,208 - INFO - Success: PDF Link Generation
+2026-01-13 15:30:02,208 - INFO - Output: Data is up to date (13/01/2026). No new PDFs to generate.
+2026-01-13 15:30:02,210 - INFO - Checking for changes to commit...
+2026-01-13 15:30:02,345 - INFO - Starting: Git Add
+2026-01-13 15:30:02,476 - INFO - Success: Git Add
+2026-01-13 15:30:02,476 - INFO - Starting: Git Commit
+2026-01-13 15:30:03,443 - INFO - Success: Git Commit
+2026-01-13 15:30:03,444 - INFO - Output: [main 03ae8279] Auto-update: 2026-01-13 15:30:02 IST
+ 6 files changed, 94554 insertions(+), 97637 deletions(-)
+ create mode 100644 note/SS-502-2026-01-13.json
+2026-01-13 15:30:03,444 - INFO - Pushing to multiple branches for redundancy...
+2026-01-13 15:30:03,444 - INFO - Starting: Git Push to Origin (Master)
+2026-01-13 15:30:05,189 - ERROR - Error in Git Push to Origin (Master): To https://github.com/santhkhd/kerala_loto.git
+ ! [rejected]          HEAD -> master (non-fast-forward)
+error: failed to push some refs to 'https://github.com/santhkhd/kerala_loto.git'
+hint: Updates were rejected because a pushed branch tip is behind its remote
+hint: counterpart. If you want to integrate the remote changes, use 'git pull'
+hint: before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+2026-01-13 15:30:05,190 - INFO - Starting: Git Push to Origin (Main)
+2026-01-13 15:30:08,527 - INFO - Success: Git Push to Origin (Main)
+2026-01-13 15:30:08,527 - INFO - Starting: Git Push to Loto Mirror (Master)
+2026-01-13 15:30:11,780 - INFO - Success: Git Push to Loto Mirror (Master)
+2026-01-13 15:30:11,781 - INFO - Update and push completed successfully!
+2026-01-13 15:30:11,781 - INFO - Result found and pushed. Stopping further runs for today.
+2026-01-13 15:30:11,781 - INFO - === Daily update task finished. ===
