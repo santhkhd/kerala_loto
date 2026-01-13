@@ -39,7 +39,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install requests beautifulsoup4 pytz
+          pip install requests beautifulsoup4 pytz google-api-python-client google-auth-httplib2 google-auth-oauthlib
 
       - name: Run updater
         run: |
@@ -48,7 +48,21 @@ jobs:
           python updateloto.py
           python generate_manifest.py
           python generate_history.py
+          python generate_history.py
           python generate_pdf_links.py
+
+      - name: Publish to Blogger
+        env:
+          BLOGGER_TOKEN: ${{ secrets.BLOGGER_TOKEN_JSON }}
+        run: |
+          if [ -n "$BLOGGER_TOKEN" ]; then
+            echo "$BLOGGER_TOKEN" > token.json
+            echo "Blogger Token restored."
+            python blogger_publish.py
+            rm token.json # Clean up
+          else
+            echo "BLOGGER_TOKEN_JSON secret not found. Skipping Blogger publish."
+          fi
 
       - name: Commit and push if changed
         run: |
