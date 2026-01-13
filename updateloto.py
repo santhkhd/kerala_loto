@@ -161,6 +161,14 @@ def main():
         process_and_save(data)
     else:
         print("Failed to update from API.")
+        
+    # Always update a status file so we know the scheduler is running
+    status = {
+        "last_check_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "status": "active"
+    }
+    with open("status.json", "w") as f:
+        json.dump(status, f)
 
 if __name__ == "__main__":
     main()
