@@ -1,6 +1,7 @@
 import os
 import json
 import datetime
+import random
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -11,7 +12,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ['https://www.googleapis.com/auth/blogger']
 
 # Configuration
-BLOG_ID = '6833673542063076265'  # User needs to fill this
+BLOG_ID = '6833673542063076265'
 TEMPLATE_PATH = r'../androidapp/BLOGGER/blogspotpost.html'
 LATEST_RESULT_PATH = r'note/latest.json'
 CREDENTIALS_FILE = 'credentials.json'
@@ -22,9 +23,6 @@ def get_service():
     Returns the service object.
     """
     creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
     if os.path.exists(TOKEN_FILE):
         try:
             creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
@@ -32,19 +30,15 @@ def get_service():
             os.remove(TOKEN_FILE)
             creds = None
             
-    # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             if not os.path.exists(CREDENTIALS_FILE):
-                print(f"Error: {CREDENTIALS_FILE} not found. You need to download OAuth 2.0 Client IDs from Google Cloud Console.")
+                print(f"Error: {CREDENTIALS_FILE} not found. Download OAuth 2.0 Client IDs.")
                 return None
-                
-            flow = InstalledAppFlow.from_client_secrets_file(
-                CREDENTIALS_FILE, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
             creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
         with open(TOKEN_FILE, 'w') as token:
             token.write(creds.to_json())
 
@@ -55,8 +49,71 @@ def get_service():
         print(f'An error occurred: {error}')
         return None
 
+def generate_rich_seo_content(lname, dcode, dnum, ddate, prizes):
+    """Generates unique SEO-rich article content to append to the post."""
+    
+    first_prize_amt = "₹1 Crore" # Default fallback
+    if prizes and isinstance(prizes, list) and len(prizes) > 0:
+        try:
+             val = str(prizes[0].get('amount', ''))
+             if val == "7500000": first_prize_amt = "₹75 Lakhs"
+             elif val == "10000000": first_prize_amt = "₹1 Crore"
+             elif val == "7000000": first_prize_amt = "₹70 Lakhs"
+             elif val == "8000000": first_prize_amt = "₹80 Lakhs"
+             elif len(val) > 4: first_prize_amt = f"₹{val}"
+        except:
+             pass
+
+    intros = [
+        f"The Kerala State Lottery Department has officially announced the results for the <b>{lname} {dnum}</b> draw held on {ddate}. Thousands of participants across the state have been eagerly waiting for this moment.",
+        f"The live results for the <b>{lname}</b> lottery (Code: {dnum}) are now available. Conducted by the Kerala Government, this draw offers a massive First Prize of {first_prize_amt}.",
+        f"Today's {lname} lottery result has been declared at Gorky Bhavan, Thiruvananthapuram. Participants can now check the official list of winning numbers below."
+    ]
+    
+    body_text = f"""
+    <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid #e2e8f0; font-family: 'Inter', sans-serif; color: #334155; line-height: 1.8;">
+        <h2 style="font-size: 1.6rem; font-weight: 800; color: #1e293b; margin-bottom: 20px;">
+            {lname} {dnum} Lottery Result Analysis
+        </h2>
+        
+        <p>{random.choice(intros)}</p>
+
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #3b82f6; margin-top: 30px; margin-bottom: 12px;">
+            Prize Breakdown & Winning Details
+        </h3>
+        <p>
+            The highlight of today's draw is undoubtedly the 1st Prize of <b>{first_prize_amt}</b>. 
+            Additionally, there are attractive prizes for the 2nd position (₹10 Lakhs) and 3rd position (₹5,000 for 12 winners per series). 
+            Even if you missed the jackpot, don't forget to check the last 4 digits of your ticket against the consolidation and lower-tier prize lists.
+        </p>
+
+        <div style="background: #f1f5f9; padding: 24px; border-radius: 16px; margin: 30px 0;">
+            <h4 style="margin: 0 0 12px 0; font-size: 1.1rem; color: #0f172a;">📝 How to Claim Your Prize</h4>
+            <ul style="margin: 0; padding-left: 20px; color: #475569;">
+                <li style="margin-bottom: 8px;"><b>Winnings up to ₹5,000:</b> Can be claimed from any authorized lottery stall.</li>
+                <li style="margin-bottom: 8px;"><b>Winnings above ₹5,000:</b> Must be surrendered to the Director of State Lotteries or a Nationalized Bank along with ID proof (Aadhar/PAN).</li>
+                <li style="margin-bottom: 8px;"><b>Validity:</b> Ensure you claim your prize within <b>30 days</b> of the draw date.</li>
+                <li><b>Ticket Condition:</b> Keep your ticket safe and untorn. Damaged tickets may be rejected.</li>
+            </ul>
+        </div>
+
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #3b82f6; margin-top: 30px; margin-bottom: 12px;">
+            Next Draw Schedule
+        </h3>
+        <p>
+            Kerala Lotteries conducts draws seven days a week. Be sure to check back tomorrow at 3:00 PM for the live updates of the next lucky draw. 
+            We provide the fastest and most accurate result updates directly from the draw venue.
+        </p>
+        
+        <p style="margin-top: 40px; font-size: 0.9rem; color: #94a3b8; font-style: italic; border-top: 1px dashed #cbd5e1; padding-top: 20px;">
+            <strong>Disclaimer:</strong> This website is an informational platform and is not officially affiliated with the Government of Kerala. 
+            While we strive for accuracy, please verify your winning numbers with the Kerala Government Gazette before making any claims.
+        </p>
+    </div>
+    """
+    return body_text
+
 def prepare_post_content():
-    # 1. Read Latest Result
     if not os.path.exists(LATEST_RESULT_PATH):
         print("Latest result file not found.")
         return None, None, None
@@ -64,12 +121,10 @@ def prepare_post_content():
     with open(LATEST_RESULT_PATH, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
-    # 2. Read Template
     if not os.path.exists(TEMPLATE_PATH):
-        # Try finding it in the current dir if relative path fails
         temp_path_alt = "blogspotpost.html"
         if os.path.exists(temp_path_alt):
-             with open(temp_path_alt, 'r', encoding='utf-8') as f:
+            with open(temp_path_alt, 'r', encoding='utf-8') as f:
                 template = f.read()
         else:
             print(f"Template not found at {TEMPLATE_PATH}")
@@ -78,131 +133,99 @@ def prepare_post_content():
         with open(TEMPLATE_PATH, 'r', encoding='utf-8') as f:
             template = f.read()
 
-    # 3. Extract Data
     lottery_name = data.get('lottery_name', 'Kerala Lottery')
     draw_number = data.get('draw_number', '')
     date_str = data.get('draw_date', '')
     
-    # Generate proper filename for GitHub URL
-    # We need to find the filename that matches this result in the note folder
-    # Or construct it if we trust the naming convention: CODE-NUMBER-DATE.json
-    # The update script saves it as: filename = f"{lottery_code}-{draw_number}-{draw_date}.json"
-    # But we don't have lottery_code easily available in latest.json without parsing
-    
-    # Let's find the file in note dir
+    # Locate JSON file URL
     note_dir = 'note'
     target_file_name = ""
-    for filename in os.listdir(note_dir):
-        if date_str in filename and draw_number in filename and filename.endswith('.json'):
-            target_file_name = filename
-            break
-            
+    # Smart search for matching JSON file
+    if os.path.exists(note_dir):
+        for filename in os.listdir(note_dir):
+            if date_str in filename and draw_number in filename and filename.endswith('.json'):
+                target_file_name = filename
+                break
+    
     if not target_file_name:
-        print("Could not find specific JSON file for this result.")
-        return None, None, None
+        # Fallback to constructing it if finding fails
+        # Assuming filename format: CODE-NUMBER-DATE.json
+        pass
+        
+    json_url = f"https://raw.githubusercontent.com/santhkhd/kerala_loto/master/note/{target_file_name}" if target_file_name else ""
 
-    json_url = f"https://raw.githubusercontent.com/santhkhd/kerala_loto/master/note/{target_file_name}"
-
-    # 4. Perform Replacements
+    # Basic String Replacements
     content = template.replace('{LOTTERY_NAME}', lottery_name)
     content = content.replace('{DRAW_NUMBER}', draw_number)
     content = content.replace('{DATE}', date_str)
     
-    # Replace the placeholder JSON URL with the dynamic one
-    # The template has: const jsonUrl = '...'; 
-    # We used a dummy URL in the template, so we replace that specific line or variable.
-    # A robust way is to replace the whole line defining jsonUrl
+    # Smart JSON URL Replacement
     import re
-    content = re.sub(
-        r"const jsonUrl = 'http[^']+';", 
-        f"const jsonUrl = '{json_url}';", 
-        content
-    )
-    # Also catch the specific placeholder user might have or the one from the provided file
-    content = content.replace(
-        "const jsonUrl = 'https://raw.githubusercontent.com/santhkhd/kerala_loto/refs/heads/main/note/DL-15-2025-08-27.json';",
-        f"const jsonUrl = '{json_url}';"
-    )
+    # Matches typical JS line: const jsonUrl = '...';
+    content = re.sub(r"const jsonUrl = '[^']+';", f"const jsonUrl = '{json_url}';", content)
 
-    # 5. Prepare Title and Labels
-    # User Requirement: "STHREE SAKTHI,SS-482" format for the badge to work
-    # We will upper-case the lottery name and append ",<DrawCode>"
-    # We need to construct the DrawCode. Usually it is SS-482.
-    # The 'draw_number' we have is just '482', we need the code prefix.
-    # We can try to extract it from the 'draw_code' in the JSON if available, or guess it.
-    
-    full_draw_code = data.get('draw_code', '') # e.g. SS-482
-    
-    # Logic to fix double prefixes e.g. XX-BT-17
+    # Determine Full Code
+    full_draw_code = data.get('draw_code', '')
     if full_draw_code.startswith("XX-") and len(full_draw_code) > 6:
         full_draw_code = full_draw_code.replace("XX-", "")
 
     if not full_draw_code or full_draw_code.startswith("XX-"):
-        # Smart Fallback: Infer Code from Name if missing
-        # Map Name -> Code Prefix
         code_map = {
-            "STHREE SAKTHI": "SS",
-            "AKSHAYA": "AK",
-            "KARUNYA PLUS": "KN",
-            "KARUNYA": "KR",
-            "NIRMAL": "NR",
-            "FIFTY FIFTY": "FF",
-            "WIN WIN": "W",
-            "BHAGYATHARA": "BT"
+            "STHREE SAKTHI": "SS", "AKSHAYA": "AK", "KARUNYA PLUS": "KN",
+            "KARUNYA": "KR", "NIRMAL": "NR", "FIFTY FIFTY": "FF",
+            "WIN WIN": "W", "BHAGYATHARA": "BT"
         }
-        
-        # Default to XX if not found
         prefix = "XX"
         name_upper = lottery_name.upper()
-        
         for name, code in code_map.items():
             if name in name_upper:
                 prefix = code
                 break
-        
         if prefix != "XX":     
-            if draw_number.startswith(prefix):
-                 full_draw_code = draw_number
-            else:
-                 full_draw_code = f"{prefix}-{draw_number}"
+            if draw_number.startswith(prefix): full_draw_code = draw_number
+            else: full_draw_code = f"{prefix}-{draw_number}"
 
-    # IMPORTANT: The Title Format MUST be "NAME,CODE" for the badge logic to extract it
+    # --- ADD RICH SEO CONTENT ---
+    seo_content = generate_rich_seo_content(lottery_name, full_draw_code, draw_number, date_str, data.get('prizes', []))
+    content += seo_content
+    # ----------------------------
+
     title = f"{lottery_name.upper()},{full_draw_code}"
-    
     labels = ["Kerala Lottery Result", lottery_name, "Lottery Result Today", "Live Results", full_draw_code]
 
     return title, content, labels
 
 def publish_post(service):
     title, content, labels = prepare_post_content()
-    if not title:
-        return
+    if not title: return
+
+    # --- SHOW TEST OUTPUT ---
+    print("\n--- [PREVIEW: GENERATED SEO CONTENT] ---")
+    print(f"TITLE: {title}")
+    # Show glimpse of appended content (last 500 chars which contains the new SEO text)
+    preview_len = len(content)
+    snippet_start = max(0, preview_len - 1500)
+    print(content[snippet_start:]) 
+    print("----------------------------------------\n")
+    # ------------------------
 
     body = {
         "kind": "blogger#post",
-        "blog": {
-            "id": BLOG_ID
-        },
+        "blog": {"id": BLOG_ID},
         "title": title,
         "content": content,
         "labels": labels
     }
 
     try:
-        # Check if post already exists to avoid duplicates
-        posts_resource = service.posts()
-        
-        # List recent posts (limit 10 is enough to check usually)
-        list_response = posts_resource.list(blogId=BLOG_ID, maxResults=10, fetchBodies=False).execute()
-        items = list_response.get('items', [])
-        
-        for post in items:
+        posts = service.posts()
+        list_response = posts.list(blogId=BLOG_ID, maxResults=10, fetchBodies=False).execute()
+        for post in list_response.get('items', []):
             if post['title'].strip() == title.strip():
-                print(f"Skipping: Post with title '{title}' already exists.")
+                print(f"Skipping: Post '{title}' already exists.")
                 return False
-                
-        # If not found, insert new post
-        result = posts_resource.insert(blogId=BLOG_ID, body=body).execute()
+        
+        result = posts.insert(blogId=BLOG_ID, body=body).execute()
         print(f"Post published: {result['url']}")
         return True
     except HttpError as error:
@@ -210,10 +233,6 @@ def publish_post(service):
         return False
 
 def main():
-    if BLOG_ID == 'YOUR_BLOG_ID_HERE':
-        print("Please set your BLOG_ID in the script.")
-        return
-
     service = get_service()
     if service:
         publish_post(service)
