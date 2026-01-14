@@ -143,12 +143,13 @@ def fetch_web_data():
         prize_map = {
             "1st": "1st_prize", "Cons": "consolation_prize", "2nd": "2nd_prize",
             "3rd": "3rd_prize", "4th": "4th_prize", "5th": "5th_prize",
-            "6th": "6th_prize", "7th": "7th_prize", "8th": "8th_prize"
+            "6th": "6th_prize", "7th": "7th_prize", "8th": "8th_prize",
+            "9th": "9th_prize"
         }
         prize_amounts = {
             "1st_prize": 10000000, "consolation_prize": 5000, "2nd_prize": 3000000,
             "3rd_prize": 500000, "4th_prize": 5000, "5th_prize": 2000,
-            "6th_prize": 1000, "7th_prize": 500, "8th_prize": 100
+            "6th_prize": 1000, "7th_prize": 500, "8th_prize": 200, "9th_prize": 100
         }
 
         table = p_soup.find("table", class_="w-full")
