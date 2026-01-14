@@ -162,9 +162,18 @@ def fetch_web_data():
                     for k, v in prize_map.items():
                         if k in label:
                             current_key = v
+                            # Clean Label: Use standard label instead of scraped text
+                            std_labels = {
+                                "1st_prize": "1st Prize", "consolation_prize": "Consolation Prize",
+                                "2nd_prize": "2nd Prize", "3rd_prize": "3rd Prize", "4th_prize": "4th Prize",
+                                "5th_prize": "5th Prize", "6th_prize": "6th Prize", "7th_prize": "7th Prize",
+                                "8th_prize": "8th Prize", "9th_prize": "9th Prize"
+                            }
+                            clean_label = std_labels.get(current_key, label)
+                            
                             prizes[current_key] = {
                                 "amount": prize_amounts.get(current_key, 0),
-                                "label": label,
+                                "label": clean_label,
                                 "winners": []
                             }
                             break
