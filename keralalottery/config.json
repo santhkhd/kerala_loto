@@ -13,7 +13,7 @@
     "redirect_url": ""
   },
   "intro": {
-    "status": true,
+    "status": false,
     "sliders": [
       {
         "title": "Welcome to WebDroid",
