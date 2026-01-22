@@ -1,5 +1,19 @@
 [
   {
+    "lottery": "KARUNYA PLUS",
+    "draw_no": "KN-607",
+    "date": "22/01/2026",
+    "drawserial": "75150",
+    "url": "https://result.keralalotteries.com/viewlotisresult.php?drawserial=75150"
+  },
+  {
+    "lottery": "DHANALEKSHMI",
+    "draw_no": "DL-36",
+    "date": "21/01/2026",
+    "drawserial": "75149",
+    "url": "https://result.keralalotteries.com/viewlotisresult.php?drawserial=75149"
+  },
+  {
     "lottery": "STHREE-SAKTHI",
     "draw_no": "SS-503",
     "date": "20/01/2026",
