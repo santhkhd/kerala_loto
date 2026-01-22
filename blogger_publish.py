@@ -219,15 +219,25 @@ def publish_post(service):
 
     try:
         posts = service.posts()
-        list_response = posts.list(blogId=BLOG_ID, maxResults=10, fetchBodies=False).execute()
+        list_response = posts.list(blogId=BLOG_ID, maxResults=20, fetchBodies=True).execute()
+        
+        existing_post = None
         for post in list_response.get('items', []):
             if post['title'].strip() == title.strip():
-                print(f"Skipping: Post '{title}' already exists.")
-                return False
+                existing_post = post
+                break
         
-        result = posts.insert(blogId=BLOG_ID, body=body).execute()
-        print(f"Post published: {result['url']}")
-        return True
+        if existing_post:
+            print(f"Found existing post: '{title}'. Updating content...")
+            # Update the existing post
+            result = posts.update(blogId=BLOG_ID, postId=existing_post['id'], body=body).execute()
+            print(f"Post updated successfully: {result['url']}")
+            return True
+        else:
+            print(f"Post '{title}' not found. Creating new post...")
+            result = posts.insert(blogId=BLOG_ID, body=body).execute()
+            print(f"Post published: {result['url']}")
+            return True
     except HttpError as error:
         print(f"An error occurred: {error}")
         return False

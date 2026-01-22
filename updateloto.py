@@ -239,20 +239,19 @@ def main():
     if api_clean and api_clean['draw_date'] == today:
         print("API has today's result!")
         save_data(api_clean)
-        return
-
-    print(f"API result date ({api_clean['draw_date'] if api_clean else 'None'}) is not today.")
-    
-    # 2. Try Fallback
-    print("Attempting Fallback Request...")
-    web_clean = fetch_web_data()
-    
-    if web_clean and web_clean['draw_date'] == today:
-        print("Fallback Web has today's result!")
-        save_data(web_clean)
     else:
-        print(f"Fallback Web date ({web_clean['draw_date'] if web_clean else 'None'}) is also not today.")
-        print("No update performed.")
+        print(f"API result date ({api_clean['draw_date'] if api_clean else 'None'}) is not today.")
+        
+        # 2. Try Fallback
+        print("Attempting Fallback Request...")
+        web_clean = fetch_web_data()
+        
+        if web_clean and web_clean['draw_date'] == today:
+            print("Fallback Web has today's result!")
+            save_data(web_clean)
+        else:
+            print(f"Fallback Web date ({web_clean['draw_date'] if web_clean else 'None'}) is also not today.")
+            print("No update performed.")
     
     # Status Update
     with open("status.json", "w") as f:
