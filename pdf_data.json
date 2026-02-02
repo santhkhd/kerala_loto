@@ -1,5 +1,26 @@
 [
   {
+    "lottery": "BHAGYATHARA",
+    "draw_no": "BT-40",
+    "date": "02/02/2026",
+    "drawserial": "75161",
+    "url": "https://result.keralalotteries.com/viewlotisresult.php?drawserial=75161"
+  },
+  {
+    "lottery": "SAMRUDHI",
+    "draw_no": "SM-40",
+    "date": "01/02/2026",
+    "drawserial": "75160",
+    "url": "https://result.keralalotteries.com/viewlotisresult.php?drawserial=75160"
+  },
+  {
+    "lottery": "KARUNYA",
+    "draw_no": "KR-741",
+    "date": "31/01/2026",
+    "drawserial": "75159",
+    "url": "https://result.keralalotteries.com/viewlotisresult.php?drawserial=75159"
+  },
+  {
     "lottery": "SUVARNA KERALAM",
     "draw_no": "SK-38",
     "date": "30/01/2026",
