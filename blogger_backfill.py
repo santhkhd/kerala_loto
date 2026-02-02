@@ -29,15 +29,22 @@ def get_service():
             
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
+            try:
+                creds.refresh(Request())
+            except Exception as e:
+                print(f"Error refreshing token: {e}")
+                if os.path.exists(TOKEN_FILE):
+                    os.remove(TOKEN_FILE)
+                creds = None
+        
+        if not creds or not creds.valid:
             if not os.path.exists(CREDENTIALS_FILE):
                 print(f"Error: {CREDENTIALS_FILE} not found.")
                 return None
             flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
             creds = flow.run_local_server(port=0)
-        with open(TOKEN_FILE, 'w') as token:
-            token.write(creds.to_json())
+            with open(TOKEN_FILE, 'w') as token:
+                token.write(creds.to_json())
 
     return build('blogger', 'v3', credentials=creds)
 
