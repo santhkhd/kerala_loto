@@ -1,5 +1,23 @@
 [
   {
+    "code": "BT",
+    "draw_number": "39",
+    "date": "2026-02-02",
+    "filename": "BT-39-2026-02-02.json"
+  },
+  {
+    "code": "SM",
+    "draw_number": "40",
+    "date": "2026-02-01",
+    "filename": "SM-40-2026-02-01.json"
+  },
+  {
+    "code": "KR",
+    "draw_number": "740",
+    "date": "2026-01-31",
+    "filename": "KR-740-2026-01-31.json"
+  },
+  {
     "code": "SK",
     "draw_number": "38",
     "date": "2026-01-30",
