@@ -6,6 +6,7 @@ import pytz
 PDF_DATA_FILE = 'pdf_data.json'
 TIMEZONE = 'Asia/Kolkata'
 
+# Normal Schedule
 SCHEDULE = {
     0: {'name': 'SAMRUDHI', 'code': 'SM'},     # Sunday
     1: {'name': 'BHAGYATHARA', 'code': 'BT'},   # Monday
@@ -16,12 +17,25 @@ SCHEDULE = {
     6: {'name': 'KARUNYA', 'code': 'KR'}        # Saturday
 }
 
+# Dates with no draw (Serial does not increment)
+SKIPPED_DATES = [
+    "26/01/2026", # Republic Day
+    "12/02/2026", # Holiday
+]
+
+# Dates with multiple draws (Serial increments multiple times)
+# Key: Date, Value: List of Lottery Codes
+SPECIAL_DRAWS = {
+    "13/02/2026": ["KN", "SK"], # Moved from 12th
+    "15/01/2026": ["KN"] # DL-35 was bumper, handled separately in history but usually serialed? 
+                         # Actually Feb 13 is the main known case.
+}
+
 def get_indian_date():
     tz = pytz.timezone(TIMEZONE)
     return datetime.now(tz)
 
 def parse_date_str(date_str):
-    # dd/mm/yyyy
     return datetime.strptime(date_str, '%d/%m/%Y')
 
 def format_date_str(date_obj):
@@ -41,29 +55,20 @@ def get_latest_draw_no(data, code):
 
 def main():
     file_path = os.path.join(os.path.dirname(__file__), PDF_DATA_FILE)
-
-    if not os.path.exists(file_path):
-        print("No existing data found.")
-        return
+    if not os.path.exists(file_path): return
 
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
-
-    if not data:
-        print("Empty data file.")
-        return
+    if not data: return
 
     latest_entry = data[0]
-    last_date = parse_date_str(latest_entry['date'])
+    last_date = parse_date_str(latest_entry['date']).replace(tzinfo=None)
     last_serial = int(latest_entry['drawserial'])
 
-    today = get_indian_date().replace(hour=0, minute=0, second=0, microsecond=0)
-    last_date = last_date.replace(tzinfo=None) # Make it naive for comparison if needed, or better use timezone everywhere
-    # Ensure both are comparable
-    today_naive = today.replace(tzinfo=None)
+    today_naive = get_indian_date().replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
     
     if last_date >= today_naive:
-        print(f"Data is up to date ({format_date_str(last_date)}). No new PDFs to generate.")
+        print(f"Data is up to date ({format_date_str(last_date)}).")
         return
 
     new_entries = []
@@ -71,51 +76,46 @@ def main():
     curr_serial = last_serial + 1
 
     while curr_date <= today_naive:
-        day_idx = curr_date.weekday() # Monday=0, Sunday=6 in Python
-        # Adjust index to match JS/My Schedule if necessary. 
-        # My SCHEDULE mapping: 0=Sunday, 1=Monday... 6=Saturday.
-        # Python weekday(): 0=Monday, 6=Sunday.
-        # Conversion: (day_idx + 1) % 7
-        js_day_idx = (day_idx + 1) % 7
-        info = SCHEDULE.get(js_day_idx)
+        date_str = format_date_str(curr_date)
+        
+        if date_str in SKIPPED_DATES:
+            print(f"Skipping holiday: {date_str}")
+            curr_date += timedelta(days=1)
+            # DO NOT increment serial
+            continue
 
-        if info:
-            # Check existing data
-            last_num = get_latest_draw_no(data, info['code'])
-            # Check newly added ones
-            for e in new_entries:
-                if e['draw_no'].startswith(info['code'] + '-'):
-                    try:
-                        num = int(e['draw_no'].split('-')[1])
-                        if num > last_num:
-                            last_num = num
-                    except:
-                        pass
+        draw_codes = SPECIAL_DRAWS.get(date_str)
+        if not draw_codes:
+            day_idx = (curr_date.weekday() + 1) % 7
+            info = SCHEDULE.get(day_idx)
+            draw_codes = [info['code']] if info else []
 
-            new_draw_no = f"{info['code']}-{last_num + 1}"
-            date_str = format_date_str(curr_date)
-
+        for code in draw_codes:
+            # Find lottery name
+            lot_name = next((v['name'] for k, v in SCHEDULE.items() if v['code'] == code), "Unknown")
+            
+            # Draw Number calculation
+            last_num = get_latest_draw_no(data + new_entries, code)
+            new_draw_no = f"{code}-{last_num + 1}"
+            
             entry = {
-                'lottery': info['name'],
+                'lottery': lot_name,
                 'draw_no': new_draw_no,
                 'date': date_str,
                 'drawserial': str(curr_serial),
                 'url': f"https://result.keralalotteries.com/viewlotisresult.php?drawserial={curr_serial}"
             }
-
-            new_entries.insert(0, entry) # Add to front
-            print(f"Generated: {entry['date']} - {entry['lottery']} ({entry['draw_no']})")
+            new_entries.insert(0, entry)
+            print(f"Generated: {date_str} - {lot_name} ({new_draw_no}) Serial: {curr_serial}")
+            curr_serial += 1
 
         curr_date += timedelta(days=1)
-        curr_serial += 1
 
     if new_entries:
         updated_data = new_entries + data
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(updated_data, f, indent=2)
-        print(f"Added {len(new_entries)} new entries to {PDF_DATA_FILE}")
-    else:
-        print("No valid lottery days found in the gap.")
+        print(f"Added {len(new_entries)} entries.")
 
 if __name__ == "__main__":
     main()
