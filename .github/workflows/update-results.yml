@@ -52,14 +52,15 @@ jobs:
           python generate_pdf_links.py
 
       - name: Publish to Blogger
+        continue-on-error: true
         env:
           BLOGGER_TOKEN: ${{ secrets.BLOGGER_TOKEN_JSON }}
         run: |
           if [ -n "$BLOGGER_TOKEN" ]; then
             echo "$BLOGGER_TOKEN" > token.json
             echo "Blogger Token restored."
-            python blogger_publish.py
-            rm token.json # Clean up
+            python blogger_publish.py || echo "Blogger publish failed, but continuing..."
+            [ -f token.json ] && rm token.json
           else
             echo "BLOGGER_TOKEN_JSON secret not found. Skipping Blogger publish."
           fi
