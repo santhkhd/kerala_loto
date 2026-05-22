@@ -107,6 +107,97 @@ def get_remote_json_url():
         print(f"Error decoding ACCESS_KEY: {e}")
         return None
 
+def check_and_send_pre_draw_reminder(last_seen):
+    """Sends a daily pre-draw reminder notification 15 minutes before the draw starts (around 2:45 PM IST / 9:15 AM UTC)"""
+    try:
+        from datetime import timezone
+        now_utc = datetime.now(timezone.utc)
+        if now_utc.hour == 9 and 10 <= now_utc.minute <= 27:
+            today_str = now_utc.strftime('%Y-%m-%d')
+            # Check if we already sent the reminder today to avoid duplicates
+            if last_seen.get('last_reminder_date') != today_str:
+                print("Time detected for pre-draw reminder. Sending attractive reminder notifications...")
+                title_en = "Are you today's lucky winner? 🌟"
+                msg_en = "Kerala Lottery results start in 15 minutes! Open the app now to be ready. 🔔"
+                
+                title_ml = "ഇന്നത്തെ ഭാഗ്യശാലി നിങ്ങളാണോ? 🌟"
+                msg_ml = "കേരള ലോട്ടറി ഫലങ്ങൾ 15 മിനിറ്റിനുള്ളിൽ വരുന്നു! ഫലങ്ങൾ അറിയാൻ ഇപ്പോൾ തന്നെ ആപ്പ് തുറക്കൂ. 🔔"
+                
+                # Send to OneSignal (links to home page)
+                send_onesignal_notification(
+                    title=title_en,
+                    message=msg_en,
+                    link="https://santhkhd.github.io/kerala_loto/index.html",
+                    title_ml=title_ml,
+                    message_ml=msg_ml
+                )
+                
+                # Record that we sent it today
+                last_seen['last_reminder_date'] = today_str
+    except Exception as e:
+        print(f"Error checking pre-draw reminder: {e}")
+
+def check_and_send_lucky_number_reminder(last_seen):
+    """Sends a recurring 'lucky or dream number' reminder notification every 2 hours during active IST hours"""
+    try:
+        from datetime import timezone
+        now_utc = datetime.now(timezone.utc)
+        
+        # Target UTC hours corresponding to 8 AM, 10 AM, 12 PM, 2 PM, 6 PM, 8 PM, 10 PM IST
+        target_hours = [2, 4, 6, 8, 12, 14, 16]
+        
+        # We allow a wider minute range to accommodate GitHub Action startup delays
+        if now_utc.hour in target_hours and 25 <= now_utc.minute <= 45:
+            today_str = now_utc.strftime('%Y-%m-%d')
+            state_key = f"{today_str}_{now_utc.hour}"
+            
+            if last_seen.get('last_lucky_notification') != state_key:
+                print(f"Active slot for 2-hour lucky number notification (Hour {now_utc.hour} UTC). Sending...")
+                
+                # Dynamic templates to keep notifications engaging
+                templates = [
+                    {
+                        "en_title": "What was your dream last night? 💭",
+                        "en_msg": "Find your lucky lottery numbers based on your dream inside the app! 🔮",
+                        "ml_title": "ഇന്നത്തെ സ്വപ്നം ഫലിക്കുമോ? 💭",
+                        "ml_msg": "നിങ്ങളുടെ സ്വപ്നത്തെ അടിസ്ഥാനമാക്കിയുള്ള ഭാഗ്യ നമ്പറുകൾ ഇപ്പോൾ തന്നെ ആപ്പിൽ കണ്ടെത്തൂ! 🔮"
+                    },
+                    {
+                        "en_title": "Feeling lucky today? 🍀",
+                        "en_msg": "Generate your lucky numbers and check if today is your day! 🌟",
+                        "ml_title": "ഇന്ന് ഭാഗ്യം നിങ്ങളുടെ കൂടെയുണ്ടോ? 🍀",
+                        "ml_msg": "നിങ്ങളുടെ ഭാഗ്യ നമ്പറുകൾ തിരഞ്ഞെടുത്ത് ഇന്നത്തെ വിജയിയാകൂ! 🌟"
+                    },
+                    {
+                        "en_title": "Your dream could be worth millions! 💰",
+                        "en_msg": "Convert your dreams into lucky lottery numbers now! 🚀",
+                        "ml_title": "സ്വപ്നങ്ങൾക്ക് ലക്ഷങ്ങളുടെ വിലയുണ്ട്! 💰",
+                        "ml_msg": "നിങ്ങളുടെ സ്വപ്നങ്ങളെ ഭാഗ്യ നമ്പറുകളാക്കി ഇപ്പോൾ തന്നെ മാറ്റൂ! 🚀"
+                    },
+                    {
+                        "en_title": "Select your lucky numbers! ✨",
+                        "en_msg": "Is today your lucky day? Tap to select your special numbers now! 🎰",
+                        "ml_title": "ഭാഗ്യ നമ്പറുകൾ തിരഞ്ഞെടുക്കൂ! ✨",
+                        "ml_msg": "ഇന്ന് നിങ്ങളുടെ ഭാഗ്യദിനമാണോ? നിങ്ങളുടെ പ്രത്യേക നമ്പറുകൾ ഇപ്പോൾ തന്നെ കണ്ടെത്തൂ! 🎰"
+                    }
+                ]
+                
+                # Pick a template deterministically based on the hour to ensure variation
+                template_idx = now_utc.hour % len(templates)
+                selected = templates[template_idx]
+                
+                send_onesignal_notification(
+                    title=selected["en_title"],
+                    message=selected["en_msg"],
+                    link="https://santhkhd.github.io/kerala_loto/index.html",
+                    title_ml=selected["ml_title"],
+                    message_ml=selected["ml_msg"]
+                )
+                
+                last_seen['last_lucky_notification'] = state_key
+    except Exception as e:
+        print(f"Error checking lucky number reminder: {e}")
+
 def monitor():
     # Load previous state
     if os.path.exists(STATE_FILE):
@@ -114,6 +205,12 @@ def monitor():
             last_seen = json.load(f)
     else:
         last_seen = {}
+
+    # Check and send the pre-draw daily app-open reminder
+    check_and_send_pre_draw_reminder(last_seen)
+
+    # Check and send the 2-hour lucky/dream number reminder
+    check_and_send_lucky_number_reminder(last_seen)
 
     feeds_to_check = []
 
