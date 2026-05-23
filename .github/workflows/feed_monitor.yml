@@ -1,0 +1,51 @@
+name: Feed Monitor and Push Notifications
+
+on:
+  schedule:
+    - cron: '30 2 * * *'  # 8:00 AM IST (02:30 UTC) - Dream/Lucky Number 2hr Reminder 1
+    - cron: '30 4 * * *'  # 10:00 AM IST (04:30 UTC) - Dream/Lucky Number 2hr Reminder 2
+    - cron: '30 6 * * *'  # 12:00 PM IST (06:30 UTC) - Dream/Lucky Number 2hr Reminder 3
+    - cron: '30 8 * * *'  # 2:00 PM IST (08:30 UTC) - Dream/Lucky Number 2hr Reminder 4
+    - cron: '15 9 * * *'  # 2:45 PM IST (09:15 UTC) - Pre-draw reminder
+    - cron: '30 9 * * *'  # 3:00 PM IST (09:30 UTC) - Result starts
+    - cron: '45 9 * * *'  # 3:15 PM IST (09:45 UTC) - Live update 1
+    - cron: '0 10 * * *'  # 3:30 PM IST (10:00 UTC) - Live update 2
+    - cron: '15 10 * * *' # 3:45 PM IST (10:15 UTC) - Live update 3
+    - cron: '30 10 * * *' # 4:00 PM IST (10:30 UTC) - Final result publish
+    - cron: '30 12 * * *' # 6:00 PM IST (12:30 UTC) - Dream/Lucky Number 2hr Reminder 5
+    - cron: '30 14 * * *' # 8:00 PM IST (14:30 UTC) - Dream/Lucky Number 2hr Reminder 6
+    - cron: '30 16 * * *' # 10:00 PM IST (16:30 UTC) - Dream/Lucky Number 2hr Reminder 7
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  check-feeds:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r automation/requirements.txt
+
+      - name: Run Feed Monitor
+        env:
+          ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
+          ONESIGNAL_REST_KEY: ${{ secrets.ONESIGNAL_REST_KEY }}
+        run: python automation/feed_monitor.py
+
+      - name: Commit and Push State (Update last_seen.json)
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add automation/last_seen.json
+          git commit -m "Update feed monitor state [skip ci]" || echo "No changes to commit"
+          git pull --rebase origin main
+          git push origin main

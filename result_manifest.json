@@ -606,10 +606,10 @@
     "filename": "SM-23-2025-10-05.json"
   },
   {
-    "code": "BR",
-    "draw_number": "105",
+    "code": "KR",
+    "draw_number": "725",
     "date": "2025-10-04",
-    "filename": "BR-105-2025-10-04.json"
+    "filename": "KR-725-2025-10-04.json"
   },
   {
     "code": "KR",
@@ -1386,10 +1386,10 @@
     "filename": "KN-574-2025-05-29.json"
   },
   {
-    "code": "BR",
-    "draw_number": "103",
+    "code": "DL",
+    "draw_number": "3",
     "date": "2025-05-28",
-    "filename": "BR-103-2025-05-28.json"
+    "filename": "DL-3-2025-05-28.json"
   },
   {
     "code": "DL",

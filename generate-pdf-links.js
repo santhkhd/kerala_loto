@@ -74,12 +74,27 @@ function main() {
         return;
     }
 
+    // Add dates here if Kerala Lottery takes a holiday (e.g., "15/08/2026")
+    const SKIPPED_DATES = [
+        "26/01/2026",
+        "12/02/2026"
+    ];
+
     const newEntries = [];
     let currDate = new Date(lastDate);
     currDate.setDate(currDate.getDate() + 1); // Start from next day
     let currSerial = lastSerial + 1;
 
     while (currDate <= today) {
+        const dateStr = formatDateStr(currDate);
+        
+        if (SKIPPED_DATES.includes(dateStr)) {
+            console.log(`Skipping holiday: ${dateStr}`);
+            currDate.setDate(currDate.getDate() + 1);
+            // DO NOT increment currSerial
+            continue;
+        }
+
         const dayIdx = currDate.getDay(); // 0-6
         const info = SCHEDULE[dayIdx];
 

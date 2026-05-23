@@ -1,199 +1,52 @@
 import os
 import json
-import re
-import sys
 import requests
-from bs4 import BeautifulSoup, Tag
-from datetime import datetime, time as dt_time, date
-from typing import Optional, List, Tuple, Dict, Any
-import pytz
-import time
-from urllib.parse import quote
+import re
+import urllib3
+from datetime import datetime
+from bs4 import BeautifulSoup
 
-# Define the Indian timezone
-IST = pytz.timezone('Asia/Kolkata')
+# Suppress SSL warnings
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Add headers to mimic a web browser
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Referer': 'https://www.kllotteryresult.com/'
-}
+API_URL = "https://indialotteryapi.com/wp-json/klr/v1/latest"
+WEB_URL = "https://www.kllotteryresult.com/"
 
-# Optional proxy-based scraping fallback (e.g., ScraperAPI or compatible)
-# Provide an API key via env var SCRAPERAPI_KEY in CI to bypass origin blocking.
-SCRAPER_API_KEY = os.environ.get('SCRAPERAPI_KEY', '').strip()
-SCRAPER_API_ENDPOINT = os.environ.get('SCRAPERAPI_ENDPOINT', 'http://api.scraperapi.com')
+def get_today_date_str():
+    return datetime.now().strftime("%Y-%m-%d")
 
-def build_proxy_url(target_url: str) -> str:
-    if not SCRAPER_API_KEY:
-        return target_url
-    # ScraperAPI format: http(s)://api.scraperapi.com?api_key=KEY&url=ENCODED
-    from urllib.parse import urlencode
-    query = urlencode({'api_key': SCRAPER_API_KEY, 'url': target_url})
-    return f"{SCRAPER_API_ENDPOINT}?{query}"
-
-def robust_get(url: str, headers: dict, timeout: int = 20, max_retries: int = 3) -> requests.Response:
-    """Try direct fetch first; on 403/429/5xx or network error, retry and fall back to proxy if configured."""
-    last_exc = None
-    for attempt in range(1, max_retries + 1):
-        try:
-            print(f"Attempting to fetch {url} (Attempt {attempt})...")
-            res = requests.get(url, headers=headers, timeout=timeout)
-            if res.status_code in (403, 429) or res.status_code >= 500:
-                print(f"Server returned status {res.status_code}. Retry might be needed.")
-                raise requests.exceptions.RequestException(f"HTTP {res.status_code}")
-            return res
-        except requests.exceptions.RequestException as exc:
-            print(f"Connection error on attempt {attempt}: {exc}")
-            last_exc = exc
-            # Try proxy fallback if available
-            if SCRAPER_API_KEY:
-                print(f"Trying ScraperAPI fallback for {url}...")
-                try:
-                    proxy_url = build_proxy_url(url)
-                    res = requests.get(proxy_url, headers=headers, timeout=timeout)
-                    if res.status_code in (403, 429) or res.status_code >= 500:
-                        raise requests.exceptions.RequestException(f"Proxy HTTP {res.status_code}")
-                    return res
-                except requests.exceptions.RequestException as exc2:
-                    last_exc = exc2
-            # Backoff between attempts
-            time.sleep(min(2 * attempt, 6))
-    
-    print(f"Maximum retries reached for {url}.")
-    if last_exc:
-        raise last_exc
-    raise RuntimeError("Failed to fetch URL and no exception captured")
-
-def fetch_text_via_jina(url: str) -> str:
-    """Fetch page text via r.jina.ai to bypass Cloudflare/Proxy challenges."""
-    print(f"Trying Jina AI fallback for {url}...")
-    proxied = "https://r.jina.ai/http://" + url.replace("https://", "").replace("http://", "")
+# ==========================================
+# 1. API METHOD
+# ==========================================
+def fetch_api_data():
     try:
-        res = requests.get(proxied, headers=HEADERS, timeout=30)
-        res.raise_for_status()
-        return res.text
+        print(f"Checking API: {API_URL}...")
+        resp = requests.get(API_URL, headers={'User-Agent': 'Mozilla/5.0'}, verify=False, timeout=30)
+        resp.raise_for_status()
+        return resp.json()
     except Exception as e:
-        print(f"Jina AI fallback failed: {e}")
-        raise
+        print(f"API Error: {e}")
+        return None
 
-def fetch_page_text(url: str) -> str:
-    """Fetch page HTML using direct request first, then fallback to Jina proxy."""
-    try:
-        res = robust_get(url, HEADERS, timeout=25)
-        res.raise_for_status()
-        return res.text
-    except Exception as e:
-        print(f"Direct fetch failed for {url}. Switching to fallback...")
-        return fetch_text_via_jina(url)
-
-def parse_date_from_text(text: str) -> Optional[date]:
-    """Extract a date from text supporting multiple formats."""
-    # Common numeric formats: 16-09-2025, 16/09/2025, 16.09.2025
-    m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", text)
-    if m:
-        try:
-            return datetime.strptime(f"{m.group(3)}-{m.group(2)}-{m.group(1)}", "%Y-%m-%d").date()
-        except ValueError:
-            pass
-    # Textual month formats: 16 September 2025, 16 Sep 2025, Sep 16, 2025
-    patterns = [
-        "%d %B %Y", "%d %b %Y", "%b %d, %Y", "%B %d, %Y",
-        "%d-%b-%Y", "%d-%B-%Y"
-    ]
-    # Try sliding windows around words that look like dates
-    candidates = []
-    # Gather tokens that include month names
-    month_regex = r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)"
-    for m2 in re.finditer(rf"\b\d{{1,2}}\s+{month_regex}\s+\d{{4}}\b", text, flags=re.I):
-        candidates.append(m2.group(0))
-    for m3 in re.finditer(rf"\b{month_regex}\s+\d{{1,2}},\s*\d{{4}}\b", text, flags=re.I):
-        candidates.append(m3.group(0))
-    for cand in candidates:
-        for fmt in patterns:
-            try:
-                return datetime.strptime(cand, fmt).date()
-            except ValueError:
-                continue
-    return None
-
-def get_last_n_result_links(n=10):
-    MAIN_URL = "https://www.kllotteryresult.com/"
-    today = datetime.now(IST).date()
-    try:
-        page_text = fetch_page_text(MAIN_URL)
-    except Exception as e:
-        print(f"Error fetching homepage: {e}")
-        return []
-
-    # Parse homepage for links and try to associate dates immediately
-    candidates = []
-    soup = BeautifulSoup(page_text, "html.parser")
+def parse_api_data(data):
+    """Converts API response to Standard Format."""
+    if not data: return None
     
-    # 1. Smart Parse: Look for dates near links in the homepage content
-    # This avoids fetching every single page just to check the date
-    for a in soup.find_all("a", href=True):
-        href = a["href"].strip()
-        if "kerala-lottery-result" in href.lower():
-            full_url = href if href.startswith("http") else f"https://www.kllotteryresult.com{href}"
-            
-            # Check parent texts for date (e.g. "Held on 10/01/2026")
-            # Look at the link text, the previous sibling, or parent container text
-            context_text = a.get_text() + " " + (a.find_previous(string=True) or "") + " " + (a.parent.get_text() if a.parent else "")
-            
-            date_found = parse_date_from_text(context_text)
-            if date_found:
-                 candidates.append((date_found, full_url))
-            else:
-                # If date not found in context, mark as needing fetch (use a dummy old date for sort, or today if desperate)
-                # But to be safe, we'll fetch these later only if needed.
-                # For now, let's assume if we can't find a date, it might be an older archive link or just obscure.
-                # We'll prioritize ones with dates.
-                pass
-                
-    # If we found candidates with dates, sort them
-    if candidates:
-        # Sort by date descending
-        candidates.sort(key=lambda x: x[0], reverse=True)
-        
-        # Filter for today or very recent
-        results = []
-        for d, u in candidates:
-            if d <= today:
-                if (today - d).days <= 7: # Only care about last 7 days max
-                    if u not in results:
-                         results.append(u)
-                         
-        if results:
-            print(f"Smart-parsed {len(results)} relevant links from homepage.")
-            return results[:n]
+    draw_date = data.get("draw_date")
+    draw_name = data.get("draw_name", "Unknown").upper()
+    full_code = data.get("draw_code", "XX-00")
+    
+    # Split Code
+    parts = full_code.split("-") if "-" in full_code else [full_code[:2], full_code[2:]]
+    lottery_code = parts[0]
+    draw_number = parts[1] if len(parts) > 1 else "00"
 
-    # 2. Fallback: If verifying from homepage failed, use the old method but LIMIT it strictly
-    print("Could not extract dates from homepage text. Falling back to fetching recent links...")
+    # Process Prizes
+    prizes_data = data.get("prizes", {})
+    first_data = data.get("first", {})
+    amounts_map = prizes_data.get("amounts", {})
     
-    raw_links_set = set()
-    # Collect potential links again
-    for a in soup.find_all("a", href=True):
-        href = a["href"].strip()
-        if "kerala-lottery-result" in href.lower():
-            full_url = href if href.startswith("http") else f"https://www.kllotteryresult.com{href}"
-            raw_links_set.add(full_url)
-            
-    # Limit to checking top 5 links to avoid blocks
-    sorted_raw_links = sorted(list(raw_links_set))[:5] 
-    
-    results = []
-    for url in sorted_raw_links:
-        try:
-             # Just check the first few
-             pt = fetch_page_text(url)
-             rd = parse_date_from_text(pt)
-             if rd and rd <= today and (today - rd).days <= 5:
-                 results.append(url)
-        except:
-            continue
-            
-    return results
+    final_prizes = {}
 
 # Mappings
 prize_map = {
@@ -487,69 +340,205 @@ def process_result_page(result_soup, result_url, result_page_text: str):
         "downloadLink": download_link
     }
 
-    # Create note directory if it doesn't exist
+    # Other Prizes
+    std_amounts = {
+        "consolation": 5000, "2nd": 3000000, "3rd": 500000,
+        "4th": 5000, "5th": 2000, "6th": 1000,
+        "7th": 500, "8th": 200, "9th": 100
+    }
+    ignore = ["amounts", "guess", "mc"]
+
+    for api_key, val in prizes_data.items():
+        if api_key in ignore: continue
+        my_key = "consolation_prize" if api_key == "consolation" else f"{api_key}_prize"
+        label = "Consolation Prize" if api_key == "consolation" else f"{api_key.capitalize()} Prize"
+        
+        winners = val if isinstance(val, list) else [val] if val else []
+        
+        # Amount
+        amt_val = std_amounts.get(api_key, 0)
+        if api_key in amounts_map:
+             try: amt_val = int(re.sub(r"[^\d]", "", str(amounts_map[api_key])))
+             except: pass
+        
+        final_prizes[my_key] = {"amount": amt_val, "label": label, "winners": winners}
+
+    return {
+        "lottery_name": draw_name,
+        "draw_number": draw_number,
+        "lottery_code": lottery_code,
+        "draw_date": draw_date,
+        "prizes": final_prizes,
+        "source": "API"
+    }
+
+# ==========================================
+# 2. WEB FALLBACK METHOD (kllotteryresult.com)
+# ==========================================
+def fetch_web_data():
+    try:
+        print(f"Checking Fallback Web: {WEB_URL}...")
+        res = requests.get(WEB_URL, headers={'User-Agent': 'Mozilla/5.0'}, timeout=30)
+        soup = BeautifulSoup(res.text, "html.parser")
+        
+        # Find latest result link
+        link = None
+        for a in soup.find_all("a", href=True):
+            if re.search(r'/kerala-lottery-result-[A-Z]+-\d+', a['href']):
+                link = a['href']
+                if not link.startswith("http"): link = "https://www.kllotteryresult.com" + link
+                break # Just get the first one (latest)
+        
+        if not link:
+            print("Fallback: No result links found.")
+            return None
+
+        # Fetch Result Page
+        print(f"Fallback: Fetching {link}...")
+        p_res = requests.get(link, headers={'User-Agent': 'Mozilla/5.0'}, timeout=30)
+        p_soup = BeautifulSoup(p_res.text, "html.parser")
+
+        # Parse Title for Date
+        title_text = ""
+        h1 = p_soup.find("h1")
+        if h1: title_text = h1.text.strip()
+        
+        m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", title_text)
+        if not m:
+            print("Fallback: Could not parse date from title.")
+            return None
+        
+        draw_date = f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
+        
+        # Parse Name & Number
+        name_m = re.search(r"([A-Za-z\s]+)\s*\(", title_text)
+        draw_name = name_m.group(1).strip().upper() if name_m else "Unknown"
+        
+        num_m = re.search(r"\(([^)]+)\)", title_text)
+        full_code = num_m.group(1) if num_m else "XX-00"
+        
+        parts = full_code.split("-") if "-" in full_code else [full_code[:2], full_code[2:]]
+        lottery_code = parts[0]
+        draw_number = parts[1] if len(parts) > 1 else "00"
+
+        # Parse Prizes Dictionary
+        prizes = {}
+        prize_map = {
+            "1st": "1st_prize", "Cons": "consolation_prize", "2nd": "2nd_prize",
+            "3rd": "3rd_prize", "4th": "4th_prize", "5th": "5th_prize",
+            "6th": "6th_prize", "7th": "7th_prize", "8th": "8th_prize",
+            "9th": "9th_prize"
+        }
+        prize_amounts = {
+            "1st_prize": 10000000, "consolation_prize": 5000, "2nd_prize": 3000000,
+            "3rd_prize": 500000, "4th_prize": 5000, "5th_prize": 2000,
+            "6th_prize": 1000, "7th_prize": 500, "8th_prize": 200, "9th_prize": 100
+        }
+
+        table = p_soup.find("table", class_="w-full")
+        if table:
+            current_key = None
+            for row in table.find_all("tr"):
+                th = row.find("th")
+                if th:
+                    label = th.get_text(strip=True)
+                    for k, v in prize_map.items():
+                        if k in label:
+                            current_key = v
+                            # Clean Label: Use standard label instead of scraped text
+                            std_labels = {
+                                "1st_prize": "1st Prize", "consolation_prize": "Consolation Prize",
+                                "2nd_prize": "2nd Prize", "3rd_prize": "3rd Prize", "4th_prize": "4th Prize",
+                                "5th_prize": "5th Prize", "6th_prize": "6th Prize", "7th_prize": "7th Prize",
+                                "8th_prize": "8th Prize", "9th_prize": "9th Prize"
+                            }
+                            clean_label = std_labels.get(current_key, label)
+                            
+                            prizes[current_key] = {
+                                "amount": prize_amounts.get(current_key, 0),
+                                "label": clean_label,
+                                "winners": []
+                            }
+                            break
+                tds = row.find_all("td")
+                if tds and current_key:
+                    nums = [td.get_text(strip=True) for td in tds if td.get_text(strip=True)]
+                    prizes[current_key]["winners"].extend(nums)
+        
+        if not prizes: return None
+
+        return {
+            "lottery_name": draw_name,
+            "draw_number": draw_number,
+            "lottery_code": lottery_code,
+            "draw_date": draw_date,
+            "prizes": prizes,
+            "source": "WEB"
+        }
+
+    except Exception as e:
+        print(f"Fallback Error: {e}")
+        return None
+
+# ==========================================
+# 3. MAIN LOGIC
+# ==========================================
+def save_data(data):
+    if not data: return False
+    
+    # Standardize Output Format
+    output = {
+        "lottery_name": data["lottery_name"],
+        "draw_number": data["draw_number"],
+        "draw_date": data["draw_date"],
+        "venue": "GORKY BHAVAN NEAR BAKERY JUNCTION THIRUVANANTHAPURAM",
+        "prizes": data["prizes"],
+        "draw_code": f"{data['lottery_code']}-{data['draw_number']}", # Helper
+        "downloadLink": "" 
+    }
+    
     os.makedirs('note', exist_ok=True)
-
-    # Generate filename with lottery code
-    filename = f"{lottery_code}-{draw_number}-{draw_date}.json"
+    filename = f"{data['lottery_code']}-{data['draw_number']}-{data['draw_date']}.json"
     local_path = f"note/{filename}"
-
-    # Save to note folder
+    
     with open(local_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-    print(f"Saved to: {os.path.abspath(local_path)}")
-
-    # Also save as latest.json for easy access
-    latest_path = "note/latest.json"
-    with open(latest_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-    print(f"Latest result saved to: {os.path.abspath(latest_path)}")
-
-    return local_path, filename
-
-def is_within_optimal_time_window():
-    """Always return True to allow scraping at any time"""
+        json.dump(output, f, indent=2, ensure_ascii=False)
+    print(f"Saved: {local_path} (Source: {data.get('source')})")
+    
+    # Save Latest
+    with open("note/latest.json", "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=2, ensure_ascii=False)
+    print(f"Updated note/latest.json")
     return True
 
 def main():
-    # Remove time window restriction to allow scraping at any time
-    try:
-        current_time = datetime.now(IST)
-        print(f"\n{'='*50}")
-        print(f"Checking for new results at {current_time.strftime('%Y-%m-%d %H:%M:%S')} IST")
-        print(f"{'='*50}")
-
-        # Fetch multiple results to ensure we don't miss any
-        latest_links = get_last_n_result_links(10)
-
-        if not latest_links:
-            print("No latest results found. This might be a normal occurrence if results aren't published yet.")
-            # Don't exit with error code - still generate manifest/history even if no new results
-            return
-        else:
-            print(f"Processing {len(latest_links)} latest results:")
-            for i, result_url in enumerate(latest_links):
-                print(f"Processing result {i+1}: {result_url}")
-
-                # Prefer direct fetch for full HTML; fallback to jina proxy
-                try:
-                    res = robust_get(result_url, HEADERS, timeout=20)
-                    res.raise_for_status()
-                    result_text = res.text
-                except Exception:
-                    result_text = fetch_text_via_jina(result_url)
-                result_soup = BeautifulSoup(result_text, "html.parser")
-
-                # Process and save the result
-                process_result_page(result_soup, result_url, result_text)
-                print(f"Result {i+1} processed successfully.")
-            
-    except Exception as e:
-        print(f"\nAn error occurred: {e}")
-        # Don't exit with error code to prevent scheduler from stopping
-        return
+    today = get_today_date_str()
+    print(f"--- Starting Update (Today: {today}) ---")
     
-    print("Script execution completed.")
+    # 1. Try API
+    api_raw = fetch_api_data()
+    api_clean = parse_api_data(api_raw)
+    
+    if api_clean and api_clean['draw_date'] == today:
+        print("API has today's result!")
+        save_data(api_clean)
+    else:
+        print(f"API result date ({api_clean['draw_date'] if api_clean else 'None'}) is not today.")
+        
+        # 2. Try Fallback
+        print("Attempting Fallback Request...")
+        web_clean = fetch_web_data()
+        
+        if web_clean and web_clean['draw_date'] == today:
+            print("Fallback Web has today's result!")
+            save_data(web_clean)
+        else:
+            print(f"Fallback Web date ({web_clean['draw_date'] if web_clean else 'None'}) is also not today.")
+            print("No update performed.")
+    
+    # Status Update
+    with open("status.json", "w") as f:
+        json.dump({"last_check": today, "status": "checked"}, f)
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Lottery Results</title>
+    <style>
+        :root {
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #2563eb;
+            --accent: #7c3aed;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --success: #059669;
+            --error: #dc2626;
+            --input-bg: #f1f5f9;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            background: var(--bg-light);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .wrap {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Card Container */
+        .card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 0 24px 0;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-left: 4px;
+        }
+
+        .input-wrap {
+            position: relative;
+            background: var(--input-bg);
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrap:focus-within {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .input {
+            width: 100%;
+            padding: 14px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            box-sizing: border-box;
+            min-height: 52px;
+        }
+
+        .input::placeholder {
+            color: #94a3b8;
+        }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.1s, filter 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: var(--text-sub);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            color: var(--text-main);
+        }
+
+        /* Results */
+        .result-box {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hit {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #064e3b;
+        }
+
+        .hit-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--success);
+            margin-bottom: 8px;
+        }
+
+        .hit-amount {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin: 12px 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .miss {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+            color: #7f1d1d;
+        }
+
+        .miss-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--error);
+            margin-bottom: 4px;
+        }
+
+        .status-text {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            margin-top: 20px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        /* Date Picker Fixes for Mobile Visibility */
+        input[type="date"] {
+            display: block;
+            -webkit-appearance: listbox;
+            /* Forces standard appearance on some mobile browsers */
+            appearance: none;
+            min-height: 52px;
+            color: var(--text-main);
+            position: relative;
+        }
+
+        /* Force placeholder text behavior on empty date inputs */
+        input[type="date"]:invalid:before {
+            content: "Select Date";
+            color: #94a3b8;
+            position: absolute;
+            left: 16px;
+        }
+
+        /* Fix the calendar icon visibility */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+            z-index: 1;
+            /* Below lines actually show the icon if not using the 'invisible overlay' trick */
+            filter: none;
+            opacity: 1;
+        }
+
+        /* Mobile specific adjustments */
+        @media screen and (max-width: 480px) {
+            .wrap {
+                padding: 0;
+            }
+
+            .card {
+                padding: 24px 16px;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+                min-height: calc(100vh - 60px);
+                /* Full height minus header */
+            }
+
+            .title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrap">
+        <div class="card">
+            <h1 class="title">Check Your Ticket</h1>
+
+            <div class="form-group">
+                <label class="label">Ticket Number</label>
+                <div class="input-wrap">
+                    <input id="num" class="input" type="text" placeholder="Ex: SS 123456" autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Draw Date</label>
+                <div class="input-wrap">
+                    <!-- Added required and changed appearance behavior -->
+                    <input id="date" class="input" type="date" required />
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button id="searchBtn" class="btn btn-primary">Check Result</button>
+                <button id="clearBtn" class="btn btn-secondary">Clear</button>
+            </div>
+
+            <div id="status" class="status-text">Connecting to database...</div>
+            <div id="out"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://raw.githubusercontent.com/santhkhd/kerala_loto/refs/heads/main/history.json';
+        const els = {
+            num: document.getElementById('num'),
+            date: document.getElementById('date'),
+            search: document.getElementById('searchBtn'),
+            clear: document.getElementById('clearBtn'),
+            out: document.getElementById('out'),
+            status: document.getElementById('status')
+        };
+
+        let historyData = [];
+
+        const norm = str => (str || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+        function formatDate(input) {
+            if (!input) return '';
+            const p = input.split('-');
+            if (p.length === 3) return `${p[2]}/${p[1]}/${p[0]}`;
+            return input;
+        }
+
+        function performSearch() {
+            els.out.innerHTML = '';
+            const rawNum = els.num.value.trim();
+            const rawDate = els.date.value;
+
+            if (!rawNum || !rawDate) {
+                showResult('miss', 'Missing Info', 'Please enter both ticket number and date.');
+                return;
+            }
+
+            const targetNum = norm(rawNum);
+            const draw = historyData.find(d => d.date === rawDate);
+
+            if (!draw) {
+                showResult('miss', 'No Draw Found', `No lottery result found for ${formatDate(rawDate)}.`);
+                return;
+            }
+
+            let winningPrizes = [];
+
+            if (Array.isArray(draw.prizes)) {
+                for (const p of draw.prizes) {
+                    if (Array.isArray(p.winners)) {
+                        for (const w of p.winners) {
+                            const wClean = w.replace(/\([^)]*\)/g, '');
+                            const wNorm = norm(wClean);
+
+                            let isMatch = false;
+                            if (wNorm === targetNum) {
+                                isMatch = true;
+                            }
+                            else if (wNorm.length <= 4 && wNorm.length > 0) {
+                                if (targetNum.endsWith(wNorm)) {
+                                    isMatch = true;
+                                }
+                            }
+
+                            if (isMatch) {
+                                winningPrizes.push({
+                                    label: p.label,
+                                    amount: p.amount,
+                                    matchNum: wClean.trim()
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (winningPrizes.length > 0) {
+                winningPrizes.sort((a, b) => (b.amount || 0) - (a.amount || 0));
+                const best = winningPrizes[0];
+                const amt = (best.amount || 0).toLocaleString('en-IN');
+
+                els.out.innerHTML = `
+                    <div class="result-box hit">
+                        <div class="hit-title">🎉 CONGRATULATIONS!</div>
+                        <div style="font-weight:600;">You won ${best.label}</div>
+                        <div class="hit-amount">₹${amt}</div>
+                        <div style="font-size:0.85rem; opacity:0.8;">
+                            Matched: ${best.matchNum}<br>
+                            Draw Date: ${formatDate(draw.date)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                els.out.innerHTML = `
+                    <div class="result-box miss">
+                        <div class="miss-title">No win this time.</div>
+                        <div style="font-size:0.85rem; opacity:0.8;">
+                            Ticket: ${rawNum}<br>
+                            Date: ${formatDate(draw.date)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function showResult(type, title, msg) {
+            els.out.innerHTML = `
+                <div class="result-box ${type}">
+                    <div class="${type}-title">${title}</div>
+                    <div style="font-size:0.9rem;">${msg}</div>
+                </div>
+            `;
+        }
+
+        els.search.onclick = performSearch;
+        els.clear.onclick = () => { els.num.value = ''; els.date.value = ''; els.out.innerHTML = ''; };
+
+        fetch(API_URL, { cache: 'no-store' })
+            .then(r => r.json())
+            .then(data => {
+                historyData = data || [];
+                els.status.innerHTML = `Database Ready: <b>${historyData.length}</b> draws available.`;
+            })
+            .catch(e => {
+                console.error(e);
+                els.status.textContent = 'Connection Error. Please check your internet.';
+            });
+
+    </script>
+</body>
+
+</html>

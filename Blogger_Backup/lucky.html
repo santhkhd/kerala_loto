@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Numbers Predictor</title>
+    <style>
+        :root {
+            --bg-light: #fdfcfe;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary: #2563eb;
+            --accent: #7c3aed;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --success: #059669;
+            --hot: #f59e0b;
+            --cold: #0ea5e9;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            background-color: var(--bg-light);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(124, 58, 237, 0.05) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            /* Increased padding-top significantly for Blogspot headers */
+            padding: 60px 0 20px 0;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 850;
+            margin: 0 0 24px 0;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto 0 auto;
+            /* Added extra margin top for the wrapper */
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            margin-bottom: 24px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 16px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn:hover {
+            filter: brightness(1.02);
+            transform: translateY(-1px);
+        }
+
+        .btn-hot {
+            background: #fff7ed;
+            color: #c2410c;
+            border: 1px solid #ffedd5;
+        }
+
+        .btn-cold {
+            background: #f0f9ff;
+            color: #0369a1;
+            border: 1px solid #e0f2fe;
+        }
+
+        .btn-random {
+            background: #f5f3ff;
+            color: #6d28d9;
+            border: 1px solid #ede9fe;
+        }
+
+        .btn-repeat {
+            background: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #dcfce7;
+        }
+
+        .section-header {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            margin: 24px 0 12px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, #e2e8f0, transparent);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .num-box {
+            background: white;
+            padding: 12px 4px;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .count-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            background: #e2e8f0;
+            color: #475569;
+            padding: 2px 6px;
+            border-radius: 6px;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .num-box.hot {
+            border-color: #fbbf24;
+            color: #b45309;
+        }
+
+        .num-box.cold {
+            border-color: #38bdf8;
+            color: #0369a1;
+        }
+
+        .num-box.repeat {
+            border-color: #34d399;
+            color: #065f46;
+        }
+
+        .status-text {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            margin: 15px 0;
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .recent-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .recent-date {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .recent-val {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: #92400e;
+            background: #fffbeb;
+            padding: 16px;
+            border-radius: 16px;
+            line-height: 1.5;
+            border: 1px solid #fef3c7;
+        }
+
+        @media (max-width: 480px) {
+            .wrap {
+                padding: 0;
+                margin-top: 0;
+            }
+
+            .card {
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(4, 1fr);
+                /* 4 cols fit better than 3 for small nums */
+            }
+
+            .btn {
+                padding: 14px 10px;
+                font-size: 0.85rem;
+            }
+
+            body {
+                padding-top: 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrap">
+        <div class="card">
+            <!-- Title is now placed inside the top card -->
+            <h1 class="title">Lucky Predictor</h1>
+
+            <div id="status" class="status-text">Fetching historical data...</div>
+
+            <div class="controls">
+                <button id="hotBtn" class="btn btn-hot">🔥 Hot</button>
+                <button id="coldBtn" class="btn btn-cold">🧊 Cold</button>
+                <button id="randomBtn" class="btn btn-random">🎲 Random</button>
+                <button id="repeatBtn" class="btn btn-repeat">🔄 Repeated</button>
+            </div>
+
+            <div id="genResult" style="display:none;">
+                <div class="section-header" id="label4">4-Digit Numbers</div>
+                <div id="grid4" class="grid"></div>
+                <div class="section-header" id="label6">6-Digit Numbers</div>
+                <div id="grid6" class="grid"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-header">Last 5 Draw Results</div>
+            <div id="recent"></div>
+        </div>
+
+        <div class="card">
+            <div class="disclaimer">
+                <b>Usage Note:</b> Repeated and Hot numbers are calculated from the last 100+ draws. Predictions are for
+                entertainment and statistical study only.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://raw.githubusercontent.com/santhkhd/kerala_loto/refs/heads/main/history.json';
+        const els = {
+            status: document.getElementById('status'),
+            recent: document.getElementById('recent'),
+            genResult: document.getElementById('genResult'),
+            grid4: document.getElementById('grid4'),
+            grid6: document.getElementById('grid6'),
+            label4: document.getElementById('label4'),
+            label6: document.getElementById('label6')
+        };
+
+        let historyData = [], freq4 = {}, freq6 = {}, all4 = [], all6 = [];
+
+        const inc = (map, k) => map[k] = (map[k] || 0) + 1;
+
+        function getStats(map, n, mode) {
+            const entries = Object.entries(map);
+            if (mode === 'hot') return entries.sort((a, b) => b[1] - a[1]).slice(0, n);
+            if (mode === 'cold') return entries.sort((a, b) => a[1] - b[1]).slice(0, n);
+            if (mode === 'repeat') return entries.filter(x => x[1] > 1).sort((a, b) => b[1] - a[1]).slice(0, n);
+            return [];
+        }
+
+        function getRand(arr, n) {
+            let unique = [...new Set(arr)];
+            return unique.sort(() => 0.5 - Math.random()).slice(0, n).map(v => [v, null]);
+        }
+
+        function renderGrid(container, data, type) {
+            container.innerHTML = data.map(([val, count]) => `
+                <div class="num-box ${type}">
+                    ${val}
+                    ${count ? `<span class="count-badge">${count} Times</span>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function updateGenerator(mode) {
+            if (!historyData.length) return;
+            els.genResult.style.display = 'block';
+            let d4, d6, cls = mode;
+
+            if (mode === 'random') {
+                d4 = getRand(all4, 12);
+                d6 = getRand(all6, 9);
+            } else {
+                d4 = getStats(freq4, 12, mode);
+                d6 = getStats(freq6, 9, mode);
+            }
+
+            els.label4.textContent = `4-Digit ${mode}`;
+            els.label6.textContent = `6-Digit ${mode}`;
+            renderGrid(els.grid4, d4, cls);
+            renderGrid(els.grid6, d6, cls);
+
+            const msg = mode === 'repeat' ? `Showing numbers that appeared multiple times.` : `Generated ${mode} prediction set.`;
+            els.status.innerHTML = `<b>${mode.toUpperCase()}</b>: ${msg}`;
+        }
+
+        function init() {
+            fetch(API_URL, { cache: 'no-store' })
+                .then(r => r.json())
+                .then(data => {
+                    historyData = data || [];
+                    historyData.forEach(d => {
+                        (d.numbers4 || []).forEach(n => { inc(freq4, n); all4.push(n); });
+                        (d.numbers6 || []).forEach(n => { inc(freq6, n); all6.push(n); });
+                    });
+
+                    els.recent.innerHTML = historyData.slice(-5).reverse().map(d => `
+                        <div class="recent-item">
+                            <span class="recent-date">${d.date}</span>
+                            <span class="recent-val">4D: ${(d.numbers4 || []).slice(0, 2).join(', ')}...</span>
+                        </div>
+                    `).join('');
+
+                    els.status.textContent = "Data Sync Complete. Choose a method below.";
+                })
+                .catch(() => els.status.textContent = "Unable to load data.");
+
+            document.getElementById('hotBtn').onclick = () => updateGenerator('hot');
+            document.getElementById('coldBtn').onclick = () => updateGenerator('cold');
+            document.getElementById('randomBtn').onclick = () => updateGenerator('random');
+            document.getElementById('repeatBtn').onclick = () => updateGenerator('repeat');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
