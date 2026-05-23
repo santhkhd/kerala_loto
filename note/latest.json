@@ -5,21 +5,10 @@
   "venue": "GORKY BHAVAN NEAR BAKERY JUNCTION THIRUVANANTHAPURAM",
   "prizes": {
     "1st_prize": {
-      "amount": 10000000,
+      "amount": 120000000,
       "label": "1st Prize",
       "winners": [
-        "VB 135452 (KARUNAGAPPALLY)"
-      ]
-    },
-    "consolation_prize": {
-      "amount": 100000,
-      "label": "Consolation Prize",
-      "winners": [
-        "VA 135452",
-        "VC 135452",
-        "VD 135452",
-        "VE 135452",
-        "VG 135452"
+        "VB 135452"
       ]
     },
     "2nd_prize": {
@@ -32,6 +21,17 @@
         "VD 252972",
         "VE 649598",
         "VG 367998"
+      ]
+    },
+    "consolation_prize": {
+      "amount": 100000,
+      "label": "Consolation Prize",
+      "winners": [
+        "VA 135452",
+        "VC 135452",
+        "VD 135452",
+        "VE 135452",
+        "VG 135452"
       ]
     },
     "3rd_prize": {
@@ -195,7 +195,7 @@
         "0155",
         "0190",
         "0211",
-        "0216",
+        "0219",
         "0233",
         "0242",
         "0293",
@@ -534,7 +534,6 @@
         "1942",
         "1984",
         "2014",
-        "2026",
         "2040",
         "2060",
         "2064",
@@ -793,6 +792,6 @@
       ]
     }
   },
-  "draw_code": "BR-109",
-  "downloadLink": ""
+  "downloadLink": "https://kllottery.s3.ap-south-1.amazonaws.com/Kerala%20Lottery/Results/2026-05-23/69c302586f0322f87d119cb9.pdf",
+  "draw_code": "VB-109"
 }
