@@ -207,6 +207,86 @@
     let all6 = [];
     let all4 = [];
 
+    const predictionI18n = {
+        en: {
+            pageTitle: "Lucky Hub",
+            hotPicks: "Hot Picks",
+            repeats: "Repeats",
+            coldZero: "Cold Zero",
+            random: "Random",
+            pred6: "6-Digit Predictions",
+            pred4: "4-Digit Predictions",
+            algoTitle: "ALGORITHMIC PREDICTION",
+            algoDesc: "Based on historical patterns",
+            disclaimer: "Predictions are generated for entertainment based on historical data. Lottery depends on chance. Play responsibly."
+        },
+        ml: {
+            pageTitle: "ലക്കി ഹബ്",
+            hotPicks: "ഹോട്ട് പിക്സ്",
+            repeats: "റിപ്പീറ്റ്സ്",
+            coldZero: "കോൾഡ് സീറോ",
+            random: "റാൻഡം",
+            pred6: "6-അക്ക പ്രവചനങ്ങൾ",
+            pred4: "4-അക്ക പ്രവചനങ്ങൾ",
+            algoTitle: "അൽഗോരിതമിക് പ്രവചനം",
+            algoDesc: "ചരിത്രപരമായ വിവരങ്ങളുടെ അടിസ്ഥാനത്തിൽ",
+            disclaimer: "പ്രവചനങ്ങൾ ചരിത്രപരമായ വിവരങ്ങളുടെ അടിസ്ഥാനത്തിൽ വിനോദത്തിനായി മാത്രം തയ്യാറാക്കിയതാണ്. ഉത്തരവാദിത്തത്തോടെ കളിക്കുക."
+        },
+        ta: {
+            pageTitle: "லக்கி ஹப்",
+            hotPicks: "ஹாட் பிக்ஸ்",
+            repeats: "மீண்டும்",
+            coldZero: "கோல்ட் ஜீரோ",
+            random: "ரேண்டம்",
+            pred6: "6-இலக்க கணிப்புகள்",
+            pred4: "4-இலக்க கணிப்புகள்",
+            algoTitle: "அல்காரிதமிக் கணிப்பு",
+            algoDesc: "வரலாற்று தரவுகளின் அடிப்படையில்",
+            disclaimer: "கணிப்புகள் வரலாற்று தரவுகளின் அடிப்படையில் பொழுதுபோக்கிற்காக மட்டுமே உருவாக்கப்படுகின்றன. பொறுப்புடன் விளையாடுங்கள்."
+        }
+    };
+
+    function updatePredictionTranslations() {
+        const t = predictionI18n[currentLang] || predictionI18n.en;
+        
+        // Translate header title
+        const headerTitle = document.querySelector('.app-header h1');
+        if (headerTitle) headerTitle.textContent = t.pageTitle;
+
+        // Translate buttons
+        const btnActions = document.querySelectorAll('.btn-action');
+        if (btnActions.length >= 4) {
+            btnActions[0].querySelector('span').textContent = t.hotPicks;
+            btnActions[1].querySelector('span').textContent = t.repeats;
+            btnActions[2].querySelector('span').textContent = t.coldZero;
+            btnActions[3].querySelector('span').textContent = t.random;
+        }
+
+        // Translate predictor section titles
+        const title6 = document.getElementById('title-6');
+        if (title6) title6.textContent = t.pred6;
+
+        const title4 = document.getElementById('title-4');
+        if (title4) title4.textContent = t.pred4;
+
+        // Translate Algo box
+        const algoBox = document.querySelector('.results-container .result-card p');
+        if (algoBox) {
+            algoBox.innerHTML = `${t.algoTitle}<br><span style="font-size:0.8rem;font-weight:500;">${t.algoDesc}</span>`;
+        }
+
+        // Translate disclaimer
+        const disc = document.querySelector('.disclaimer p');
+        if (disc) disc.textContent = t.disclaimer;
+    }
+
+    // Intercept state changes to update prediction translations
+    const originalUpdateTranslations = typeof updateTranslations !== 'undefined' ? updateTranslations : null;
+    updateTranslations = function() {
+        if (originalUpdateTranslations) originalUpdateTranslations();
+        updatePredictionTranslations();
+    };
+
     async function fetchData() {
       try {
         const res = await fetch('history.json');
@@ -276,7 +356,10 @@
       } else { big4.textContent = "----"; }
     }
 
-    fetchData();
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchData();
+        setTimeout(updatePredictionTranslations, 200); // Initial delay to ensure app.js loaded
+    });
   </script>
 </body>
 

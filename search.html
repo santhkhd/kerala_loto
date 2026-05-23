@@ -8,6 +8,7 @@
     <title>Verify Ticket - Kerala Lottery</title>
     <link rel="stylesheet" href="index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="app.js"></script>
     <style>
         .search-container {
             padding: 24px 16px;
@@ -362,8 +363,9 @@
         <!-- Result Card -->
         <div id="win-card" class="winner-card">
             <div class="prize-title" id="p-rank">1st Prize</div>
+            <div id="p-lottery" style="font-weight: 800; font-size: 1.1rem; color: var(--accent); margin-bottom: 8px; display: none;"></div>
             <div style="margin: 15px 0;">
-                <span class="label-text"
+                <span class="label-text" id="lbl-winning-number"
                     style="color:#6b7280; font-weight:700; text-transform:uppercase; font-size:0.8rem; display:block; margin-bottom:5px;">Winning
                     Number</span>
                 <span id="p-number" class="number-badge">--</span>
@@ -423,7 +425,107 @@
     <script src="app.js"></script>
     <script>
         // historyData is already declared in app.js
+        const searchI18n = {
+            en: {
+                didYouWin: "Did You Win?",
+                ticket: "Ticket",
+                date: "Date",
+                checkNow: "Check Now",
+                clear: "Clear",
+                winningNumber: "Winning Number",
+                drawDate: "Draw Date: ",
+                viewFullAnalytics: "View Full Analytics",
+                youAreWinner: "YOU ARE A WINNER!",
+                winBannerText: "Found 1 winning entry. Congratulations on your win!",
+                checkingRecords: "Checking official records...",
+                noMatch: "No winning prize found for ",
+                viewFullPage: "View Full Result Page",
+                ticketPlaceholder: "PG 247439",
+                noMatchFound: "No Match Found. Better luck next time!",
+                enterTicketAlert: "Please enter a ticket number or date."
+            },
+            ml: {
+                didYouWin: "നിങ്ങൾ ജയിച്ചോ?",
+                ticket: "ടിക്കറ്റ് നമ്പർ",
+                date: "തീയതി",
+                checkNow: "പരിശോധിക്കുക",
+                clear: "ഒഴിവാക്കുക",
+                winningNumber: "വിജയിച്ച നമ്പർ",
+                drawDate: "ഡ്രോ തീയതി: ",
+                viewFullAnalytics: "വിശദമായ വിവരങ്ങൾ",
+                youAreWinner: "നിങ്ങൾക്ക് സമ്മാനമുണ്ട്! 🎉",
+                winBannerText: "വിജയിച്ച ടിക്കറ്റ് കണ്ടെത്തിയിരിക്കുന്നു. അഭിനന്ദനങ്ങൾ!",
+                checkingRecords: "വിവരങ്ങൾ പരിശോധിക്കുന്നു...",
+                noMatch: "സമ്മാനങ്ങളൊന്നും കണ്ടെത്താനായില്ല: ",
+                viewFullPage: "മുഴുവൻ ഫലങ്ങളും കാണുക",
+                ticketPlaceholder: "ഉദാ: PG 247439",
+                noMatchFound: "നമ്പർ മാച്ചായില്ല. അടുത്ത തവണ ഭാഗ്യം തുണയ്ക്കട്ടെ!",
+                enterTicketAlert: "ദയവായി ടിക്കറ്റ് നമ്പറോ തീയതിയോ നൽകുക."
+            },
+            ta: {
+                didYouWin: "நீங்கள் வென்றீர்களா?",
+                ticket: "லாட்டரி எண்",
+                date: "தேதி",
+                checkNow: "சரிபார்க்கவும்",
+                clear: "அழிக்கவும்",
+                winningNumber: "வெற்றி எண்",
+                drawDate: "டிரா தேதி: ",
+                viewFullAnalytics: "முழு முடிவுகளைக் காண்க",
+                youAreWinner: "நீங்கள் வெற்றியாளர்! 🎉",
+                winBannerText: "வெற்றி பெற்ற லாட்டரி எண் கண்டறியப்பட்டது. வாழ்த்துகள்!",
+                checkingRecords: "சரிபார்க்கப்படுகிறது...",
+                noMatch: "வெற்றி எண் எதுவும் கண்டறியப்படவில்லை: ",
+                viewFullPage: "முழு முடிவுகளையும் காண்க",
+                ticketPlaceholder: "எ.கா: PG 247439",
+                noMatchFound: "எந்த முடிவும் கண்டறியப்படவில்லை. அடுத்த முறை முயற்சி செய்யவும்!",
+                enterTicketAlert: "தயவுசெய்து லாட்டரி எண் அல்லது தேதியை உள்ளிடவும்."
+            }
+        };
 
+        function updateSearchTranslations() {
+            const t = searchI18n[currentLang] || searchI18n.en;
+            
+            // Translate header title
+            const headerTitle = document.querySelector('.app-header h1');
+            if (headerTitle) headerTitle.textContent = t.didYouWin;
+
+            // Translate fields
+            const labels = document.querySelectorAll('.field-label');
+            if (labels.length >= 2) {
+                labels[0].innerHTML = `<i class="material-icons">confirmation_number</i> ${t.ticket}`;
+                labels[1].innerHTML = `<i class="material-icons">event</i> ${t.date}`;
+            }
+
+            // Input placeholder
+            const ticketInput = document.getElementById('ticket-input');
+            if (ticketInput) ticketInput.placeholder = t.ticketPlaceholder;
+
+            // Buttons
+            const btnCheck = document.querySelector('.btn-check');
+            if (btnCheck) btnCheck.innerHTML = `<i class="material-icons">fact_check</i> ${t.checkNow}`;
+
+            const btnClear = document.querySelector('.btn-clear');
+            if (btnClear) btnClear.innerHTML = `<i class="material-icons">restart_alt</i> ${t.clear}`;
+
+            // Labels inside winner card
+            const lblWinningNumber = document.getElementById('lbl-winning-number');
+            if (lblWinningNumber) lblWinningNumber.textContent = t.winningNumber;
+
+            const winBanner = document.getElementById('win-banner');
+            if (winBanner) {
+                winBanner.innerHTML = `<h3><i class="material-icons">celebration</i> ${t.youAreWinner}</h3><p>${t.winBannerText}</p>`;
+            }
+
+            const pLink = document.getElementById('p-link');
+            if (pLink) pLink.innerHTML = `<i class="material-icons">visibility</i> ${t.viewFullAnalytics}`;
+        }
+
+        // Intercept state changes to update search translations
+        const originalUpdateTranslations = typeof updateTranslations !== 'undefined' ? updateTranslations : null;
+        updateTranslations = function() {
+            if (originalUpdateTranslations) originalUpdateTranslations();
+            updateSearchTranslations();
+        };
 
         async function initData() {
             try {
@@ -431,7 +533,11 @@
                 historyData = await res.json();
             } catch (e) { console.error(e); }
         }
-        initData();
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initData();
+            setTimeout(updateSearchTranslations, 200); // Initial localization delay to ensure app.js loaded
+        });
 
         function clearSearch() {
             document.getElementById('ticket-input').value = '';
@@ -439,30 +545,31 @@
             document.getElementById('win-banner').classList.remove('show');
             document.getElementById('win-card').classList.remove('show');
             document.getElementById('status-msg').textContent = '';
+            document.getElementById('p-lottery').style.display = 'none';
         }
 
         async function verifyTicket() {
             const rawNum = document.getElementById('ticket-input').value.trim();
             const dateVal = document.getElementById('date-input').value;
             const pureNum = rawNum.replace(/[^0-9]/g, '');
+            const t = searchI18n[currentLang] || searchI18n.en;
 
             if (!rawNum && !dateVal) {
-                alert("Please enter a ticket number or date.");
+                alert(t.enterTicketAlert);
                 return;
             }
 
             const status = document.getElementById('status-msg');
-            status.textContent = "Checking official records...";
+            status.textContent = t.checkingRecords;
             document.getElementById('win-banner').classList.remove('show');
             document.getElementById('win-card').classList.remove('show');
+            document.getElementById('p-lottery').style.display = 'none';
 
             if (historyData.length === 0) await initData();
 
             // 1. Filter candidates from history
-            // 1. Filter candidates from history
             let candidates = historyData.filter(h => {
                 if (dateVal && h.date !== dateVal) return false;
-                // If a date is selected, ALWAYS consider it a candidate to start with
                 if (dateVal) return true;
 
                 if (pureNum) {
@@ -477,17 +584,8 @@
                 return true;
             }).slice(0, 10);
 
-            // Fallback: If no date selected and no number match found, 
-            // but we want to show *something* relevant (e.g. today's result) if they just clicked check?
-            // Actually, if candidates is empty here, it means no file matched the date OR no file matched the number.
-
-            if (candidates.length === 0 && dateVal) {
-                // Date was selected but maybe historyData doesn't have it? 
-                // Or logic above filtered it out? (Won't happen with new logic above).
-            }
-
             if (candidates.length === 0) {
-                status.textContent = "No Match Found. Better luck next time!";
+                status.textContent = t.noMatchFound;
                 return;
             }
 
@@ -508,24 +606,18 @@
                         if (!p) continue;
 
                         // Check if user input matches any winner string
-                        // We support "PG 247439" (exact) or "247439" (suffix match)
                         const exactMatch = p.winners.find(w => {
                             const cleanW = w.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
                             const cleanIn = rawNum.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
 
-                            // If user typed codes (e.g. PG24...), check includes
                             if (cleanIn.length > 6) {
                                 return cleanW.includes(cleanIn) || cleanIn.includes(cleanW);
                             }
 
-                            // 4-Digit Search Logic:
-                            // We strictly check if the winning number ENDS WITH the input if input is 4 digits.
-                            // This covers cases where user has last 4 digits "5963" and winner is "NZ 525963".
                             if (pureNum.length === 4) {
                                 return cleanW.endsWith(pureNum);
                             }
 
-                            // General fallback
                             return w.endsWith(pureNum) || w.includes(pureNum);
                         });
 
@@ -535,7 +627,9 @@
                                 amount: p.amount,
                                 number: exactMatch,
                                 date: data.draw_date,
-                                file: cand.filename
+                                file: cand.filename,
+                                code: cand.filename.split('-')[0].toUpperCase(),
+                                lottery_name: data.lottery_name
                             };
                             break;
                         }
@@ -553,22 +647,37 @@
                 document.getElementById('p-rank').textContent = winnerFound.rank;
                 document.getElementById('p-number').textContent = winnerFound.number;
                 document.getElementById('p-amount').textContent = "₹" + parseInt(winnerFound.amount).toLocaleString();
-                document.getElementById('p-date').textContent = winnerFound.date;
+                
+                const formattedDate = winnerFound.date && winnerFound.date.includes('-')
+                    ? winnerFound.date.split('-').reverse().join('/')
+                    : (winnerFound.date || '--/--/----');
+                document.getElementById('p-date').textContent = formattedDate;
+
+                // Set Translated Lottery Name dynamically
+                let name = '';
+                if (typeof lotteryNames !== 'undefined' && lotteryNames[winnerFound.code]) {
+                    name = lotteryNames[winnerFound.code][currentLang] || lotteryNames[winnerFound.code].en;
+                } else {
+                    name = winnerFound.lottery_name || 'Kerala Lottery';
+                }
+                const pLottery = document.getElementById('p-lottery');
+                if (pLottery) {
+                    pLottery.textContent = name;
+                    pLottery.style.display = 'block';
+                }
 
                 const isLocal = window.location.protocol === 'file:';
                 const targetPage = isLocal ? 'result.html' : 'result';
                 document.getElementById('p-link').href = `${targetPage}?file=${winnerFound.file}`;
             } else {
-                // Show "No Match" but also provide link to the result if we checked a specific file candidate
                 let linkHtml = '';
                 if (candidates.length > 0) {
                     const isLocal = window.location.protocol === 'file:';
                     const targetPage = isLocal ? 'result.html' : 'result';
-                    // Use the first candidate file as the most likely intended result
-                    linkHtml = `<br><br><a href="${targetPage}?file=${candidates[0].filename}" class="view-btn" style="background:#6b7280; font-size:0.9rem;">View Full Result Page</a>`;
+                    linkHtml = `<br><br><a href="${targetPage}?file=${candidates[0].filename}" class="view-btn" style="background:#6b7280; font-size:0.9rem;">${t.viewFullPage}</a>`;
                 }
 
-                status.innerHTML = `<i class="material-icons" style="font-size:2rem; display:block">sentiment_dissatisfied</i><br>No winning prize found for <strong>${rawNum}</strong>.${linkHtml}`;
+                status.innerHTML = `<i class="material-icons" style="font-size:2rem; display:block">sentiment_dissatisfied</i><br>${t.noMatch}<strong>${rawNum}</strong>.${linkHtml}`;
             }
         }
     </script>

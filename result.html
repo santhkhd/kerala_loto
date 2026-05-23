@@ -8,6 +8,7 @@
   <title>Draw Details - Kerala Lottery</title>
   <link rel="stylesheet" href="index.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="app.js"></script>
   <style>
     .prize-block {
       background: var(--card-bg);
@@ -286,8 +287,22 @@
     }
 
     function render(data) {
-      document.getElementById('loto-name').textContent = data.lottery_name;
-      document.getElementById('loto-meta').textContent = `Draw No: ${data.draw_number} | Date: ${data.draw_date.split('-').reverse().join('/')}`;
+      // Robustly translate lottery name dynamically bilingually
+      const file = new URLSearchParams(window.location.search).get('file') || '';
+      const code = (file ? file.split('-')[0] : '').toUpperCase();
+      let name = '';
+      if (typeof lotteryNames !== 'undefined' && lotteryNames[code]) {
+        name = lotteryNames[code][currentLang] || lotteryNames[code].en;
+      } else {
+        name = data.lottery_name || 'Kerala Lottery';
+      }
+      document.getElementById('loto-name').textContent = name;
+
+      // Safe split for date to prevent undefined/malformed crashes
+      const formattedDate = data.draw_date && data.draw_date.includes('-')
+          ? data.draw_date.split('-').reverse().join('/')
+          : (data.draw_date || '--/--/----');
+      document.getElementById('loto-meta').textContent = `Draw No: ${data.draw_number || '--'} | Date: ${formattedDate}`;
 
       const list = document.getElementById('prizes-list');
       const order = ['1st_prize', 'consolation_prize', '2nd_prize', '3rd_prize', '4th_prize', '5th_prize', '6th_prize', '7th_prize', '8th_prize', '9th_prize'];
@@ -321,7 +336,6 @@
     }
     init();
   </script>
-  <script src="app.js"></script> <!-- Theme Support -->
 </body>
 
 </html>

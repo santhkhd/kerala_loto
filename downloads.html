@@ -160,8 +160,46 @@
 
     <script src="app.js"></script>
     <script>
+        const downloadsI18n = {
+            en: {
+                pageTitle: "Official PDFs",
+                view: "View",
+                download: "Download",
+                failedToLoad: "Failed to load downloads.",
+                drawLabel: "Draw: "
+            },
+            ml: {
+                pageTitle: "ഔദ്യോഗിക പി.ഡി.എഫ്",
+                view: "കാണുക",
+                download: "ഡൗൺലോഡ്",
+                failedToLoad: "ഡൗൺലോഡുകൾ ലോഡുചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു.",
+                drawLabel: "ഡ്രോ: "
+            },
+            ta: {
+                pageTitle: "அதிகாரப்பூர்வ PDF",
+                view: "காண்க",
+                download: "பதிவிறக்க",
+                failedToLoad: "பதிவிறக்கங்கள் தோல்வியடைந்தன.",
+                drawLabel: "டிரா: "
+            }
+        };
+
+        function updateDownloadsTranslations() {
+            const t = downloadsI18n[currentLang] || downloadsI18n.en;
+            const headerTitle = document.querySelector('.app-header h1');
+            if (headerTitle) headerTitle.textContent = t.pageTitle;
+        }
+
+        // Intercept state changes to update downloads translations
+        const originalUpdateTranslations = typeof updateTranslations !== 'undefined' ? updateTranslations : null;
+        updateTranslations = function() {
+            if (originalUpdateTranslations) originalUpdateTranslations();
+            updateDownloadsTranslations();
+        };
+
         document.addEventListener('DOMContentLoaded', async () => {
             const container = document.getElementById('pdf-container');
+            updateDownloadsTranslations();
 
             try {
                 // Fetch the manual data file
@@ -169,10 +207,20 @@
                 const data = await res.json();
 
                 container.innerHTML = '';
+                const t = downloadsI18n[currentLang] || downloadsI18n.en;
 
                 data.forEach(item => {
                     const card = document.createElement('div');
                     card.className = 'pdf-card fade-in';
+
+                    // Translate lottery name dynamically using the draw_no code
+                    const code = (item.draw_no ? item.draw_no.split('-')[0] : '').toUpperCase();
+                    let name = '';
+                    if (typeof lotteryNames !== 'undefined' && lotteryNames[code]) {
+                        name = lotteryNames[code][currentLang] || lotteryNames[code].en;
+                    } else {
+                        name = item.lottery;
+                    }
 
                     // Create download button with specific filename fragment for Android app handling
                     const fileName = `${item.lottery.replace(/\s+/g, '_')}-${item.draw_no}.pdf`;
@@ -180,20 +228,17 @@
 
                     // Format the share message
                     const appLink = "https://play.google.com/store/apps/details?id=com.kerala.lottery.results.today.sanshiv";
-                    const shareText = `📢 Kerala Lottery Result Published! \n\n🏆 ${item.lottery} (${item.draw_no})\n\n📲 Check full result & Download PDF in our Official App:\n${appLink}\n\n📄 Direct PDF Link:`;
+                    const shareText = `📢 Kerala Lottery Result Published! \n\n🏆 ${name} (${item.draw_no})\n\n📲 Check full result & Download PDF in our Official App:\n${appLink}\n\n📄 Direct PDF Link:`;
                     const shareUrl = `shareapp://?message=${encodeURIComponent(shareText)}&url=${item.url}`;
-
-                    // Google Docs Viewer URL for viewing PDF without downloading
-                    const viewUrl = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(item.url)}`;
 
                     card.innerHTML = `
                         <div class="pdf-info">
-                            <div class="pdf-title">${item.lottery}</div>
-                            <div class="pdf-meta">Draw: ${item.draw_no} • ${item.date}</div>
+                            <div class="pdf-title">${name}</div>
+                            <div class="pdf-meta">${t.drawLabel}${item.draw_no} • ${item.date}</div>
                         </div>
                         <div class="pdf-actions">
                             <a href="${item.url}#target=external" class="action-btn btn-view" target="_blank" rel="noopener noreferrer">
-                                <i class="material-icons" style="font-size:1.1rem">visibility</i> View
+                                <i class="material-icons" style="font-size:1.1rem">visibility</i> ${t.view}
                             </a>
                             <a href="${downloadHref}" class="action-btn btn-download">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -201,7 +246,7 @@
                                     <polyline points="7 10 12 15 17 10"></polyline>
                                     <line x1="12" y1="15" x2="12" y2="3"></line>
                                 </svg>
-                                Download
+                                ${t.download}
                             </a>
                             <a href="${shareUrl}" class="action-btn btn-share" style="background: var(--primary);">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="0" stroke-linecap="round" stroke-linejoin="round">
@@ -215,7 +260,7 @@
 
             } catch (e) {
                 console.error(e);
-                container.innerHTML = '<div class="empty-state"><p>Failed to load downloads.</p></div>';
+                container.innerHTML = `<div class="empty-state"><p>${downloadsI18n[currentLang].failedToLoad}</p></div>`;
             }
         });
     </script>

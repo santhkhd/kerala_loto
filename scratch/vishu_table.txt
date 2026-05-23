@@ -1,0 +1,335 @@
+<table class="min-w-full divide-y-4 divide-foreground">
+ <thead class="bg-foreground text-background">
+  <tr>
+   <th class="px-6 py-6 text-left text-xs font-black uppercase tracking-[0.2em] border-r-4 border-background/20" scope="col">
+    Prize
+   </th>
+   <th class="px-6 py-6 text-left text-xs font-black uppercase tracking-[0.2em] border-r-4 border-background/20" scope="col">
+    Amount
+   </th>
+   <th class="px-6 py-6 text-left text-xs font-black uppercase tracking-[0.2em] border-r-4 border-background/20" scope="col">
+    Winners
+   </th>
+   <th class="px-6 py-6 text-left text-xs font-black uppercase tracking-[0.2em] border-r-4 border-background/20" scope="col">
+    Commission
+   </th>
+   <th class="px-6 py-6 text-left text-xs font-black uppercase tracking-[0.2em]" scope="col">
+    Details
+   </th>
+  </tr>
+ </thead>
+ <tbody class="divide-y-4 divide-foreground bg-background">
+  <tr class="hover:bg-foreground/[0.03] transition-colors">
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <div class="flex items-center gap-3">
+     <div class="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xl">
+      1
+     </div>
+    </div>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-2xl font-black tracking-tighter">
+     ₹
+     <!-- -->
+     12 Crore
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black italic">
+     1
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black">
+     ₹1.20 Crore
+    </span>
+   </td>
+   <td class="px-6 py-8">
+    <p class="text-sm font-medium leading-relaxed italic max-w-none">
+     Common to all series
+    </p>
+   </td>
+  </tr>
+  <tr class="hover:bg-foreground/[0.03] transition-colors">
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <div class="flex items-center gap-3">
+     <div class="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xl">
+      <span class="text-[8px] uppercase text-center leading-tight">
+       Consolation
+      </span>
+     </div>
+    </div>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-2xl font-black tracking-tighter">
+     ₹
+     <!-- -->
+     1 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black italic">
+     5
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black">
+     ₹50,000
+    </span>
+   </td>
+   <td class="px-6 py-8">
+    <p class="text-sm font-medium leading-relaxed italic max-w-none">
+     Remaining all series
+    </p>
+   </td>
+  </tr>
+  <tr class="hover:bg-foreground/[0.03] transition-colors">
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <div class="flex items-center gap-3">
+     <div class="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xl">
+      2
+     </div>
+    </div>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-2xl font-black tracking-tighter">
+     ₹
+     <!-- -->
+     1 Crore
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black italic">
+     6
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black">
+     ₹60 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8">
+    <p class="text-sm font-medium leading-relaxed italic max-w-none">
+     One prize in each series
+    </p>
+   </td>
+  </tr>
+  <tr class="hover:bg-foreground/[0.03] transition-colors">
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <div class="flex items-center gap-3">
+     <div class="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xl">
+      3
+     </div>
+    </div>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-2xl font-black tracking-tighter">
+     ₹
+     <!-- -->
+     10 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black italic">
+     6
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black">
+     ₹6 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8">
+    <p class="text-sm font-medium leading-relaxed italic max-w-none">
+     One prize in each series
+    </p>
+   </td>
+  </tr>
+  <tr class="hover:bg-foreground/[0.03] transition-colors">
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <div class="flex items-center gap-3">
+     <div class="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xl">
+      4
+     </div>
+    </div>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-2xl font-black tracking-tighter">
+     ₹
+     <!-- -->
+     5 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black italic">
+     6
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black">
+     ₹3 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8">
+    <p class="text-sm font-medium leading-relaxed italic max-w-none">
+     One prize in each series
+    </p>
+   </td>
+  </tr>
+  <tr class="hover:bg-foreground/[0.03] transition-colors">
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <div class="flex items-center gap-3">
+     <div class="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xl">
+      5
+     </div>
+    </div>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-2xl font-black tracking-tighter">
+     ₹
+     <!-- -->
+     5,000
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black italic">
+     16,200
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black">
+     ₹81 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8">
+    <p class="text-sm font-medium leading-relaxed italic max-w-none">
+     Last four digits to be drawn times
+    </p>
+   </td>
+  </tr>
+  <tr class="hover:bg-foreground/[0.03] transition-colors">
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <div class="flex items-center gap-3">
+     <div class="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xl">
+      6
+     </div>
+    </div>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-2xl font-black tracking-tighter">
+     ₹
+     <!-- -->
+     2,000
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black italic">
+     12,960
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black">
+     ₹25.92 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8">
+    <p class="text-sm font-medium leading-relaxed italic max-w-none">
+     Last four digits to be drawn times
+    </p>
+   </td>
+  </tr>
+  <tr class="hover:bg-foreground/[0.03] transition-colors">
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <div class="flex items-center gap-3">
+     <div class="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xl">
+      7
+     </div>
+    </div>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-2xl font-black tracking-tighter">
+     ₹
+     <!-- -->
+     1,000
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black italic">
+     29,160
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black">
+     ₹29.16 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8">
+    <p class="text-sm font-medium leading-relaxed italic max-w-none">
+     Last four digits to be drawn times
+    </p>
+   </td>
+  </tr>
+  <tr class="hover:bg-foreground/[0.03] transition-colors">
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <div class="flex items-center gap-3">
+     <div class="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xl">
+      8
+     </div>
+    </div>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-2xl font-black tracking-tighter">
+     ₹
+     <!-- -->
+     500
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black italic">
+     1.37 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black">
+     ₹68.58 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8">
+    <p class="text-sm font-medium leading-relaxed italic max-w-none">
+     Last four digits to be drawn times
+    </p>
+   </td>
+  </tr>
+  <tr class="hover:bg-foreground/[0.03] transition-colors">
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <div class="flex items-center gap-3">
+     <div class="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xl">
+      9
+     </div>
+    </div>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-2xl font-black tracking-tighter">
+     ₹
+     <!-- -->
+     300
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black italic">
+     1.85 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8 border-r-4 border-foreground/10 whitespace-nowrap">
+    <span class="text-lg font-black">
+     ₹55.40 Lakh
+    </span>
+   </td>
+   <td class="px-6 py-8">
+    <p class="text-sm font-medium leading-relaxed italic max-w-none">
+     Last four digits to be drawn times
+    </p>
+   </td>
+  </tr>
+ </tbody>
+</table>
