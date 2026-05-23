@@ -56,7 +56,7 @@ const i18n = {
 const catMap = {
     'SAMRUDHI': 'SM', 'BHAGYATHARA': 'BT', 'STHREE_SAKTHI': 'SS',
     'DHANALEKSHMI': 'DL', 'KARUNYA_PLUS': 'KN', 'SUVARNA_KERALAM': 'SK',
-    'KARUNYA': 'KR', 'AKSHAYA': 'AK', 'WIN_WIN': 'WW', 'NIRMAL': 'NR',
+    'KARUNYA': 'KR',
     'FIFTY_FIFTY': 'FF', 'BUMPER': 'BR', 'VISHU_BUMPER': 'VB',
     'MONSOON_BUMPER': 'MY', 'KERALA_BUMPER': 'RK'
 };
@@ -66,9 +66,6 @@ const bumperCodes = new Set(['BR', 'VB', 'MY', 'RK', 'MC']);
 
 const lotteryNames = {
     // Weekly lotteries
-    AK: { en: 'Akshaya', ml: 'അക്ഷയ', ta: 'அக்ஷயா' },
-    WW: { en: 'Win Win', ml: 'വിൻ വിൻ', ta: 'வின் வின்' },
-    NR: { en: 'Nirmal', ml: 'നിർമ്മൽ', ta: 'நிர்மல்' },
     KR: { en: 'Karunya', ml: 'കരുണ്യ', ta: 'கருண்யா' },
     KN: { en: 'Karunya Plus', ml: 'കരുണ്യ പ്ലസ്', ta: 'கருண்யா பிளஸ்' },
     SS: { en: 'Sthree Sakthi', ml: 'സ്ത്രീ ശക്തി', ta: 'ஸ்த்ரீ-சக்தி' },
