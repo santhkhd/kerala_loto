@@ -7,16 +7,25 @@ NOTE_DIR = os.path.join(os.path.dirname(__file__), 'note')
 MANIFEST_FILE = os.path.join(os.path.dirname(__file__), 'result_manifest.json')
 
 def parse_result_filename(filename):
-    # Example: SK-17-2025-08-29.json
+    # Standard format: SK-17-2025-08-29.json
     match = re.match(r'^([A-Z]{2,3})-(\d+)-(\d{4}-\d{2}-\d{2})\.json$', filename)
-    if not match:
-        return None
-    return {
-        'code': match.group(1),
-        'draw_number': match.group(2),
-        'date': match.group(3),
-        'filename': filename
-    }
+    if match:
+        return {
+            'code': match.group(1),
+            'draw_number': match.group(2),
+            'date': match.group(3),
+            'filename': filename
+        }
+    # Bumper format: VB-May 23, 2026-2026-05-23.json  (draw label contains non-numeric chars)
+    bumper_match = re.match(r'^([A-Z]{2,3})-(.+?)-(\d{4}-\d{2}-\d{2})\.json$', filename)
+    if bumper_match:
+        return {
+            'code': bumper_match.group(1),
+            'draw_number': bumper_match.group(2),
+            'date': bumper_match.group(3),
+            'filename': filename
+        }
+    return None
 
 def main():
     if not os.path.exists(NOTE_DIR):
@@ -39,13 +48,15 @@ def main():
 
     manifest.sort(key=get_date, reverse=True)
 
-    # Remove duplicates
+    # Remove duplicates - use (code, date) key so bumper results coexisting
+    # with regular draws on the same date are both included
     unique_manifest = []
-    seen_dates = set()
+    seen_keys = set()
     for entry in manifest:
-        if entry['date'] in seen_dates:
+        key = (entry['code'], entry['date'])
+        if key in seen_keys:
             continue
-        seen_dates.add(entry['date'])
+        seen_keys.add(key)
         unique_manifest.append(entry)
 
     with open(MANIFEST_FILE, 'w', encoding='utf-8') as f:

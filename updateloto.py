@@ -218,6 +218,46 @@ standard_labels = {
     "8th_prize": "8th Prize", "9th_prize": "9th Prize"
 }
 
+def extract_amount_from_label(label: str) -> Optional[int]:
+    """Dynamically extracts the numeric prize amount from the label or text row."""
+    if not label:
+        return None
+    # Clean label to remove spaces, commas, and hyphens for numeric checks
+    cleaned = re.sub(r'[\s,\-/\\]', '', label)
+    
+    # 1. Match standard patterns like Rs.120000000 or Rs120000000 or Rs:120000000
+    m_rs = re.search(r'(?:Rs|Rs\.|Rs:)\s*[:\.]?\s*(\d+)', cleaned, re.I)
+    if m_rs:
+        try:
+            return int(m_rs.group(1))
+        except ValueError:
+            pass
+            
+    # 2. Textual matches like "12 Crore" or "10 Lakh" or "1 Crore"
+    m_crore = re.search(r'(\d+(?:\.\d+)?)\s*(?:Crore|Crores|Cr)', label, re.I)
+    if m_crore:
+        try:
+            return int(float(m_crore.group(1)) * 10000000)
+        except ValueError:
+            pass
+            
+    m_lakh = re.search(r'(\d+(?:\.\d+)?)\s*(?:Lakh|Lakhs|L)', label, re.I)
+    if m_lakh:
+        try:
+            return int(float(m_lakh.group(1)) * 100000)
+        except ValueError:
+            pass
+
+    # 3. Match generic trailing digits if Rs is omitted but large number exists
+    m_generic = re.search(r'\b(\d{3,10})\b', cleaned)
+    if m_generic:
+        try:
+            return int(m_generic.group(1))
+        except ValueError:
+            pass
+
+    return None
+
 def process_result_page(result_soup, result_url, result_page_text: str):
     title_text = ""
     title_tag = result_soup.find("h1")
@@ -309,8 +349,11 @@ def process_result_page(result_soup, result_url, result_page_text: str):
                         break
                 if key:
                     current_key = key
+                    amount = extract_amount_from_label(label)
+                    if amount is None:
+                        amount = prize_amounts.get(current_key, 0)
                     prizes[current_key] = {
-                        "amount": prize_amounts.get(current_key, 0),
+                        "amount": amount,
                         "label": standard_labels.get(current_key, label),
                         "winners": []
                     }
@@ -334,22 +377,43 @@ def process_result_page(result_soup, result_url, result_page_text: str):
             (re.compile(r"^8th Prize", re.I), "8th_prize"),
             (re.compile(r"^9th Prize", re.I), "9th_prize"),
         ]
+        stop_keywords = [
+            "how to claim", "upcoming draws", "latest lottery results", 
+            "weekly schedule", "frequently asked questions", "yesterday result",
+            "quick links", "disclaimer", "explore kerala lottery", "about malluz"
+        ]
         parsed: Dict[str, Any] = {}
         current_section: Optional[str] = None
         for ln in lines:
             if not ln:
                 continue
+            
+            # Stop parsing completely if we hit a footer/advertisement/upcoming draws block
+            should_stop = False
+            for kw in stop_keywords:
+                if kw in ln.lower():
+                    should_stop = True
+                    break
+            if should_stop:
+                break
+                
             # Section header detection
             switched = False
             for rgx, key in header_regex_to_key:
                 if rgx.search(ln):
                     current_section = key
+                    amount = extract_amount_from_label(ln)
                     if current_section not in parsed:
+                        if amount is None:
+                            amount = prize_amounts.get(current_section, 0)
                         parsed[current_section] = {
-                            "amount": prize_amounts.get(current_section, 0),
+                            "amount": amount,
                             "label": standard_labels.get(current_section, current_section.replace('_', ' ').title()),
                             "winners": []
                         }
+                    else:
+                        if amount is not None and amount > 0:
+                            parsed[current_section]["amount"] = amount
                     switched = True
                     break
             if switched:
@@ -399,9 +463,18 @@ def process_result_page(result_soup, result_url, result_page_text: str):
         if not has_actual_winners:
             for key, prize in prizes.items():
                 prize["winners"] = ["Please wait, results will be published at 3 PM."]
-        # Otherwise, add placeholder to any prize category that has no winners
+        # Otherwise, de-duplicate and filter draw year, add placeholder to empty categories
         else:
+            draw_year = draw_date.split('-')[0] if '-' in draw_date else str(datetime.now(IST).year)
             for key, prize in prizes.items():
+                if prize["winners"]:
+                    cleaned_winners = []
+                    for w in prize["winners"]:
+                        w_clean = w.strip()
+                        if w_clean != draw_year and w_clean not in cleaned_winners:
+                            cleaned_winners.append(w_clean)
+                    prize["winners"] = cleaned_winners
+                
                 if not prize["winners"]:
                     prize["winners"].append("Please wait, results will be published at 3 PM.")
 

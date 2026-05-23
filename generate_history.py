@@ -94,11 +94,14 @@ def main():
     history.sort(key=get_date, reverse=True)
 
     unique_history = []
-    seen_dates = set()
+    seen_keys = set()
     for entry in history:
-        if entry['date'] != "Unknown-Date" and entry['date'] in seen_dates:
+        # Use (lottery_code, date) as the unique key so bumper results
+        # on the same day as regular draws are both kept
+        key = (entry.get('lottery', ''), entry['date']) if entry['date'] != "Unknown-Date" else entry['date']
+        if key in seen_keys:
             continue
-        seen_dates.add(entry['date'])
+        seen_keys.add(key)
         unique_history.append(entry)
 
     with open(OUT_FILE, 'w', encoding='utf-8') as f:
