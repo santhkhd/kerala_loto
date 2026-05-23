@@ -225,9 +225,13 @@ function renderResults() {
 
     // Filter
     const filtered = manifestData.filter(item => {
+        let code = (item.code || item.lottery_code || '').toUpperCase();
+        if (!code && item.filename) {
+            code = item.filename.split('-')[0].toUpperCase();
+        }
         if (currentCategory === 'ALL') return true;
-        if (currentCategory === 'BUMPER') return bumperCodes.has(item.code || '');
-        return item.code === catMap[currentCategory];
+        if (currentCategory === 'BUMPER') return bumperCodes.has(code);
+        return code === catMap[currentCategory];
     }).slice(0, 365);
 
     if (filtered.length === 0) {
@@ -248,15 +252,24 @@ function renderResults() {
         card.href = `${targetPage}?file=${encodeURIComponent(item.filename)}`;
         card.className = 'result-card fade-in';
 
-        const code = item.code || 'XX';
+        let code = (item.code || item.lottery_code || '').toUpperCase();
+        if (!code && item.filename) {
+            code = item.filename.split('-')[0].toUpperCase();
+        }
+        if (!code) code = 'XX';
+
         const nameObj = lotteryNames[code];
         const name = nameObj ? (nameObj[currentLang] || nameObj.en) : (code + ' Lottery');
         const date = item.date ? item.date.split('-').reverse().join('/') : '';
         const isBumper = bumperCodes.has(code);
 
         // Draw number display - for bumpers the draw_number may be a date label
-        const drawLabel = item.draw_number && /^\d+$/.test(item.draw_number)
-            ? code + '-' + item.draw_number
+        let drawNo = item.draw_number || item.draw || '';
+        if (!drawNo && item.filename) {
+            drawNo = item.filename.split('-')[1] || '';
+        }
+        const drawLabel = drawNo && /^\d+$/.test(drawNo)
+            ? code + '-' + drawNo
             : (isBumper ? '★ BUMPER' : code);
 
         const isNew = (index === 0);
