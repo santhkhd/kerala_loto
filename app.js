@@ -56,20 +56,35 @@ const i18n = {
 const catMap = {
     'SAMRUDHI': 'SM', 'BHAGYATHARA': 'BT', 'STHREE_SAKTHI': 'SS',
     'DHANALEKSHMI': 'DL', 'KARUNYA_PLUS': 'KN', 'SUVARNA_KERALAM': 'SK',
-    'KARUNYA': 'KR', 'AKSHAYA': 'AK', 'WIN_WIN': 'WW', 'NIRMAL': 'NR'
+    'KARUNYA': 'KR', 'AKSHAYA': 'AK', 'WIN_WIN': 'WW', 'NIRMAL': 'NR',
+    'FIFTY_FIFTY': 'FF', 'BUMPER': 'BR', 'VISHU_BUMPER': 'VB',
+    'MONSOON_BUMPER': 'MY', 'KERALA_BUMPER': 'RK'
 };
 
+// Bumper codes - shown with special gold styling
+const bumperCodes = new Set(['BR', 'VB', 'MY', 'RK', 'MC']);
+
 const lotteryNames = {
-    SM: { en: 'Samrudhi', ml: 'സമൃദ്ധി', ta: 'சம்ருத்தி' },
-    BT: { en: 'Bhagyathara', ml: 'ഭാഗ്യതാര', ta: 'பாக்யதாரா' },
-    SS: { en: 'Sthree Sakthi', ml: 'സ്ത്രീ ശക്തി', ta: 'ஸ்த்ரீ-சக்தி' },
-    DL: { en: 'Dhanalekshmi', ml: 'ധനലക്ഷ്മി', ta: 'தனலட்சுமி' },
-    KN: { en: 'Karunya Plus', ml: 'കരുണ്യ പ്ലസ്', ta: 'கருண்யா பிளസ്' },
-    SK: { en: 'Suvarna Keralam', ml: 'സുവർണ കേരളം', ta: 'சுவர்ண கேരளம்' },
-    KR: { en: 'Karunya', ml: 'കരുണ്യ', ta: 'கருண்யா' },
+    // Weekly lotteries
     AK: { en: 'Akshaya', ml: 'അക്ഷയ', ta: 'அக்ஷயா' },
     WW: { en: 'Win Win', ml: 'വിൻ വിൻ', ta: 'வின் வின்' },
-    NR: { en: 'Nirmal', ml: 'നിർമ്മൽ', ta: 'நிர்மல்' }
+    NR: { en: 'Nirmal', ml: 'നിർമ്മൽ', ta: 'நிர்மல்' },
+    KR: { en: 'Karunya', ml: 'കരുണ്യ', ta: 'கருண்யா' },
+    KN: { en: 'Karunya Plus', ml: 'കരുണ്യ പ്ലസ്', ta: 'கருண்யா பிளஸ்' },
+    SS: { en: 'Sthree Sakthi', ml: 'സ്ത്രീ ശക്തി', ta: 'ஸ்த்ரீ-சக்தி' },
+    SK: { en: 'Suvarna Keralam', ml: 'സുവർണ കേരളം', ta: 'சுவர்ண கேரளம்' },
+    FF: { en: 'Fifty Fifty', ml: 'ഫിഫ്റ്റി-ഫിഫ്റ്റി', ta: 'ஃபிஃப்டி-ஃபிஃப்டி' },
+    SKS: { en: 'Fifty Fifty', ml: 'ഫിഫ്റ്റി-ഫിഫ്റ്റി', ta: 'ஃபிஃப்டி-ஃபிஃப்டி' },
+    SM: { en: 'Samrudhi', ml: 'സമൃദ്ധി', ta: 'சம்ருத்தி' },
+    BT: { en: 'Bhagyathara', ml: 'ഭാഗ്യതാര', ta: 'பாக்யதாரா' },
+    DL: { en: 'Dhanalekshmi', ml: 'ധനലക്ഷ്മി', ta: 'தனலட்சுமி' },
+    // Bumper lotteries
+    BR: { en: 'Bumper Lottery', ml: 'ബമ്പർ ലോട്ടറി', ta: 'பம்பர் லாட்டரி' },
+    VB: { en: 'Vishu Bumper', ml: 'വിഷു ബമ്പർ', ta: 'விஷு பம்பர்' },
+    MY: { en: 'Monsoon Bumper', ml: 'മൺസൂൺ ബമ്പർ', ta: 'மழை பம்பர்' },
+    RK: { en: 'Kerala Bumper', ml: 'കേരള ബമ്പർ', ta: 'கேரளா பம்பர்' },
+    MC: { en: 'Xmas New Year Bumper', ml: 'ക്രിസ്മസ് ബമ്പർ', ta: 'கிறிஸ்மஸ் பம்பர்' },
+    XX: { en: 'Kerala Lottery', ml: 'കേരള ലോട്ടറി', ta: 'கேரளா லாட்டரி' }
 };
 
 // Theme Logic
@@ -211,6 +226,7 @@ function renderResults() {
     // Filter
     const filtered = manifestData.filter(item => {
         if (currentCategory === 'ALL') return true;
+        if (currentCategory === 'BUMPER') return bumperCodes.has(item.code || '');
         return item.code === catMap[currentCategory];
     }).slice(0, 365);
 
@@ -225,28 +241,39 @@ function renderResults() {
     // Build fragment
     const fragment = document.createDocumentFragment();
 
-    filtered.forEach(item => {
+    filtered.forEach((item, index) => {
         const card = document.createElement('a');
         const isLocal = window.location.protocol === 'file:';
         const targetPage = isLocal ? 'result.html' : 'result';
-        card.href = `${targetPage}?file=${item.filename}`;
+        card.href = `${targetPage}?file=${encodeURIComponent(item.filename)}`;
         card.className = 'result-card fade-in';
 
-        const name = lotteryNames[item.code] ? (lotteryNames[item.code][currentLang] || lotteryNames[item.code].en) : item.code;
-        const date = item.date.split('-').reverse().join('/');
+        const code = item.code || 'XX';
+        const nameObj = lotteryNames[code];
+        const name = nameObj ? (nameObj[currentLang] || nameObj.en) : (code + ' Lottery');
+        const date = item.date ? item.date.split('-').reverse().join('/') : '';
+        const isBumper = bumperCodes.has(code);
 
-        // Check if item is "new" (e.g. from today or yesterday, or first item)
-        // For simplicity, let's mark the very first item as NEW or check date
-        const isNew = (filtered.indexOf(item) === 0);
+        // Draw number display - for bumpers the draw_number may be a date label
+        const drawLabel = item.draw_number && /^\d+$/.test(item.draw_number)
+            ? code + '-' + item.draw_number
+            : (isBumper ? '★ BUMPER' : code);
+
+        const isNew = (index === 0);
+        const newBadge = isNew ? '<span class="badge-new">NEW</span>' : '';
+        const bumperStyle = isBumper
+            ? 'background: linear-gradient(135deg, #92400e, #b45309); border: 1.5px solid #f59e0b;'
+            : '';
 
         card.innerHTML = `
-            <div class="card-upper">
-                 ${isNew ? '<span class="badge-new">NEW</span>' : ''}
-                 <span class="badge-code">${item.code}-${item.draw_number}</span>
+            <div class="card-upper" style="${bumperStyle}">
+                 ${newBadge}
+                 <span class="badge-code" style="${isBumper ? 'background:#f59e0b;color:#1c1917;' : ''}">${drawLabel}</span>
                  <div class="card-title">${name}</div>
             </div>
             <div class="card-lower">
                  <div class="card-date">${date}</div>
+                 ${isBumper ? '<div style="font-size:0.7rem;font-weight:700;color:#f59e0b;letter-spacing:0.5px;">🏆 BUMPER LOTTERY</div>' : ''}
             </div>
         `;
         fragment.appendChild(card);
