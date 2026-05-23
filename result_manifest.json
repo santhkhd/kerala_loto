@@ -6,6 +6,895 @@
     "filename": "VB-May 23, 2026-2026-05-23.json"
   },
   {
+    "filename": "BR-109-2026-05-23.json",
+    "lottery_code": "BR",
+    "draw_number": "109",
+    "date": "2026-05-23",
+    "title": "VISHU BUMPER BR-109"
+  },
+  {
+    "filename": "SK-53-2026-05-22.json",
+    "lottery_code": "SK",
+    "draw_number": "53",
+    "date": "2026-05-22",
+    "title": "SUVARNA KERALAM SK-53"
+  },
+  {
+    "filename": "KN-624-2026-05-21.json",
+    "lottery_code": "KN",
+    "draw_number": "624",
+    "date": "2026-05-21",
+    "title": "KARUNYA PLUS KN-624"
+  },
+  {
+    "filename": "DL-53-2026-05-20.json",
+    "lottery_code": "DL",
+    "draw_number": "53",
+    "date": "2026-05-20",
+    "title": "DHANALEKSHMI DL-53"
+  },
+  {
+    "filename": "SS-520-2026-05-19.json",
+    "lottery_code": "SS",
+    "draw_number": "520",
+    "date": "2026-05-19",
+    "title": "STHREE SAKTHI SS-520"
+  },
+  {
+    "filename": "BT-54-2026-05-18.json",
+    "lottery_code": "BT",
+    "draw_number": "54",
+    "date": "2026-05-18",
+    "title": "BHAGYATHARA BT-54"
+  },
+  {
+    "filename": "SM-55-2026-05-17.json",
+    "lottery_code": "SM",
+    "draw_number": "55",
+    "date": "2026-05-17",
+    "title": "SAMRUDHI SM-55"
+  },
+  {
+    "filename": "KR-754-2026-05-16.json",
+    "lottery_code": "KR",
+    "draw_number": "754",
+    "date": "2026-05-16",
+    "title": "KARUNYA KR-754"
+  },
+  {
+    "filename": "SK-52-2026-05-15.json",
+    "lottery_code": "SK",
+    "draw_number": "52",
+    "date": "2026-05-15",
+    "title": "SUVARNA KERALAM SK-52"
+  },
+  {
+    "filename": "KN-623-2026-05-14.json",
+    "lottery_code": "KN",
+    "draw_number": "623",
+    "date": "2026-05-14",
+    "title": "KARUNYA PLUS KN-623"
+  },
+  {
+    "filename": "DL-52-2026-05-13.json",
+    "lottery_code": "DL",
+    "draw_number": "52",
+    "date": "2026-05-13",
+    "title": "DHANALEKSHMI DL-52"
+  },
+  {
+    "filename": "SS-519-2026-05-12.json",
+    "lottery_code": "SS",
+    "draw_number": "519",
+    "date": "2026-05-12",
+    "title": "STHREE SAKTHI SS-519"
+  },
+  {
+    "filename": "BT-53-2026-05-11.json",
+    "lottery_code": "BT",
+    "draw_number": "53",
+    "date": "2026-05-11",
+    "title": "BHAGYATHARA BT-53"
+  },
+  {
+    "filename": "SM-54-2026-05-10.json",
+    "lottery_code": "SM",
+    "draw_number": "54",
+    "date": "2026-05-10",
+    "title": "SAMRUDHI SM-54"
+  },
+  {
+    "filename": "KR-753-2026-05-09.json",
+    "lottery_code": "KR",
+    "draw_number": "753",
+    "date": "2026-05-09",
+    "title": "KARUNYA KR-753"
+  },
+  {
+    "filename": "SK-51-2026-05-08.json",
+    "lottery_code": "SK",
+    "draw_number": "51",
+    "date": "2026-05-08",
+    "title": "SUVARNA KERALAM SK-51"
+  },
+  {
+    "filename": "KN-622-2026-05-07.json",
+    "lottery_code": "KN",
+    "draw_number": "622",
+    "date": "2026-05-07",
+    "title": "KARUNYA PLUS KN-622"
+  },
+  {
+    "filename": "DL-51-2026-05-06.json",
+    "lottery_code": "DL",
+    "draw_number": "51",
+    "date": "2026-05-06",
+    "title": "DHANALEKSHMI DL-51"
+  },
+  {
+    "filename": "SS-518-2026-05-05.json",
+    "lottery_code": "SS",
+    "draw_number": "518",
+    "date": "2026-05-05",
+    "title": "STHREE SAKTHI SS-518"
+  },
+  {
+    "filename": "BT-52-2026-05-04.json",
+    "lottery_code": "BT",
+    "draw_number": "52",
+    "date": "2026-05-04",
+    "title": "BHAGYATHARA BT-52"
+  },
+  {
+    "filename": "SM-53-2026-05-03.json",
+    "lottery_code": "SM",
+    "draw_number": "53",
+    "date": "2026-05-03",
+    "title": "SAMRUDHI SM-53"
+  },
+  {
+    "filename": "KR-752-2026-05-02.json",
+    "lottery_code": "KR",
+    "draw_number": "752",
+    "date": "2026-05-02",
+    "title": "KARUNYA KR-752"
+  },
+  {
+    "filename": "KN-621-2026-04-30.json",
+    "lottery_code": "KN",
+    "draw_number": "621",
+    "date": "2026-04-30",
+    "title": "KARUNYA PLUS KN-621"
+  },
+  {
+    "filename": "DL-50-2026-04-29.json",
+    "lottery_code": "DL",
+    "draw_number": "50",
+    "date": "2026-04-29",
+    "title": "DHANALEKSHMI DL-50"
+  },
+  {
+    "filename": "SS-517-2026-04-28.json",
+    "lottery_code": "SS",
+    "draw_number": "517",
+    "date": "2026-04-28",
+    "title": "STHREE SAKTHI SS-517"
+  },
+  {
+    "filename": "BT-51-2026-04-27.json",
+    "lottery_code": "BT",
+    "draw_number": "51",
+    "date": "2026-04-27",
+    "title": "BHAGYATHARA BT-51"
+  },
+  {
+    "filename": "SM-52-2026-04-26.json",
+    "lottery_code": "SM",
+    "draw_number": "52",
+    "date": "2026-04-26",
+    "title": "SAMRUDHI SM-52"
+  },
+  {
+    "filename": "KR-751-2026-04-25.json",
+    "lottery_code": "KR",
+    "draw_number": "751",
+    "date": "2026-04-25",
+    "title": "KARUNYA KR-751"
+  },
+  {
+    "filename": "SK-50-2026-04-24.json",
+    "lottery_code": "SK",
+    "draw_number": "50",
+    "date": "2026-04-24",
+    "title": "SUVARNA KERALAM SK-50"
+  },
+  {
+    "filename": "KN-620-2026-04-23.json",
+    "lottery_code": "KN",
+    "draw_number": "620",
+    "date": "2026-04-23",
+    "title": "KARUNYA PLUS KN-620"
+  },
+  {
+    "filename": "DL-49-2026-04-22.json",
+    "lottery_code": "DL",
+    "draw_number": "49",
+    "date": "2026-04-22",
+    "title": "DHANALEKSHMI DL-49"
+  },
+  {
+    "filename": "SS-516-2026-04-21.json",
+    "lottery_code": "SS",
+    "draw_number": "516",
+    "date": "2026-04-21",
+    "title": "STHREE SAKTHI SS-516"
+  },
+  {
+    "filename": "BT-50-2026-04-20.json",
+    "lottery_code": "BT",
+    "draw_number": "50",
+    "date": "2026-04-20",
+    "title": "BHAGYATHARA BT-50"
+  },
+  {
+    "filename": "SM-51-2026-04-19.json",
+    "lottery_code": "SM",
+    "draw_number": "51",
+    "date": "2026-04-19",
+    "title": "SAMRUDHI SM-51"
+  },
+  {
+    "filename": "KR-750-2026-04-18.json",
+    "lottery_code": "KR",
+    "draw_number": "750",
+    "date": "2026-04-18",
+    "title": "KARUNYA KR-750"
+  },
+  {
+    "filename": "SK-49-2026-04-17.json",
+    "lottery_code": "SK",
+    "draw_number": "49",
+    "date": "2026-04-17",
+    "title": "SUVARNA KERALAM SK-49"
+  },
+  {
+    "filename": "KN-618-2026-04-16.json",
+    "lottery_code": "KN",
+    "draw_number": "618",
+    "date": "2026-04-16",
+    "title": "KARUNYA PLUS KN-618"
+  },
+  {
+    "filename": "DL-48-2026-04-15.json",
+    "lottery_code": "DL",
+    "draw_number": "48",
+    "date": "2026-04-15",
+    "title": "DHANALEKSHMI DL-48"
+  },
+  {
+    "filename": "SS-515-2026-04-14.json",
+    "lottery_code": "SS",
+    "draw_number": "515",
+    "date": "2026-04-14",
+    "title": "STHREE SAKTHI SS-515"
+  },
+  {
+    "filename": "BT-49-2026-04-13.json",
+    "lottery_code": "BT",
+    "draw_number": "49",
+    "date": "2026-04-13",
+    "title": "BHAGYATHARA BT-49"
+  },
+  {
+    "filename": "SM-50-2026-04-12.json",
+    "lottery_code": "SM",
+    "draw_number": "50",
+    "date": "2026-04-12",
+    "title": "SAMRUDHI SM-50"
+  },
+  {
+    "filename": "KR-749-2026-04-11.json",
+    "lottery_code": "KR",
+    "draw_number": "749",
+    "date": "2026-04-11",
+    "title": "KARUNYA KR-749"
+  },
+  {
+    "filename": "SK-48-2026-04-10.json",
+    "lottery_code": "SK",
+    "draw_number": "48",
+    "date": "2026-04-10",
+    "title": "SUVARNA KERALAM SK-48"
+  },
+  {
+    "filename": "KN-618-2026-04-08.json",
+    "lottery_code": "KN",
+    "draw_number": "618",
+    "date": "2026-04-08",
+    "title": "KARUNYA PLUS KN-618"
+  },
+  {
+    "filename": "SS-514-2026-04-07.json",
+    "lottery_code": "SS",
+    "draw_number": "514",
+    "date": "2026-04-07",
+    "title": "STHREE SAKTHI SS-514"
+  },
+  {
+    "filename": "BT-48-2026-04-06.json",
+    "lottery_code": "BT",
+    "draw_number": "48",
+    "date": "2026-04-06",
+    "title": "BHAGYATHARA BT-48"
+  },
+  {
+    "filename": "SM-49-2026-04-05.json",
+    "lottery_code": "SM",
+    "draw_number": "49",
+    "date": "2026-04-05",
+    "title": "SAMRUDHI SM-49"
+  },
+  {
+    "filename": "KR-748-2026-04-04.json",
+    "lottery_code": "KR",
+    "draw_number": "748",
+    "date": "2026-04-04",
+    "title": "KARUNYA KR-748"
+  },
+  {
+    "filename": "SK-47-2026-04-03.json",
+    "lottery_code": "SK",
+    "draw_number": "47",
+    "date": "2026-04-03",
+    "title": "SUVARNA KERALAM SK-47"
+  },
+  {
+    "filename": "DL-46-2026-04-01.json",
+    "lottery_code": "DL",
+    "draw_number": "46",
+    "date": "2026-04-01",
+    "title": "DHANALEKSHMI DL-46"
+  },
+  {
+    "filename": "SS-513-2026-03-31.json",
+    "lottery_code": "SS",
+    "draw_number": "513",
+    "date": "2026-03-31",
+    "title": "STHREE SAKTHI SS-513"
+  },
+  {
+    "filename": "BT-47-2026-03-30.json",
+    "lottery_code": "BT",
+    "draw_number": "47",
+    "date": "2026-03-30",
+    "title": "BHAGYATHARA BT-47"
+  },
+  {
+    "filename": "SM-48-2026-03-29.json",
+    "lottery_code": "SM",
+    "draw_number": "48",
+    "date": "2026-03-29",
+    "title": "SAMRUDHI SM-48"
+  },
+  {
+    "filename": "BR-108-2026-03-28.json",
+    "lottery_code": "BR",
+    "draw_number": "108",
+    "date": "2026-03-28",
+    "title": "SUMMER BUMPER BR-108"
+  },
+  {
+    "filename": "SK-46-2026-03-27.json",
+    "lottery_code": "SK",
+    "draw_number": "46",
+    "date": "2026-03-27",
+    "title": "SUVARNA KERALAM SK-46"
+  },
+  {
+    "filename": "KN-616-2026-03-26.json",
+    "lottery_code": "KN",
+    "draw_number": "616",
+    "date": "2026-03-26",
+    "title": "KARUNYA PLUS KN-616"
+  },
+  {
+    "filename": "DL-45-2026-03-25.json",
+    "lottery_code": "DL",
+    "draw_number": "45",
+    "date": "2026-03-25",
+    "title": "DHANALEKSHMI DL-45"
+  },
+  {
+    "filename": "SS-512-2026-03-24.json",
+    "lottery_code": "SS",
+    "draw_number": "512",
+    "date": "2026-03-24",
+    "title": "STHREE SAKTHI SS-512"
+  },
+  {
+    "filename": "BT-46-2026-03-23.json",
+    "lottery_code": "BT",
+    "draw_number": "46",
+    "date": "2026-03-23",
+    "title": "BHAGYATHARA BT-46"
+  },
+  {
+    "filename": "SM-47-2026-03-22.json",
+    "lottery_code": "SM",
+    "draw_number": "47",
+    "date": "2026-03-22",
+    "title": "SAMRUDHI SM-47"
+  },
+  {
+    "filename": "KR-747-2026-03-21.json",
+    "lottery_code": "KR",
+    "draw_number": "747",
+    "date": "2026-03-21",
+    "title": "KARUNYA KR-747"
+  },
+  {
+    "filename": "SK-45-2026-03-20.json",
+    "lottery_code": "SK",
+    "draw_number": "45",
+    "date": "2026-03-20",
+    "title": "SUVARNA KERALAM SK-45"
+  },
+  {
+    "filename": "KN-615-2026-03-19.json",
+    "lottery_code": "KN",
+    "draw_number": "615",
+    "date": "2026-03-19",
+    "title": "KARUNYA PLUS KN-615"
+  },
+  {
+    "filename": "DL-44-2026-03-18.json",
+    "lottery_code": "DL",
+    "draw_number": "44",
+    "date": "2026-03-18",
+    "title": "DHANALEKSHMI DL-44"
+  },
+  {
+    "filename": "SS-511-2026-03-17.json",
+    "lottery_code": "SS",
+    "draw_number": "511",
+    "date": "2026-03-17",
+    "title": "STHREE SAKTHI SS-511"
+  },
+  {
+    "filename": "SS-511-2026-03-16.json",
+    "lottery_code": "SS",
+    "draw_number": "511",
+    "date": "2026-03-16",
+    "title": "STHREE SAKTHI SS-511"
+  },
+  {
+    "filename": "SM-46-2026-03-15.json",
+    "lottery_code": "SM",
+    "draw_number": "46",
+    "date": "2026-03-15",
+    "title": "SAMRUDHI SM-46"
+  },
+  {
+    "filename": "KR-746-2026-03-14.json",
+    "lottery_code": "KR",
+    "draw_number": "746",
+    "date": "2026-03-14",
+    "title": "KARUNYA KR-746"
+  },
+  {
+    "filename": "SK-44-2026-03-13.json",
+    "lottery_code": "SK",
+    "draw_number": "44",
+    "date": "2026-03-13",
+    "title": "SUVARNA KERALAM SK-44"
+  },
+  {
+    "filename": "KN-614-2026-03-12.json",
+    "lottery_code": "KN",
+    "draw_number": "614",
+    "date": "2026-03-12",
+    "title": "KARUNYA PLUS KN-614"
+  },
+  {
+    "filename": "DL-43-2026-03-11.json",
+    "lottery_code": "DL",
+    "draw_number": "43",
+    "date": "2026-03-11",
+    "title": "DHANALEKSHMI DL-43"
+  },
+  {
+    "filename": "SS-510-2026-03-10.json",
+    "lottery_code": "SS",
+    "draw_number": "510",
+    "date": "2026-03-10",
+    "title": "STHREE SAKTHI SS-510"
+  },
+  {
+    "filename": "BT-44-2026-03-09.json",
+    "lottery_code": "BT",
+    "draw_number": "44",
+    "date": "2026-03-09",
+    "title": "BHAGYATHARA BT-44"
+  },
+  {
+    "filename": "SM-45-2026-03-08.json",
+    "lottery_code": "SM",
+    "draw_number": "45",
+    "date": "2026-03-08",
+    "title": "SAMRUDHI SM-45"
+  },
+  {
+    "filename": "KR-745-2026-03-07.json",
+    "lottery_code": "KR",
+    "draw_number": "745",
+    "date": "2026-03-07",
+    "title": "KARUNYA KR-745"
+  },
+  {
+    "filename": "SK-43-2026-03-06.json",
+    "lottery_code": "SK",
+    "draw_number": "43",
+    "date": "2026-03-06",
+    "title": "SUVARNA KERALAM SK-43"
+  },
+  {
+    "filename": "SK-43-2026-03-05.json",
+    "lottery_code": "SK",
+    "draw_number": "43",
+    "date": "2026-03-05",
+    "title": "SUVARNA KERALAM SK-43"
+  },
+  {
+    "filename": "DL-42-2026-03-04.json",
+    "lottery_code": "DL",
+    "draw_number": "42",
+    "date": "2026-03-04",
+    "title": "DHANALEKSHMI DL-42"
+  },
+  {
+    "filename": "SS-509-2026-03-03.json",
+    "lottery_code": "SS",
+    "draw_number": "509",
+    "date": "2026-03-03",
+    "title": "STHREE SAKTHI SS-509"
+  },
+  {
+    "filename": "BT-43-2026-03-02.json",
+    "lottery_code": "BT",
+    "draw_number": "43",
+    "date": "2026-03-02",
+    "title": "BHAGYATHARA BT-43"
+  },
+  {
+    "filename": "SM-44-2026-03-01.json",
+    "lottery_code": "SM",
+    "draw_number": "44",
+    "date": "2026-03-01",
+    "title": "SAMRUDHI SM-44"
+  },
+  {
+    "filename": "KR-744-2026-02-28.json",
+    "lottery_code": "KR",
+    "draw_number": "744",
+    "date": "2026-02-28",
+    "title": "KARUNYA KR-744"
+  },
+  {
+    "filename": "SK-42-2026-02-27.json",
+    "lottery_code": "SK",
+    "draw_number": "42",
+    "date": "2026-02-27",
+    "title": "SUVARNA KERALAM SK-42"
+  },
+  {
+    "filename": "KN-612-2026-02-26.json",
+    "lottery_code": "KN",
+    "draw_number": "612",
+    "date": "2026-02-26",
+    "title": "KARUNYA PLUS KN-612"
+  },
+  {
+    "filename": "SS-508-2026-02-24.json",
+    "lottery_code": "SS",
+    "draw_number": "508",
+    "date": "2026-02-24",
+    "title": "STHREE SAKTHI SS-508"
+  },
+  {
+    "filename": "BT-42-2026-02-23.json",
+    "lottery_code": "BT",
+    "draw_number": "42",
+    "date": "2026-02-23",
+    "title": "BHAGYATHARA BT-42"
+  },
+  {
+    "filename": "SM-43-2026-02-22.json",
+    "lottery_code": "SM",
+    "draw_number": "43",
+    "date": "2026-02-22",
+    "title": "SAMRUDHI SM-43"
+  },
+  {
+    "filename": "KR-743-2026-02-21.json",
+    "lottery_code": "KR",
+    "draw_number": "743",
+    "date": "2026-02-21",
+    "title": "KARUNYA KR-743"
+  },
+  {
+    "filename": "SK-41-2026-02-20.json",
+    "lottery_code": "SK",
+    "draw_number": "41",
+    "date": "2026-02-20",
+    "title": "SUVARNA KERALAM SK-41"
+  },
+  {
+    "filename": "KN-611-2026-02-19.json",
+    "lottery_code": "KN",
+    "draw_number": "611",
+    "date": "2026-02-19",
+    "title": "KARUNYA PLUS KN-611"
+  },
+  {
+    "filename": "DL-40-2026-02-18.json",
+    "lottery_code": "DL",
+    "draw_number": "40",
+    "date": "2026-02-18",
+    "title": "DHANALAKSHMI DL-40"
+  },
+  {
+    "filename": "SS-507-2026-02-17.json",
+    "lottery_code": "SS",
+    "draw_number": "507",
+    "date": "2026-02-17",
+    "title": "STHREE SAKTHI SS-507"
+  },
+  {
+    "filename": "BT-41-2026-02-16.json",
+    "lottery_code": "BT",
+    "draw_number": "41",
+    "date": "2026-02-16",
+    "title": "BHAGYATHARA BT-41"
+  },
+  {
+    "filename": "SM-42-2026-02-15.json",
+    "lottery_code": "SM",
+    "draw_number": "42",
+    "date": "2026-02-15",
+    "title": "SAMRUDHI SM-42"
+  },
+  {
+    "filename": "KR-742-2026-02-14.json",
+    "lottery_code": "KR",
+    "draw_number": "742",
+    "date": "2026-02-14",
+    "title": "KARUNYA KR-742"
+  },
+  {
+    "filename": "KN-610-2026-02-13.json",
+    "lottery_code": "KN",
+    "draw_number": "610",
+    "date": "2026-02-13",
+    "title": "KARUNYA PLUS KN-610"
+  },
+  {
+    "filename": "SK-40-2026-02-13.json",
+    "lottery_code": "SK",
+    "draw_number": "40",
+    "date": "2026-02-13",
+    "title": "SUVARNA KERALAM SK-40"
+  },
+  {
+    "filename": "DL-39-2026-02-11.json",
+    "lottery_code": "DL",
+    "draw_number": "39",
+    "date": "2026-02-11",
+    "title": "DHANALAKSHMI DL-39"
+  },
+  {
+    "filename": "SS-506-2026-02-10.json",
+    "lottery_code": "SS",
+    "draw_number": "506",
+    "date": "2026-02-10",
+    "title": "STHREE SAKTHI SS-506"
+  },
+  {
+    "filename": "BT-40-2026-02-09.json",
+    "lottery_code": "BT",
+    "draw_number": "40",
+    "date": "2026-02-09",
+    "title": "BHAGYATHARA BT-40"
+  },
+  {
+    "filename": "SM-41-2026-02-08.json",
+    "lottery_code": "SM",
+    "draw_number": "41",
+    "date": "2026-02-08",
+    "title": "SAMRUDHI SM-41"
+  },
+  {
+    "filename": "KR-741-2026-02-07.json",
+    "lottery_code": "KR",
+    "draw_number": "741",
+    "date": "2026-02-07",
+    "title": "KARUNYA KR-741"
+  },
+  {
+    "filename": "SK-39-2026-02-06.json",
+    "lottery_code": "SK",
+    "draw_number": "39",
+    "date": "2026-02-06",
+    "title": "SUVARNA KERALAM SK-39"
+  },
+  {
+    "filename": "KN-609-2026-02-05.json",
+    "lottery_code": "KN",
+    "draw_number": "609",
+    "date": "2026-02-05",
+    "title": "KARUNYA PLUS KN-609"
+  },
+  {
+    "filename": "DL-38-2026-02-04.json",
+    "lottery_code": "DL",
+    "draw_number": "38",
+    "date": "2026-02-04",
+    "title": "DHANALEKSHMI DL-38"
+  },
+  {
+    "filename": "SS-505-2026-02-03.json",
+    "lottery_code": "SS",
+    "draw_number": "505",
+    "date": "2026-02-03",
+    "title": "STHREE SAKTHI SS-505"
+  },
+  {
+    "filename": "BT-39-2026-02-02.json",
+    "lottery_code": "BT",
+    "draw_number": "39",
+    "date": "2026-02-02",
+    "title": "BHAGYATHARA BT-39"
+  },
+  {
+    "filename": "SM-40-2026-02-01.json",
+    "lottery_code": "SM",
+    "draw_number": "40",
+    "date": "2026-02-01",
+    "title": "SAMRUDHI SM-40"
+  },
+  {
+    "filename": "KR-740-2026-01-31.json",
+    "lottery_code": "KR",
+    "draw_number": "740",
+    "date": "2026-01-31",
+    "title": "KARUNYA KR-740"
+  },
+  {
+    "filename": "SK-38-2026-01-30.json",
+    "lottery_code": "SK",
+    "draw_number": "38",
+    "date": "2026-01-30",
+    "title": "SUVARNA KERALAM SK-38"
+  },
+  {
+    "filename": "KN-608-2026-01-29.json",
+    "lottery_code": "KN",
+    "draw_number": "608",
+    "date": "2026-01-29",
+    "title": "KARUNYA PLUS KN-608"
+  },
+  {
+    "filename": "DL-37-2026-01-28.json",
+    "lottery_code": "DL",
+    "draw_number": "37",
+    "date": "2026-01-28",
+    "title": "DHANALEKSHMI DL-37"
+  },
+  {
+    "filename": "SS-504-2026-01-27.json",
+    "lottery_code": "SS",
+    "draw_number": "504",
+    "date": "2026-01-27",
+    "title": "STHREE SAKTHI SS-504"
+  },
+  {
+    "filename": "SM-39-2026-01-25.json",
+    "lottery_code": "SM",
+    "draw_number": "39",
+    "date": "2026-01-25",
+    "title": "SAMRUDHI SM-39"
+  },
+  {
+    "filename": "BR-107-2026-01-24.json",
+    "lottery_code": "BR",
+    "draw_number": "107",
+    "date": "2026-01-24",
+    "title": "CHRISTMAS NEW YEAR BUMPER BR-107"
+  },
+  {
+    "filename": "SK-37-2026-01-23.json",
+    "lottery_code": "SK",
+    "draw_number": "37",
+    "date": "2026-01-23",
+    "title": "SUVARNA KERALAM SK-37"
+  },
+  {
+    "filename": "KN-607-2026-01-22.json",
+    "lottery_code": "KN",
+    "draw_number": "607",
+    "date": "2026-01-22",
+    "title": "KARUNYA PLUS KN-607"
+  },
+  {
+    "filename": "DL-36-2026-01-21.json",
+    "lottery_code": "DL",
+    "draw_number": "36",
+    "date": "2026-01-21",
+    "title": "DHANALAKSHMI DL-36"
+  },
+  {
+    "filename": "SS-503-2026-01-20.json",
+    "lottery_code": "SS",
+    "draw_number": "503",
+    "date": "2026-01-20",
+    "title": "STHREE SAKTHI SS-503"
+  },
+  {
+    "filename": "BT-38-2026-01-19.json",
+    "lottery_code": "BT",
+    "draw_number": "38",
+    "date": "2026-01-19",
+    "title": "BHAGYATHARA BT-38"
+  },
+  {
+    "filename": "SM-38-2026-01-18.json",
+    "lottery_code": "SM",
+    "draw_number": "38",
+    "date": "2026-01-18",
+    "title": "SAMRUDHI SM-38"
+  },
+  {
+    "filename": "KR-739-2026-01-17.json",
+    "lottery_code": "KR",
+    "draw_number": "739",
+    "date": "2026-01-17",
+    "title": "KARUNYA KR-739"
+  },
+  {
+    "filename": "SK-36-2026-01-16.json",
+    "lottery_code": "SK",
+    "draw_number": "36",
+    "date": "2026-01-16",
+    "title": "SUVARNA KERALAM SK-36"
+  },
+  {
+    "filename": "KN-606-2026-01-15.json",
+    "lottery_code": "KN",
+    "draw_number": "606",
+    "date": "2026-01-15",
+    "title": "KARUNYA PLUS KN-606"
+  },
+  {
+    "filename": "DL-35-2026-01-14.json",
+    "lottery_code": "DL",
+    "draw_number": "35",
+    "date": "2026-01-14",
+    "title": "DHANALAKSHMI DL-35"
+  },
+  {
+    "filename": "SS-502-2026-01-13.json",
+    "lottery_code": "SS",
+    "draw_number": "502",
+    "date": "2026-01-13",
+    "title": "STHREE SAKTHI SS-502"
+  },
+  {
+    "filename": "BT-37-2026-01-12.json",
+    "lottery_code": "BT",
+    "draw_number": "37",
+    "date": "2026-01-12",
+    "title": "BHAGYATHARA BT-37"
+  },
+  {
     "code": "SM",
     "draw_number": "37",
     "date": "2026-01-11",
@@ -616,6 +1505,13 @@
     "draw_number": "725",
     "date": "2025-10-04",
     "filename": "KR-725-2025-10-04.json"
+  },
+  {
+    "filename": "BR-105-2025-10-04.json",
+    "lottery_code": "BR",
+    "draw_number": "105",
+    "date": "2025-10-04",
+    "title": "THIRUVONAM BUMPER LOTTERY BR-105"
   },
   {
     "code": "SK",
@@ -1396,6 +2292,13 @@
     "draw_number": "3",
     "date": "2025-05-28",
     "filename": "DL-3-2025-05-28.json"
+  },
+  {
+    "filename": "BR-103-2025-05-28.json",
+    "lottery_code": "BR",
+    "draw_number": "103",
+    "date": "2025-05-28",
+    "title": "VISHU BUMPER LOTTERY BR-103"
   },
   {
     "code": "SS",
