@@ -211,48 +211,49 @@ def parse_api_data(data):
 
     final_prizes = {}
 
-   # ======================================
-# FIRST PRIZE
-# ======================================
-first_data = data.get("first", {})
+    # ======================================
+    # FIRST PRIZE
+    # ======================================
+    first_data = data.get("first", {})
 
-first_ticket = (
-    first_data.get("ticket")
-    or first_data.get("number")
-    or first_data.get("winner")
-    or ""
-)
-
-first_location = first_data.get("location", "").strip()
-
-first_amount = (
-    first_data.get("amount")
-    or amounts_map.get("1st")
-    or amounts_map.get("first")
-    or 10000000
-)
-
-try:
-    first_amount = int(
-        re.sub(r"[^\d]", "", str(first_amount))
+    first_ticket = (
+        first_data.get("ticket")
+        or first_data.get("number")
+        or first_data.get("winner")
+        or ""
     )
-except:
-    first_amount = 10000000
 
-if first_ticket:
+    first_location = first_data.get("location", "").strip()
 
-    # Format like:
-    # PN 945080 (ATTINGAL)
-    formatted_first = str(first_ticket).strip()
+    first_amount = (
+        first_data.get("amount")
+        or amounts_map.get("1st")
+        or amounts_map.get("first")
+        or 10000000
+    )
 
-    if first_location:
-        formatted_first = f"{formatted_first} ({first_location})"
+    try:
+        first_amount = int(
+            re.sub(r"[^\d]", "", str(first_amount))
+        )
+    except:
+        first_amount = 10000000
 
-    final_prizes["1st_prize"] = {
-        "amount": first_amount,
-        "label": "1st Prize",
-        "winners": [formatted_first]
-    }
+    if first_ticket:
+
+        formatted_first = str(first_ticket).strip()
+
+        if first_location:
+            formatted_first = (
+                f"{formatted_first} "
+                f"({first_location})"
+            )
+
+        final_prizes["1st_prize"] = {
+            "amount": first_amount,
+            "label": "1st Prize",
+            "winners": [formatted_first]
+        }
 
     # ======================================
     # OTHER PRIZES
@@ -327,7 +328,6 @@ if first_ticket:
         "prizes": final_prizes,
         "source": "API"
     }
-
 
 # ==========================================
 # WEB FALLBACK
