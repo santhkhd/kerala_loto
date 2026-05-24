@@ -211,39 +211,48 @@ def parse_api_data(data):
 
     final_prizes = {}
 
-    # ======================================
-    # FIRST PRIZE FIX
-    # ======================================
-    first_data = data.get("first", {})
+   # ======================================
+# FIRST PRIZE
+# ======================================
+first_data = data.get("first", {})
 
-    first_number = (
-        first_data.get("number")
-        or first_data.get("ticket")
-        or first_data.get("winner")
-        or ""
+first_ticket = (
+    first_data.get("ticket")
+    or first_data.get("number")
+    or first_data.get("winner")
+    or ""
+)
+
+first_location = first_data.get("location", "").strip()
+
+first_amount = (
+    first_data.get("amount")
+    or amounts_map.get("1st")
+    or amounts_map.get("first")
+    or 10000000
+)
+
+try:
+    first_amount = int(
+        re.sub(r"[^\d]", "", str(first_amount))
     )
+except:
+    first_amount = 10000000
 
-    first_amount = (
-        first_data.get("amount")
-        or amounts_map.get("1st")
-        or amounts_map.get("first")
-        or 10000000
-    )
+if first_ticket:
 
-    try:
-        first_amount = int(
-            re.sub(r"[^\d]", "", str(first_amount))
-        )
-    except:
-        first_amount = 10000000
+    # Format like:
+    # PN 945080 (ATTINGAL)
+    formatted_first = str(first_ticket).strip()
 
-    if first_number:
+    if first_location:
+        formatted_first = f"{formatted_first} ({first_location})"
 
-        final_prizes["1st_prize"] = {
-            "amount": first_amount,
-            "label": "1st Prize",
-            "winners": [str(first_number).strip()]
-        }
+    final_prizes["1st_prize"] = {
+        "amount": first_amount,
+        "label": "1st Prize",
+        "winners": [formatted_first]
+    }
 
     # ======================================
     # OTHER PRIZES
