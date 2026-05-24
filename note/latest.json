@@ -4,6 +4,13 @@
   "draw_date": "2026-05-24",
   "venue": "GORKY BHAVAN NEAR BAKERY JUNCTION THIRUVANANTHAPURAM",
   "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "MV 232040"
+      ]
+    },
     "consolation_prize": {
       "amount": 5000,
       "label": "Consolation Prize",
