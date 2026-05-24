@@ -7,58 +7,116 @@ from datetime import datetime
 from bs4 import BeautifulSoup, Tag
 from typing import Optional, Dict, Any
 
-# Suppress SSL warnings
+# ==========================================
+# SETTINGS
+# ==========================================
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 API_URL = "https://indialotteryapi.com/wp-json/klr/v1/latest"
 WEB_URL = "https://www.kllotteryresult.com/"
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0"
+}
+
+# ==========================================
+# HELPERS
+# ==========================================
 def get_today_date_str():
     return datetime.now().strftime("%Y-%m-%d")
 
-# ==========================================
-# 1. API METHOD
-# ==========================================
-def fetch_api_data():
-    try:
-        print(f"Checking API: {API_URL}...")
-        resp = requests.get(
-            API_URL,
-            headers={'User-Agent': 'Mozilla/5.0'},
-            verify=False,
-            timeout=30
-        )
-        resp.raise_for_status()
-        return resp.json()
 
-    except Exception as e:
-        print(f"API Error: {e}")
+def extract_amount_from_label(label: str) -> Optional[int]:
+
+    if not label:
         return None
 
+    cleaned = re.sub(r'[\s,\-/\\]', '', label)
 
-# Prize mappings
+    # Rs.120000000
+    m_rs = re.search(
+        r'(?:Rs|Rs\.|Rs:)\s*[:\.]?\s*(\d+)',
+        cleaned,
+        re.I
+    )
+
+    if m_rs:
+        try:
+            return int(m_rs.group(1))
+        except:
+            pass
+
+    # 12 Crore
+    m_crore = re.search(
+        r'(\d+(?:\.\d+)?)\s*(?:Crore|Crores|Cr)',
+        label,
+        re.I
+    )
+
+    if m_crore:
+        try:
+            return int(float(m_crore.group(1)) * 10000000)
+        except:
+            pass
+
+    # 10 Lakh
+    m_lakh = re.search(
+        r'(\d+(?:\.\d+)?)\s*(?:Lakh|Lakhs|L)',
+        label,
+        re.I
+    )
+
+    if m_lakh:
+        try:
+            return int(float(m_lakh.group(1)) * 100000)
+        except:
+            pass
+
+    # Generic large number
+    m_generic = re.search(r'\b(\d{3,10})\b', cleaned)
+
+    if m_generic:
+        try:
+            return int(m_generic.group(1))
+        except:
+            pass
+
+    return None
+
+
+# ==========================================
+# STANDARD PRIZE DATA
+# ==========================================
 prize_map = {
     "1st": "1st_prize",
     "1st Prize": "1st_prize",
+
     "Cons": "consolation_prize",
     "Cons Prize": "consolation_prize",
-    "Cons Prize-Rs": "consolation_prize",
     "Consolation": "consolation_prize",
     "Consolation Prize": "consolation_prize",
+
     "2nd": "2nd_prize",
     "2nd Prize": "2nd_prize",
+
     "3rd": "3rd_prize",
     "3rd Prize": "3rd_prize",
+
     "4th": "4th_prize",
     "4th Prize": "4th_prize",
+
     "5th": "5th_prize",
     "5th Prize": "5th_prize",
+
     "6th": "6th_prize",
     "6th Prize": "6th_prize",
+
     "7th": "7th_prize",
     "7th Prize": "7th_prize",
+
     "8th": "8th_prize",
     "8th Prize": "8th_prize",
+
     "9th": "9th_prize",
     "9th Prize": "9th_prize"
 }
@@ -89,66 +147,107 @@ standard_labels = {
     "9th_prize": "9th Prize"
 }
 
+# ==========================================
+# API FETCH
+# ==========================================
+def fetch_api_data():
 
-def extract_amount_from_label(label: str) -> Optional[int]:
-    if not label:
+    try:
+        print(f"Checking API: {API_URL}")
+
+        response = requests.get(
+            API_URL,
+            headers=HEADERS,
+            timeout=30,
+            verify=False
+        )
+
+        response.raise_for_status()
+
+        return response.json()
+
+    except Exception as e:
+        print(f"API Error: {e}")
         return None
 
-    cleaned = re.sub(r'[\s,\-/\\]', '', label)
 
-    # Rs patterns
-    m_rs = re.search(r'(?:Rs|Rs\.|Rs:)\s*[:\.]?\s*(\d+)', cleaned, re.I)
-    if m_rs:
-        try:
-            return int(m_rs.group(1))
-        except ValueError:
-            pass
-
-    # Crore
-    m_crore = re.search(r'(\d+(?:\.\d+)?)\s*(?:Crore|Crores|Cr)', label, re.I)
-    if m_crore:
-        try:
-            return int(float(m_crore.group(1)) * 10000000)
-        except ValueError:
-            pass
-
-    # Lakh
-    m_lakh = re.search(r'(\d+(?:\.\d+)?)\s*(?:Lakh|Lakhs|L)', label, re.I)
-    if m_lakh:
-        try:
-            return int(float(m_lakh.group(1)) * 100000)
-        except ValueError:
-            pass
-
-    # Generic digits
-    m_generic = re.search(r'\b(\d{3,10})\b', cleaned)
-    if m_generic:
-        try:
-            return int(m_generic.group(1))
-        except ValueError:
-            pass
-
-    return None
-
-
+# ==========================================
+# API PARSE
+# ==========================================
 def parse_api_data(data):
+
     if not data:
         return None
 
     draw_date = data.get("draw_date")
-    draw_name = data.get("draw_name", "Unknown").upper()
-    full_code = data.get("draw_code", "XX-00")
 
-    parts = full_code.split("-") if "-" in full_code else [full_code[:2], full_code[2:]]
+    draw_name = data.get(
+        "draw_name",
+        "Unknown"
+    ).upper()
+
+    full_code = data.get(
+        "draw_code",
+        "XX-00"
+    )
+
+    parts = (
+        full_code.split("-")
+        if "-" in full_code
+        else [full_code[:2], full_code[2:]]
+    )
 
     lottery_code = parts[0]
-    draw_number = parts[1] if len(parts) > 1 else "00"
+
+    draw_number = (
+        parts[1]
+        if len(parts) > 1
+        else "00"
+    )
 
     prizes_data = data.get("prizes", {})
+
     amounts_map = prizes_data.get("amounts", {})
 
     final_prizes = {}
 
+    # ======================================
+    # FIRST PRIZE FIX
+    # ======================================
+    first_data = data.get("first", {})
+
+    first_number = (
+        first_data.get("number")
+        or first_data.get("ticket")
+        or first_data.get("winner")
+        or ""
+    )
+
+    first_amount = (
+        first_data.get("amount")
+        or amounts_map.get("1st")
+        or amounts_map.get("first")
+        or 10000000
+    )
+
+    try:
+        first_amount = int(
+            re.sub(r"[^\d]", "", str(first_amount))
+        )
+    except:
+        first_amount = 10000000
+
+    if first_number:
+
+        final_prizes["1st_prize"] = {
+            "amount": first_amount,
+            "label": "1st Prize",
+            "winners": [str(first_number).strip()]
+        }
+
+    # ======================================
+    # OTHER PRIZES
+    # ======================================
     std_amounts = {
         "consolation": 5000,
         "2nd": 3000000,
@@ -168,7 +267,14 @@ def parse_api_data(data):
         if api_key in ignore:
             continue
 
-        my_key = "consolation_prize" if api_key == "consolation" else f"{api_key}_prize"
+        if api_key in ["1st", "first"]:
+            continue
+
+        my_key = (
+            "consolation_prize"
+            if api_key == "consolation"
+            else f"{api_key}_prize"
+        )
 
         label = (
             "Consolation Prize"
@@ -176,13 +282,25 @@ def parse_api_data(data):
             else f"{api_key.capitalize()} Prize"
         )
 
-        winners = val if isinstance(val, list) else [val] if val else []
+        winners = (
+            val
+            if isinstance(val, list)
+            else [val] if val else []
+        )
 
         amt_val = std_amounts.get(api_key, 0)
 
         if api_key in amounts_map:
+
             try:
-                amt_val = int(re.sub(r"[^\d]", "", str(amounts_map[api_key])))
+                amt_val = int(
+                    re.sub(
+                        r"[^\d]",
+                        "",
+                        str(amounts_map[api_key])
+                    )
+                )
+
             except:
                 pass
 
@@ -203,16 +321,16 @@ def parse_api_data(data):
 
 
 # ==========================================
-# 2. WEB FALLBACK METHOD
+# WEB FALLBACK
 # ==========================================
 def fetch_web_data():
 
     try:
-        print(f"Checking Fallback Web: {WEB_URL}...")
+        print(f"Checking Website: {WEB_URL}")
 
         res = requests.get(
             WEB_URL,
-            headers={'User-Agent': 'Mozilla/5.0'},
+            headers=HEADERS,
             timeout=30
         )
 
@@ -222,51 +340,81 @@ def fetch_web_data():
 
         for a in soup.find_all("a", href=True):
 
-            if re.search(r'/kerala-lottery-result-[A-Z]+-\d+', a['href']):
+            if re.search(
+                r'/kerala-lottery-result-[A-Z]+-\d+',
+                a["href"]
+            ):
 
-                link = a['href']
+                link = a["href"]
 
                 if not link.startswith("http"):
-                    link = "https://www.kllotteryresult.com" + link
+                    link = WEB_URL.rstrip("/") + link
 
                 break
 
         if not link:
-            print("Fallback: No result links found.")
+            print("No result link found.")
             return None
 
-        print(f"Fallback: Fetching {link}...")
+        print(f"Fetching Result Page: {link}")
 
-        p_res = requests.get(
+        page = requests.get(
             link,
-            headers={'User-Agent': 'Mozilla/5.0'},
+            headers=HEADERS,
             timeout=30
         )
 
-        p_soup = BeautifulSoup(p_res.text, "html.parser")
+        result_soup = BeautifulSoup(
+            page.text,
+            "html.parser"
+        )
 
         title_text = ""
 
-        h1 = p_soup.find("h1")
+        h1 = result_soup.find("h1")
 
         if h1:
             title_text = h1.text.strip()
 
-        m = re.search(r"(\d{2})[./-](\d{2})[./-](\d{4})", title_text)
+        # Date
+        m = re.search(
+            r"(\d{2})[./-](\d{2})[./-](\d{4})",
+            title_text
+        )
 
         if not m:
-            print("Fallback: Could not parse date from title.")
+            print("Date not found.")
             return None
 
-        draw_date = f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
+        draw_date = (
+            f"{m.group(3)}-"
+            f"{m.group(2)}-"
+            f"{m.group(1)}"
+        )
 
-        name_m = re.search(r"([A-Za-z\s]+)\s*\(", title_text)
+        # Name
+        name_m = re.search(
+            r"([A-Za-z\s]+)\s*\(",
+            title_text
+        )
 
-        draw_name = name_m.group(1).strip().upper() if name_m else "Unknown"
+        draw_name = (
+            name_m.group(1).strip().upper()
+            if name_m
+            else "UNKNOWN"
+        )
 
-        num_m = re.search(r"\(([^)]+)\)", title_text)
+        # Draw code
+        num_m = re.search(
+            r"\(([^)]+)\)",
+            title_text
+        )
 
-        full_code = num_m.group(1) if num_m else "XX-00"
+        full_code = (
+            num_m.group(1)
+            if num_m
+            else "XX-00"
+        )
 
         parts = (
             full_code.split("-")
@@ -275,11 +423,19 @@ def fetch_web_data():
         )
 
         lottery_code = parts[0]
-        draw_number = parts[1] if len(parts) > 1 else "00"
+
+        draw_number = (
+            parts[1]
+            if len(parts) > 1
+            else "00"
+        )
 
         prizes = {}
 
-        table = p_soup.find("table", class_="w-full")
+        table = result_soup.find(
+            "table",
+            class_="w-full"
+        )
 
         if table:
 
@@ -299,16 +455,20 @@ def fetch_web_data():
 
                             current_key = v
 
-                            clean_label = standard_labels.get(current_key, label)
-
                             amount = extract_amount_from_label(label)
 
                             if amount is None:
-                                amount = prize_amounts.get(current_key, 0)
+                                amount = prize_amounts.get(
+                                    current_key,
+                                    0
+                                )
 
                             prizes[current_key] = {
                                 "amount": amount,
-                                "label": clean_label,
+                                "label": standard_labels.get(
+                                    current_key,
+                                    label
+                                ),
                                 "winners": []
                             }
 
@@ -344,7 +504,7 @@ def fetch_web_data():
 
 
 # ==========================================
-# 3. SAVE DATA
+# SAVE JSON
 # ==========================================
 def save_data(data):
 
@@ -361,7 +521,7 @@ def save_data(data):
         "downloadLink": ""
     }
 
-    os.makedirs('note', exist_ok=True)
+    os.makedirs("note", exist_ok=True)
 
     filename = (
         f"{data['lottery_code']}-"
@@ -372,12 +532,27 @@ def save_data(data):
     local_path = f"note/{filename}"
 
     with open(local_path, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
+        json.dump(
+            output,
+            f,
+            indent=2,
+            ensure_ascii=False
+        )
 
     print(f"Saved: {local_path}")
 
-    with open("note/latest.json", "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
+    with open(
+        "note/latest.json",
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            output,
+            f,
+            indent=2,
+            ensure_ascii=False
+        )
 
     print("Updated note/latest.json")
 
@@ -391,47 +566,40 @@ def main():
 
     today = get_today_date_str()
 
-    print(f"--- Starting Update (Today: {today}) ---")
+    print(f"--- Starting Update ({today}) ---")
 
+    # Try API
     api_raw = fetch_api_data()
 
     api_clean = parse_api_data(api_raw)
 
-    if api_clean and api_clean['draw_date'] == today:
+    if api_clean and api_clean["draw_date"] == today:
 
-        print("API has today's result!")
+        print("API has today's result.")
 
         save_data(api_clean)
 
     else:
 
-        print(
-            f"API result date "
-            f"({api_clean['draw_date'] if api_clean else 'None'}) "
-            f"is not today."
-        )
+        print("API does not have today's result.")
 
-        print("Attempting Fallback Request...")
+        print("Trying website fallback...")
 
         web_clean = fetch_web_data()
 
-        if web_clean and web_clean['draw_date'] == today:
+        if web_clean and web_clean["draw_date"] == today:
 
-            print("Fallback Web has today's result!")
+            print("Website has today's result.")
 
             save_data(web_clean)
 
         else:
 
-            print(
-                f"Fallback Web date "
-                f"({web_clean['draw_date'] if web_clean else 'None'}) "
-                f"is also not today."
-            )
+            print("No latest result found.")
 
-            print("No update performed.")
-
+    # Update status
     with open("status.json", "w") as f:
+
         json.dump(
             {
                 "last_check": today,
@@ -439,6 +607,8 @@ def main():
             },
             f
         )
+
+    print("Done.")
 
 
 if __name__ == "__main__":
