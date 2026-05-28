@@ -56,7 +56,7 @@
         }
     ],
   "ads": {
-    "ad_status": false,
+    "ad_status": true,
     "main_ads": "admob",
     "backup_ads": "none",
     "admob_banner_unit_id": "ca-app-pub-8211285362401989/7641995418",
