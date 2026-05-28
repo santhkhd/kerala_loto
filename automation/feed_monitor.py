@@ -8,7 +8,7 @@ from datetime import datetime
 
 # CONFIGURATION
 # Set these in your environment variables for security
-ONESIGNAL_APP_ID = os.getenv('ONESIGNAL_APP_ID', 'YOUR_APP_ID_HERE')
+ONESIGNAL_APP_ID = os.getenv('ONESIGNAL_APP_ID', '65c53281-d399-49a4-9ec9-229499aeb473')
 ONESIGNAL_REST_KEY = os.getenv('ONESIGNAL_REST_KEY', 'YOUR_REST_KEY_HERE')
 
 # PATHS
