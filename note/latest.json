@@ -14,7 +14,19 @@
     "consolation_prize": {
       "amount": 5000,
       "label": "Consolation Prize",
-      "winners": []
+      "winners": [
+        "SA 119013",
+        "SB 119013",
+        "SC 119013",
+        "SD 119013",
+        "SF 119013",
+        "SG 119013",
+        "SH 119013",
+        "SJ 119013",
+        "SK 119013",
+        "SL 119013",
+        "SM 119013"
+      ]
     },
     "2nd_prize": {
       "amount": 3000000,
