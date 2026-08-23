@@ -4,35 +4,111 @@
   "draw_date": "2026-08-23",
   "venue": "GORKY BHAVAN NEAR BAKERY JUNCTION THIRUVANANTHAPURAM",
   "prizes": {
+    "1st_prize": {
+      "amount": 10000000,
+      "label": "1st Prize",
+      "winners": [
+        "ML 840315 (CHITTUR)"
+      ]
+    },
     "consolation_prize": {
       "amount": 5000,
       "label": "Consolation Prize",
-      "winners": []
+      "winners": [
+        "MA 840315",
+        "MB 840315",
+        "MC 840315",
+        "MD 840315",
+        "ME 840315",
+        "MF 840315",
+        "MG 840315",
+        "MH 840315",
+        "MJ 840315",
+        "MK 840315",
+        "MM 840315"
+      ]
     },
     "2nd_prize": {
       "amount": 2500000,
       "label": "2nd Prize",
-      "winners": []
+      "winners": [
+        "ML 580278"
+      ]
     },
     "3rd_prize": {
       "amount": 500000,
       "label": "3rd Prize",
-      "winners": []
+      "winners": [
+        "MK 877920"
+      ]
     },
     "4th_prize": {
       "amount": 5000,
       "label": "4th Prize",
-      "winners": []
+      "winners": [
+        "0514",
+        "0723",
+        "0748",
+        "3771",
+        "4292",
+        "4855",
+        "6025",
+        "6676",
+        "7096",
+        "7154",
+        "7164",
+        "7632",
+        "8085",
+        "8900",
+        "9434",
+        "9505",
+        "9512",
+        "9675",
+        "9825"
+      ]
     },
     "5th_prize": {
       "amount": 2000,
       "label": "5th Prize",
-      "winners": []
+      "winners": [
+        "0169",
+        "1125",
+        "2547",
+        "4072",
+        "5328",
+        "9537"
+      ]
     },
     "6th_prize": {
       "amount": 1000,
       "label": "6th Prize",
-      "winners": []
+      "winners": [
+        "0201",
+        "0296",
+        "0507",
+        "0809",
+        "0987",
+        "1427",
+        "1449",
+        "2119",
+        "2701",
+        "3214",
+        "3481",
+        "3540",
+        "4608",
+        "4890",
+        "4916",
+        "5580",
+        "5799",
+        "6496",
+        "6878",
+        "6880",
+        "7592",
+        "7622",
+        "7824",
+        "7840",
+        "9864"
+      ]
     },
     "7th_prize": {
       "amount": 500,
