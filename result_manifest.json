@@ -1266,16 +1266,16 @@
     "filename": "KR-742-2026-02-14.json"
   },
   {
-    "code": "SK",
-    "draw_number": "40",
-    "date": "2026-02-13",
-    "filename": "SK-40-2026-02-13.json"
-  },
-  {
     "code": "KN",
     "draw_number": "610",
     "date": "2026-02-13",
     "filename": "KN-610-2026-02-13.json"
+  },
+  {
+    "code": "SK",
+    "draw_number": "40",
+    "date": "2026-02-13",
+    "filename": "SK-40-2026-02-13.json"
   },
   {
     "code": "DL",
@@ -1470,10 +1470,10 @@
     "filename": "KR-738-2026-01-10.json"
   },
   {
-    "code": "SK",
-    "draw_number": "35",
+    "code": "XX",
+    "draw_number": "KR-738",
     "date": "2026-01-09",
-    "filename": "SK-35-2026-01-09.json"
+    "filename": "XX-KR-738-2026-01-09.json"
   },
   {
     "code": "RK",
@@ -1482,10 +1482,10 @@
     "filename": "RK-XX-2026-01-09.json"
   },
   {
-    "code": "XX",
-    "draw_number": "KR-738",
+    "code": "SK",
+    "draw_number": "35",
     "date": "2026-01-09",
-    "filename": "XX-KR-738-2026-01-09.json"
+    "filename": "SK-35-2026-01-09.json"
   },
   {
     "code": "KN",
